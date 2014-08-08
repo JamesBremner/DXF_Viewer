@@ -9,13 +9,14 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+namespace dxfv {
 
 class CLine : public cDXFGraphObject
 
 {
 public:
 	double x1,y1,x2,y2;
-	CString m_Layer;
+//	CString m_Layer;
 	BYTE m_Select;
 	BYTE m_Nest;
 
@@ -45,5 +46,5 @@ draw.x2, draw.y2  second endpoint of line
     bool getDraw( s_dxf_draw& draw );
 
 };
-
+}
 #endif // !defined(AFX_LINE_H__57D9AECB_3DF9_42D3_BC4B_789EA9B64D68__INCLUDED_)

@@ -17,9 +17,11 @@ static char THIS_FILE[]=__FILE__;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
+namespace dxfv {
+
 CArc::CArc()
 {
-	m_Layer = "0";
+//	m_Layer = "0";
 	m_Select = FALSE;
 	m_Nest = FALSE;
 }
@@ -64,7 +66,7 @@ bool CArc::Read( FILE * fp, int& code, char* lpValue )
 			// a new object
 			return true;
 		case 8:
-			m_Layer = lpValue;
+//			m_Layer = lpValue;
 			break;
 		case 10:
 			x = atof(lpValue);
@@ -86,5 +88,6 @@ bool CArc::Read( FILE * fp, int& code, char* lpValue )
 	return true;
 }
 
+}
 
 

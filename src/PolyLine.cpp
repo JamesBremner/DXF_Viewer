@@ -16,11 +16,13 @@ static char THIS_FILE[]=__FILE__;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
+namespace dxfv {
+
 CPolyLine::CPolyLine()
 {
 	m_VertexCount = 0;
 	m_PolyLineFlag = 0;
-	m_Layer = "0";
+//	m_Layer = "0";
 	m_Select = FALSE;
 	m_Nest = FALSE;
 }
@@ -54,7 +56,7 @@ bool CPolyLine::Read( FILE * fp, int& code, char* lpValue )
 				return false;
 			return true;
 		case 8:
-			m_Layer = lpValue;
+//			m_Layer = lpValue;
 			break;
 		case 90:
 			m_VertexCount = atoi(lpValue);
@@ -86,5 +88,5 @@ bool CPolyLine::getDraw( s_dxf_draw& draw )
     draw.rect->ApplyScale( draw.x2, draw.y2 );
     return true;
 }
-
+}
 

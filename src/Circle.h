@@ -9,12 +9,12 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-
+namespace dxfv {
 class CCircle  : public cDXFGraphObject
 {
 public:
 	double x,y,r;
-	CString m_Layer;
+//	CString m_Layer;
 	BYTE m_Select;
 	BYTE m_Nest;
 
@@ -35,5 +35,5 @@ draw.r            Radius of cirle
 */
     bool getDraw( s_dxf_draw& draw );
 };
-
+}
 #endif // !defined(AFX_CIRCLE_H__B468D98B_7FA1_4A99_B55F_2A56932403A7__INCLUDED_)

@@ -10,6 +10,9 @@
 #endif // _MSC_VER > 1000
 
 
+
+namespace dxfv {
+
 class cBoundingRectangle
 {
 public:
@@ -104,6 +107,7 @@ protected:
 
 };
 
+
 /**  Structure holding parameters for the operation needed to draw all or part of graphical object
 
 Some objects can be drawn in one operation - a line, a circle, an arc
@@ -126,11 +130,16 @@ The values are in pixels, scaled to fit into the display window
         cBoundingRectangle* rect;   // bounding rectange scaled to window
         };
 
+
+}
+
 #include "line.h"
 #include "arc.h"
 #include "Circle.h"	// Added by ClassView
 #include "PolyLine.h"	// Added by ClassView
 #include "Spline.h"	// Added by ClassView
+
+namespace dxfv {
 
 /** A container for the graphical objects in a .DXF file
 */
@@ -174,5 +183,5 @@ private:
 	void ReadUntilCode(  FILE * fp, int TargetCode,  char* lpValue );
 	void UpdateBoundingRectangle();
 };
-
+}
 #endif // !defined(AFX_DXF_H__148A5C6F_8B80_49A1_A007_2259EB5655F5__INCLUDED_)

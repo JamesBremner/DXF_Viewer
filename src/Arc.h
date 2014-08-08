@@ -9,12 +9,13 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+namespace dxfv {
 
 class CArc  : public cDXFGraphObject
 {
 public:
 	double x,y,r,sa,ea;
-	CString m_Layer;
+//	CString m_Layer;
 	BYTE m_Select;
 	BYTE m_Nest;
 
@@ -51,5 +52,5 @@ To run on other platforms or frameworks this code will need to be adjusted
 bool Read( FILE * fp, int& code, char* value );
 
 };
-
+}
 #endif // !defined(AFX_ARC_H__F3B30C5E_D3C4_4380_844A_03369FF97719__INCLUDED_)

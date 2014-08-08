@@ -1,6 +1,9 @@
-# Windows image file caches
-Thumbs.db
-ehthumbs.db
+*.o
+*Debug/*
+*/Debug/*
+
+*.cbp
+*.depend
 
 # Folder config file
 Desktop.ini

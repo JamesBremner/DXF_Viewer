@@ -9,14 +9,14 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-
+namespace dxfv {
 class CPolyLine   : public cDXFGraphObject
 
 {
 public:
 	UINT m_VertexCount,m_PolyLineFlag;
 	double x[1024],y[1024];
-	CString m_Layer;
+//	CString m_Layer;
 	BYTE m_Select;
 	BYTE m_Nest;
 
@@ -36,5 +36,5 @@ public:
 */
     bool getDraw( s_dxf_draw& draw );
 };
-
+}
 #endif // !defined(AFX_POLYLINE_H__2845A691_54B0_40CE_9000_80D63B888975__INCLUDED_)

@@ -11,10 +11,12 @@
 
 #include <vector>
 
+namespace dxfv {
+
 class CSpline  : public cDXFGraphObject
 {
 public:
-	CString m_Layer;
+//	CString m_Layer;
 	int m_FitPointCount;
 	double x[128],y[128];
 	BYTE m_Select;
@@ -45,5 +47,7 @@ private:
 	void MatrixSolve(std::vector<float>& B,
             std::vector< std::vector<float> >& Mat );
 };
+
+}
 
 #endif // !defined(AFX_SPLINE_H__E4B987FD_0798_424F_9D92_B5CA8CA37F17__INCLUDED_)

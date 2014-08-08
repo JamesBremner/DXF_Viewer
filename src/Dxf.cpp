@@ -11,6 +11,9 @@
 static char THIS_FILE[]=__FILE__;
 #define new DEBUG_NEW
 #endif
+
+namespace dxfv {
+
 /**  Read next two lines from a DXF file - a group code and a value
 
 @param[in]  fp     the open DXF file
@@ -235,3 +238,4 @@ void CDxf::Init()
         draw.index_curve = 0;
         draw.rect = &myBoundingRectangle;
     }
+}

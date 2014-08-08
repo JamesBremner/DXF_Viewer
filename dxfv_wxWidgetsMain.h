@@ -17,7 +17,7 @@
 #include "dxfv_wxWidgetsApp.h"
 
 
-class CDxf;
+#include "src/Dxf.h"
 
 class dxfv_wxWidgetsFrame: public wxFrame
 {
@@ -40,7 +40,7 @@ class dxfv_wxWidgetsFrame: public wxFrame
         DECLARE_EVENT_TABLE()
 
 
-        CDxf * dxf;
+        dxfv::CDxf * dxf;
 };
 
 

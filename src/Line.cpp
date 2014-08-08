@@ -16,9 +16,11 @@ static char THIS_FILE[]=__FILE__;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
+namespace dxfv {
+
 CLine::CLine()
 {
-	m_Layer = "0";
+//	m_Layer = "0";
 	m_Select = FALSE;
 	m_Nest = FALSE;
 }
@@ -40,7 +42,7 @@ bool CLine::Read( FILE * fp, int& code, char* lpValue )
 			// a new object
 			return true;
 		case 8:
-			m_Layer = lpValue;
+//			m_Layer = lpValue;
 			break;
 		case 10:
 			x1 = atof(lpValue);
@@ -70,3 +72,4 @@ bool CLine::Read( FILE * fp, int& code, char* lpValue )
         draw.rect->ApplyScale(draw.x2, draw.y2);
         return true;
     }
+}

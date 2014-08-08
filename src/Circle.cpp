@@ -16,9 +16,11 @@ static char THIS_FILE[]=__FILE__;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
+namespace dxfv {
+
 CCircle::CCircle()
 {
-	m_Layer = "0";
+//	m_Layer = "0";
 	m_Select = FALSE;
 	m_Nest = FALSE;
 }
@@ -49,7 +51,7 @@ bool CCircle::Read( FILE * fp, int& code, char* lpValue )
 			// a new object
 			return true;
 		case 8:
-			m_Layer = lpValue;
+//			m_Layer = lpValue;
 			break;
 		case 10:
 			x = atof(lpValue);
@@ -74,3 +76,4 @@ bool CCircle::Read( FILE * fp, int& code, char* lpValue )
         draw.r /= draw.rect->myScale;
         return true;
     }
+}

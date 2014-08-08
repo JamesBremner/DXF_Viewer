@@ -87,7 +87,7 @@ dxfv_wxWidgetsFrame::dxfv_wxWidgetsFrame(wxFrame *frame, const wxString& title)
     //SetStatusText(wxbuildinfo(short_f), 1);
 #endif // wxUSE_STATUSBAR
 
-    dxf = new CDxf();
+    dxf = new dxfv::CDxf();
 
 }
 
@@ -136,10 +136,10 @@ void dxfv_wxWidgetsFrame::OnPaint(wxPaintEvent& event)
     // scale to window
     dxf->myBoundingRectangle.CalcScale( sz.GetWidth(), sz.GetHeight() );
 
-    s_dxf_draw draw;
+    dxfv::s_dxf_draw draw;
 
 
-    for( CLine& line : dxf->m_Line )
+    for( dxfv::CLine& line : dxf->m_Line )
     {
         dxf->Init( draw );
         line.getDraw( draw );
@@ -147,7 +147,7 @@ void dxfv_wxWidgetsFrame::OnPaint(wxPaintEvent& event)
    }
 
 
-    for( CPolyLine& polyline : dxf->m_PolyLine )
+    for( dxfv::CPolyLine& polyline : dxf->m_PolyLine )
     {
         dxf->Init( draw );
         while( polyline.getDraw( draw ) )
@@ -156,14 +156,14 @@ void dxfv_wxWidgetsFrame::OnPaint(wxPaintEvent& event)
         }
     }
 
-    for( CCircle& circle : dxf->m_Circle )
+    for( dxfv::CCircle& circle : dxf->m_Circle )
     {
         dxf->Init( draw );
         circle.getDraw( draw );
         dc.DrawCircle( draw.x1, draw.y1, draw.r );
     }
 
-    for ( CArc& arc : dxf->m_Arc )
+    for ( dxfv::CArc& arc : dxf->m_Arc )
     {
         dxf->Init( draw );
         arc.getDraw( draw );
@@ -173,7 +173,7 @@ void dxfv_wxWidgetsFrame::OnPaint(wxPaintEvent& event)
             draw.sa, draw.ea );
     }
 
-    for( CSpline& spline : dxf->m_Spline )
+    for( dxfv::CSpline& spline : dxf->m_Spline )
     {
         dxf->Init( draw );
          while( spline.getDraw( draw ) )
