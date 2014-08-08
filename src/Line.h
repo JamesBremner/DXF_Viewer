@@ -1,0 +1,49 @@
+// Line.h: interface for the CLine class.
+//
+//////////////////////////////////////////////////////////////////////
+
+#if !defined(AFX_LINE_H__57D9AECB_3DF9_42D3_BC4B_789EA9B64D68__INCLUDED_)
+#define AFX_LINE_H__57D9AECB_3DF9_42D3_BC4B_789EA9B64D68__INCLUDED_
+
+#if _MSC_VER > 1000
+#pragma once
+#endif // _MSC_VER > 1000
+
+
+class CLine : public cDXFGraphObject
+
+{
+public:
+	double x1,y1,x2,y2;
+	CString m_Layer;
+	BYTE m_Select;
+	BYTE m_Nest;
+
+	CLine();
+	virtual ~CLine();
+
+
+	void Update( cBoundingRectangle& rect )
+	{
+	    rect.Update( x1, y1 );
+	    rect.Update( x2, y2 );
+	}
+
+
+	bool Read( FILE * fp, int& code, char* value );
+
+
+	/**  get drawing parameters, scaled to display window
+
+@param[in/out] draw  structure holding parameters
+@return true if valid line has been returned
+
+draw.x1, draw.y1  first endpoint of line
+draw.x2, draw.y2  second endpoint of line
+
+*/
+    bool getDraw( s_dxf_draw& draw );
+
+};
+
+#endif // !defined(AFX_LINE_H__57D9AECB_3DF9_42D3_BC4B_789EA9B64D68__INCLUDED_)
