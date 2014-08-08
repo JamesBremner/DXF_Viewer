@@ -132,6 +132,14 @@ void dxfv_wxWidgetsFrame::OnOpen(wxCommandEvent& event)
 
     dxf->LoadFile( std::string(openFileDialog.GetPath().utf8_str()));
 
+    #ifdef DEMO
+    if( dxf->myLoadStatus == dxfv::CDxf::demo ) {
+        wxMessageBox( "Demo limit exceeded!", "Sorry");
+        exit(1);
+    }
+    #endif // DEMO
+
+
     dxf->myBoundingRectangle.Fit();
 
     Refresh();

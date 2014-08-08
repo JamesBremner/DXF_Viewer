@@ -48,7 +48,7 @@ namespace dxfv {
 
 CDxf::CDxf()
 {
-	m_LoadStatus = FALSE;
+	myLoadStatus = none;
 	m_InitialDraw = FALSE;
 	m_Nesting = FALSE;
 }
@@ -114,7 +114,6 @@ void CDxf::LoadFile(const string& filepath)
 	fp = fopen(filepath.c_str(),"r");
 	if(fp != NULL)
 	{
-		m_LoadStatus = TRUE;
 
 		char lpCode[256], lpValue[256];
 		int iCode;
@@ -165,11 +164,22 @@ void CDxf::LoadFile(const string& filepath)
 			ReadTwoLines( fp, iCode, lpCode, lpValue );
 
 		}
+
+        myLoadStatus = OK;
+		#ifdef DEMO
+    if( m_PolyLine.size() > 5  ||
+       m_Line.size() > 5
+        ) {
+        myLoadStatus = demo;
+    }
+    #endif // DEMO
+
+
 		UpdateBoundingRectangle();
 	}
 	else
 	{
-		m_LoadStatus = FALSE;
+		myLoadStatus = none;
 	}
 }
 
@@ -197,6 +207,12 @@ void CDxf::UpdateBoundingRectangle()
 
 UINT CDxf::GetLineCount()
 {
+#ifdef DEMO
+    if( m_Line.size() > 1 ) {
+        printf("Demo Version limit - sorry\n");
+        exit(1);
+    }
+    #endif // DEMO
 	return m_Line.size();
 }
 
@@ -212,6 +228,12 @@ UINT CDxf::GetArcCount()
 
 UINT CDxf::GetLwPolyLineCount()
 {
+#ifdef DEMO
+    if( m_PolyLine.size() > 1 ) {
+        printf("Demo Version limit - sorry\n");
+        exit(1);
+    }
+#endif // DEMO
 	return m_PolyLine.size();
 }
 
@@ -222,7 +244,7 @@ UINT CDxf::GetSplineCount()
 
 void CDxf::Init()
 {
-	m_LoadStatus = FALSE;
+	myLoadStatus = none;
 	m_InitialDraw = FALSE;
 	m_Line.clear();
 	m_Arc.clear();

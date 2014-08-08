@@ -1,6 +1,9 @@
 *.o
 *Debug/*
 */Debug/*
+*Release/*
+*/Release/*
+Installer/*
 
 *.cbp
 *.depend

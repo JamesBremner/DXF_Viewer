@@ -13,6 +13,8 @@
 
 namespace dxfv {
 
+/**  Manage zooming and scaling
+*/
 class cBoundingRectangle
 {
 public:
@@ -30,12 +32,25 @@ cBoundingRectangle()
 , xpan( 0 ), ypan( 0 )
 {}
 
+/**  Fit all ontent so they show in the display window */
 void Fit()
 {
     myZoom = 1;
     xpan = 0;
     ypan = 0;
 }
+/**  Register some new content
+
+@param[in] x location of content, file units
+@param[in] y location of content, file units
+
+We do not care what the file units are,
+just assume that they are consistent
+
+The bounding rectangle will be enlarged to include this new point,
+if neccessary
+
+*/
 void Update( double x, double y )
 {
 	if( ! init ) {
@@ -55,20 +70,37 @@ void Update( double x, double y )
 			y2 = y;
 	}
 }
+/**  Increase zoom ( make contents display larger ) */
 void ZoomIn()
 {
     myZoom *= 1.2;
 }
+/**  Decrease zoom ( make contents display smaller ) */
 void ZoomOut()
 {
     myZoom *= 0.8;
 }
+/** Pan ( move contents across display
+
+@param[in]  ox, oy  old location, pixels
+@param[in   nx, ny  new location, pixels
+
+Contents will be moved by same pixels as old -> new
+
+*/
 void Pan( int ox, int oy, int nx, int ny )
 {
     xpan += nx - ox;
     ypan += ny - oy;
 }
-/**  Calculate scale factors that will keep the bounding rectangle inside a window
+/**  Calculate scale factors
+
+ First calculate scale that will keep the bounding rectangle inside window
+ Then multiply by zoom factor.
+
+The same scale can be applied to every point,
+so call this just once and the scale will be applied
+by ApplyScale until this is called with new values.
 
 @param[in] w  window width, pixels
 @param[in] h window height, pixels
@@ -100,6 +132,12 @@ void CalcScale( int w, int h )
 	// Apply current zoom factor
 	myScale *= myZoom;
 }
+/**  Apply current scale, xoom and pan
+
+@param[in/out] x value
+@param[in/out] y value
+
+*/
 void ApplyScale( double& x, double& y )
 {
     x = (x / myScale ) + x_offset;
@@ -178,7 +216,12 @@ class CDxf
 public:
 
 	BYTE m_InitialDraw;
-	BYTE m_LoadStatus;
+
+	enum eLoadStatus {
+        none,
+        OK,
+        demo,
+	} myLoadStatus;
 	BYTE m_Nesting;
 
 	std::vector< CLine > m_Line;
