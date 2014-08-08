@@ -14,7 +14,7 @@ class CCircle  : public cDXFGraphObject
 {
 public:
 	double x,y,r;
-//	CString m_Layer;
+	std::string m_Layer;
 	BYTE m_Select;
 	BYTE m_Nest;
 

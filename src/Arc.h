@@ -15,7 +15,7 @@ class CArc  : public cDXFGraphObject
 {
 public:
 	double x,y,r,sa,ea;
-//	CString m_Layer;
+	std::string m_Layer;
 	BYTE m_Select;
 	BYTE m_Nest;
 

@@ -20,7 +20,7 @@ namespace dxfv {
 
 CCircle::CCircle()
 {
-//	m_Layer = "0";
+	m_Layer = "0";
 	m_Select = FALSE;
 	m_Nest = FALSE;
 }
@@ -51,7 +51,7 @@ bool CCircle::Read( FILE * fp, int& code, char* lpValue )
 			// a new object
 			return true;
 		case 8:
-//			m_Layer = lpValue;
+			m_Layer = lpValue;
 			break;
 		case 10:
 			x = atof(lpValue);

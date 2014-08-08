@@ -16,7 +16,7 @@ class CPolyLine   : public cDXFGraphObject
 public:
 	UINT m_VertexCount,m_PolyLineFlag;
 	double x[1024],y[1024];
-//	CString m_Layer;
+	std::string m_Layer;
 	BYTE m_Select;
 	BYTE m_Nest;
 

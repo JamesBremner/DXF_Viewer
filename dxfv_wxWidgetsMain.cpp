@@ -16,10 +16,10 @@
 #include <string>
 #include <vector>
 #include <cstdio>
-#include <cstring>
+#include <string>
 #include <cstdlib>
 #include <cmath>
-#define CString std::string
+
 
 #include "src/dxf.h"
 
@@ -58,9 +58,12 @@ BEGIN_EVENT_TABLE(dxfv_wxWidgetsFrame, wxFrame)
     EVT_MENU(idMenuQuit, dxfv_wxWidgetsFrame::OnQuit)
     EVT_MENU(idMenuAbout, dxfv_wxWidgetsFrame::OnAbout)
     EVT_MENU(idMenuOpen, dxfv_wxWidgetsFrame::OnOpen)
+   EVT_MENU(idMenuFit, dxfv_wxWidgetsFrame::OnFit)
     EVT_PAINT(dxfv_wxWidgetsFrame::OnPaint )
     EVT_SIZE(dxfv_wxWidgetsFrame::OnSize )
     EVT_MOUSEWHEEL( dxfv_wxWidgetsFrame::OnWheel)
+    EVT_MOTION( dxfv_wxWidgetsFrame::OnMouseMove )
+    EVT_LEFT_DOWN( dxfv_wxWidgetsFrame::OnLeftDown )
 END_EVENT_TABLE()
 
 dxfv_wxWidgetsFrame::dxfv_wxWidgetsFrame(wxFrame *frame, const wxString& title)
@@ -73,6 +76,12 @@ dxfv_wxWidgetsFrame::dxfv_wxWidgetsFrame(wxFrame *frame, const wxString& title)
     fileMenu->Append(idMenuOpen,"Open");
     fileMenu->Append(idMenuQuit, _("&Quit\tAlt-F4"), _("Quit the application"));
     mbar->Append(fileMenu, _("&File"));
+
+    wxMenu* viewMenu = new wxMenu(_T(""));
+    viewMenu->Append(idMenuFit,"Fit Contents");
+
+    mbar->Append(viewMenu, _("&View"));
+
 
     wxMenu* helpMenu = new wxMenu(_T(""));
     helpMenu->Append(idMenuAbout, _("&About\tF1"), _("Show info about this application"));
@@ -122,6 +131,14 @@ void dxfv_wxWidgetsFrame::OnOpen(wxCommandEvent& event)
 
 
     dxf->LoadFile( std::string(openFileDialog.GetPath().utf8_str()));
+
+    dxf->myBoundingRectangle.Fit();
+
+    Refresh();
+}
+void dxfv_wxWidgetsFrame::OnFit(wxCommandEvent& event)
+{
+    dxf->myBoundingRectangle.Fit();
 
     Refresh();
 }
@@ -196,4 +213,19 @@ void dxfv_wxWidgetsFrame::OnWheel(wxMouseEvent& event)
     else
         dxf->myBoundingRectangle.ZoomOut();
     Refresh();
+}
+void dxfv_wxWidgetsFrame::OnLeftDown(wxMouseEvent& event)
+{
+    old_pos = event.GetPosition();
+}
+void dxfv_wxWidgetsFrame::OnMouseMove(wxMouseEvent& event)
+{
+
+    if( ! event.Dragging() ) {
+        return;
+    }
+    wxPoint now = event.GetPosition();
+    dxf->myBoundingRectangle.Pan( old_pos.x,old_pos.y,now.x,now.y);
+    Refresh();
+    old_pos = now;
 }

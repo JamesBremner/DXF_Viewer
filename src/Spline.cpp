@@ -23,7 +23,7 @@ namespace dxfv {
 CSpline::CSpline()
 {
     m_FitPointCount = 0;
-//    m_Layer = "0";
+    m_Layer = "0";
     m_Select = FALSE;
     m_Nest = FALSE;
 }
@@ -52,7 +52,7 @@ bool CSpline::Read( FILE * fp, int& code, char* lpValue )
             return true;
 
         case 8:
-//            m_Layer = lpValue;
+            m_Layer = lpValue;
             break;
         case 74:
             m_FitPointCount = atoi(lpValue);

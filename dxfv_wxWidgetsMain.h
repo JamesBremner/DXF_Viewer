@@ -30,14 +30,20 @@ class dxfv_wxWidgetsFrame: public wxFrame
             idMenuQuit = 1000,
             idMenuAbout,
             idMenuOpen,
+            idMenuFit
         };
+        wxPoint old_pos;
+
         void OnClose(wxCloseEvent& event);
         void OnQuit(wxCommandEvent& event);
         void OnAbout(wxCommandEvent& event);
         void OnOpen(wxCommandEvent& event);
+        void OnFit(wxCommandEvent& event);
         void OnPaint(wxPaintEvent& event);
         void OnSize(wxSizeEvent& event);
         void OnWheel(wxMouseEvent& event);
+        void OnMouseMove(wxMouseEvent& event);
+        void OnLeftDown(wxMouseEvent& event);
         DECLARE_EVENT_TABLE()
 
 

@@ -16,7 +16,7 @@ class CLine : public cDXFGraphObject
 {
 public:
 	double x1,y1,x2,y2;
-//	CString m_Layer;
+	std::string m_Layer;
 	BYTE m_Select;
 	BYTE m_Nest;
 
