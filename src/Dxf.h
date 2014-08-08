@@ -19,11 +19,13 @@ public:
 double x1,y1,x2,y2;
 bool init;
 double myScale;
+double myZoom;
 double x_offset, y_offset;
 int myWindowHeight;
 
 cBoundingRectangle()
 : init( false )
+, myZoom( 1 )
 {}
 void Update( double x, double y )
 {
@@ -43,6 +45,14 @@ void Update( double x, double y )
 		if( y > y2 )
 			y2 = y;
 	}
+}
+void ZoomIn()
+{
+    myZoom *= 1.2;
+}
+void ZoomOut()
+{
+    myZoom *= 0.8;
 }
 /**  Calculate scale factors that will keep the bounding rectangle inside a window
 
@@ -72,6 +82,9 @@ void CalcScale( int w, int h )
 		x_offset = int((w / 2) - (dx / (2 * myScale)) - (x1 / myScale));
 		y_offset = int(-y1 / myScale);
 	}
+
+	// Apply current zoom factor
+	myScale *= myZoom;
 }
 void ApplyScale( double& x, double& y )
 {

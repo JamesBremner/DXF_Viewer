@@ -60,6 +60,7 @@ BEGIN_EVENT_TABLE(dxfv_wxWidgetsFrame, wxFrame)
     EVT_MENU(idMenuOpen, dxfv_wxWidgetsFrame::OnOpen)
     EVT_PAINT(dxfv_wxWidgetsFrame::OnPaint )
     EVT_SIZE(dxfv_wxWidgetsFrame::OnSize )
+    EVT_MOUSEWHEEL( dxfv_wxWidgetsFrame::OnWheel)
 END_EVENT_TABLE()
 
 dxfv_wxWidgetsFrame::dxfv_wxWidgetsFrame(wxFrame *frame, const wxString& title)
@@ -144,7 +145,7 @@ void dxfv_wxWidgetsFrame::OnPaint(wxPaintEvent& event)
         dxf->Init( draw );
         line.getDraw( draw );
         dc.DrawLine( draw.x1, draw.y1, draw.x2, draw.y2 );
-   }
+    }
 
 
     for( dxfv::CPolyLine& polyline : dxf->m_PolyLine )
@@ -176,7 +177,7 @@ void dxfv_wxWidgetsFrame::OnPaint(wxPaintEvent& event)
     for( dxfv::CSpline& spline : dxf->m_Spline )
     {
         dxf->Init( draw );
-         while( spline.getDraw( draw ) )
+        while( spline.getDraw( draw ) )
         {
             dc.DrawLine( draw.x1, draw.y1, draw.x2, draw.y2 );
         }
@@ -185,5 +186,14 @@ void dxfv_wxWidgetsFrame::OnPaint(wxPaintEvent& event)
 }
 void dxfv_wxWidgetsFrame::OnSize(wxSizeEvent& event)
 {
+    Refresh();
+}
+
+void dxfv_wxWidgetsFrame::OnWheel(wxMouseEvent& event)
+{
+    if( event.GetWheelRotation() > 0 )
+        dxf->myBoundingRectangle.ZoomIn();
+    else
+        dxf->myBoundingRectangle.ZoomOut();
     Refresh();
 }

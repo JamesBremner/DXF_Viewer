@@ -37,6 +37,7 @@ class dxfv_wxWidgetsFrame: public wxFrame
         void OnOpen(wxCommandEvent& event);
         void OnPaint(wxPaintEvent& event);
         void OnSize(wxSizeEvent& event);
+        void OnWheel(wxMouseEvent& event);
         DECLARE_EVENT_TABLE()
 
 
