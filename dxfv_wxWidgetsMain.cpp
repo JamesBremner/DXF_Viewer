@@ -92,12 +92,14 @@ dxfv_wxWidgetsFrame::dxfv_wxWidgetsFrame(wxFrame *frame, const wxString& title)
 
 #if wxUSE_STATUSBAR
     // create a status bar with some information about the used wxWidgets version
-    CreateStatusBar(2);
-    SetStatusText(_("OK"),0);
+//    CreateStatusBar(2);
+//    SetStatusText(_("OK"),0);
     //SetStatusText(wxbuildinfo(short_f), 1);
 #endif // wxUSE_STATUSBAR
 
     dxf = new dxfv::CDxf();
+
+    SetBackgroundColour( *wxBLACK );
 
 }
 
@@ -124,11 +126,11 @@ void dxfv_wxWidgetsFrame::OnAbout(wxCommandEvent &event)
 
 void dxfv_wxWidgetsFrame::OnOpen(wxCommandEvent& event)
 {
+
     wxFileDialog         openFileDialog(this, _("Open DXF file"), "", "",                       "DXF files (*.dxf)|*.dxf",
                                         wxFD_OPEN|wxFD_FILE_MUST_EXIST);
     if (openFileDialog.ShowModal() == wxID_CANCEL)
         return;     // the user changed idea...
-
 
     dxf->LoadFile( std::string(openFileDialog.GetPath().utf8_str()));
 
@@ -138,9 +140,16 @@ void dxfv_wxWidgetsFrame::OnOpen(wxCommandEvent& event)
         exit(1);
     }
     #endif // DEMO
-
+    SetTitle( openFileDialog.GetPath() );
 
     dxf->myBoundingRectangle.Fit();
+
+    // restart the pan feature
+    // this stores the current mouse position
+    // if this is not done here, then a false pan operation
+    // sometime occurrs on the first display of a newly opened file
+    old_pos.x = wxGetMousePosition().x - GetScreenPosition().x;
+    old_pos.y = wxGetMousePosition().y - GetScreenPosition().y - 55;
 
     Refresh();
 }
@@ -153,7 +162,7 @@ void dxfv_wxWidgetsFrame::OnFit(wxCommandEvent& event)
 void dxfv_wxWidgetsFrame::OnPaint(wxPaintEvent& event)
 {
     wxPaintDC dc(this);
-    dc.SetPen(*wxBLACK_PEN);
+    dc.SetPen(*wxWHITE_PEN);
     dc.SetBrush(*wxTRANSPARENT_BRUSH);
 
     // Get window dimensions
@@ -228,10 +237,10 @@ void dxfv_wxWidgetsFrame::OnLeftDown(wxMouseEvent& event)
 }
 void dxfv_wxWidgetsFrame::OnMouseMove(wxMouseEvent& event)
 {
-
     if( ! event.Dragging() ) {
         return;
     }
+
     wxPoint now = event.GetPosition();
     dxf->myBoundingRectangle.Pan( old_pos.x,old_pos.y,now.x,now.y);
     Refresh();
