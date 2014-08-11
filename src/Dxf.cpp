@@ -257,6 +257,7 @@ void CDxf::Init()
 	m_Circle.clear();
 	m_PolyLine.clear();
 	m_Spline.clear();
+	myText.clear();
 	m_Nesting = FALSE;
 }
 

@@ -18,6 +18,7 @@ class CSpline  : public cDXFGraphObject
 public:
 	std::string m_Layer;
 	int m_FitPointCount;
+	int m_ControlPointCount;
 	double x[128],y[128];
 	BYTE m_Select;
 	BYTE m_Nest;

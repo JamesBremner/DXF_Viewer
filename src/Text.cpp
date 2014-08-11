@@ -79,6 +79,9 @@ void CText::clean_mtext( std::string& text )
         {
             text = text.substr(0,esc) + "\n" + text.substr(esc+2);
         }
+        else if ( text[esc+1] == 'A' ) {
+             text = text.substr(0,esc) + text.substr(esc+2);
+        }
         else if ( text[esc+1] == 'p' )
         {
             int p = text.find(";",esc+1);

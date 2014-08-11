@@ -134,6 +134,17 @@ void dxfv_wxWidgetsFrame::OnOpen(wxCommandEvent& event)
 
     dxf->LoadFile( std::string(openFileDialog.GetPath().utf8_str()));
 
+    // check for control point splines
+    for( dxfv::CSpline& spline : dxf->m_Spline ) {
+        if( ! spline.m_FitPointCount) {
+                wxMessageBox(
+                    "File contains control point splines\n"
+                    "These will not be displayed",
+                    "WARNING");
+                break;
+        }
+    }
+
     #ifdef DEMO
     if( dxf->myLoadStatus == dxfv::CDxf::demo ) {
         wxMessageBox( "Demo limit exceeded!", "Sorry");
@@ -211,6 +222,8 @@ void dxfv_wxWidgetsFrame::OnPaint(wxPaintEvent& event)
 
     for( dxfv::CSpline& spline : dxf->m_Spline )
     {
+        if( ! spline.m_FitPointCount )
+            continue;
         dxf->Init( draw );
         while( spline.getDraw( draw ) )
         {

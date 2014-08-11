@@ -49,13 +49,12 @@ bool CSpline::Read( FILE * fp, int& code, char* lpValue )
         case 0:
             // a new object
             Generate();
-             if( ! m_FitPointCount )
-                return false;
             return true;
 
         case 8:
             m_Layer = lpValue;
             break;
+
         case 74:
             m_FitPointCount = atoi(lpValue);
             break;
@@ -65,6 +64,18 @@ bool CSpline::Read( FILE * fp, int& code, char* lpValue )
         case 21:
             y[point_index++] = atof(lpValue);
             break;
+
+
+        case 73:
+            m_ControlPointCount = atoi(lpValue);
+            break;
+//        case 10:
+//            x[point_index] = atof(lpValue);
+//            break;
+//        case 20:
+//            y[point_index++] = atof(lpValue);
+//            break;
+
 
         }
     }
