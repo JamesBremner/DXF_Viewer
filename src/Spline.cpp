@@ -49,6 +49,8 @@ bool CSpline::Read( FILE * fp, int& code, char* lpValue )
         case 0:
             // a new object
             Generate();
+             if( ! m_FitPointCount )
+                return false;
             return true;
 
         case 8:
@@ -77,6 +79,9 @@ bool CSpline::Read( FILE * fp, int& code, char* lpValue )
 	}
 void CSpline::Generate()
 {
+    if( ! m_FitPointCount )
+        return;
+
     float AMag , AMagOld;
     vector<float> k;
     vector< vector<float> > Mat( 3, vector<float>(m_FitPointCount) );
@@ -175,6 +180,8 @@ bool CSpline::getDraw( s_dxf_draw& draw )
     const float DIV_FACTOR = 10.0;
 
     int Ndiv = (int)(max(abs((int)Ax[draw.index]),abs((int)Ay[draw.index]))/DIV_FACTOR);
+    if( ! Ndiv )
+        return false;
 
     if( draw.index_curve == 0 && draw.index == 0 )
     {

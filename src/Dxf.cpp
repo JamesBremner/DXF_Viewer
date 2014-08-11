@@ -161,6 +161,12 @@ void CDxf::LoadFile(const string& filepath)
 
 			}
 
+			CText text;
+			if( text.Read( fp, iCode, lpValue ) ) {
+                myText.push_back( text );
+                continue;
+			}
+
 			ReadTwoLines( fp, iCode, lpCode, lpValue );
 
 		}

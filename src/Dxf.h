@@ -195,6 +195,7 @@ The values are in pixels, scaled to fit into the display window
         double ea;
         int index;
         int index_curve;
+        std::string text;
         cBoundingRectangle* rect;   // bounding rectange scaled to window
         };
 
@@ -206,6 +207,7 @@ The values are in pixels, scaled to fit into the display window
 #include "Circle.h"	// Added by ClassView
 #include "PolyLine.h"	// Added by ClassView
 #include "Spline.h"	// Added by ClassView
+#include "text.h"
 
 namespace dxfv {
 
@@ -229,6 +231,7 @@ public:
 	std::vector< CCircle > m_Circle;
 	std::vector < CPolyLine > m_PolyLine;
 	std::vector< CSpline > m_Spline;
+	std::vector < CText > myText;
 
 	cBoundingRectangle myBoundingRectangle;
 

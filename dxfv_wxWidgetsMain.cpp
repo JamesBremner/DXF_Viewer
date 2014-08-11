@@ -164,6 +164,7 @@ void dxfv_wxWidgetsFrame::OnPaint(wxPaintEvent& event)
     wxPaintDC dc(this);
     dc.SetPen(*wxWHITE_PEN);
     dc.SetBrush(*wxTRANSPARENT_BRUSH);
+    dc.SetTextForeground( *wxYELLOW );
 
     // Get window dimensions
     wxSize sz = GetClientSize();
@@ -216,6 +217,14 @@ void dxfv_wxWidgetsFrame::OnPaint(wxPaintEvent& event)
             dc.DrawLine( draw.x1, draw.y1, draw.x2, draw.y2 );
         }
 
+    }
+
+    for ( dxfv::CText& text : dxf->myText )
+    {
+        dxf->Init( draw );
+        text.getDraw( draw );
+        //dc.DrawLabel( draw.text, wxRect( draw.x1, draw.y1,draw.x1+100, draw.y1+100 ) );
+        dc.DrawText( draw.text, draw.x1, draw.y1 );
     }
 }
 void dxfv_wxWidgetsFrame::OnSize(wxSizeEvent& event)
