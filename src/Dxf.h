@@ -145,6 +145,7 @@ void ApplyScale( double& x, double& y )
 
     x += xpan;
     y += ypan;
+
 }
 };
 
@@ -208,6 +209,7 @@ The values are in pixels, scaled to fit into the display window
 #include "PolyLine.h"	// Added by ClassView
 #include "Spline.h"	// Added by ClassView
 #include "text.h"
+#include "Dimension.h"
 
 namespace dxfv {
 
@@ -232,6 +234,7 @@ public:
 	std::vector < CPolyLine > m_PolyLine;
 	std::vector< CSpline > m_Spline;
 	std::vector < CText > myText;
+	std::vector < CDimension > myDimension;
 
 	cBoundingRectangle myBoundingRectangle;
 

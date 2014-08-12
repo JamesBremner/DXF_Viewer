@@ -167,6 +167,12 @@ void CDxf::LoadFile(const string& filepath)
                 continue;
 			}
 
+			CDimension dim;
+			if( dim.Read( fp, iCode, lpValue ) ) {
+                myDimension.push_back( dim );
+                continue;
+			}
+
 			ReadTwoLines( fp, iCode, lpCode, lpValue );
 
 		}
@@ -258,6 +264,7 @@ void CDxf::Init()
 	m_PolyLine.clear();
 	m_Spline.clear();
 	myText.clear();
+	myDimension.clear();
 	m_Nesting = FALSE;
 }
 
