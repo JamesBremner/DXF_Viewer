@@ -139,7 +139,7 @@ void dxfv_wxWidgetsFrame::OnOpen(wxCommandEvent& event)
         if( ! spline.m_FitPointCount) {
                 wxMessageBox(
                     "File contains control point splines\n"
-                    "These will not be displayed",
+                    "These will be displayed as straight lines between the control points",
                     "WARNING");
                 break;
         }
@@ -222,8 +222,8 @@ void dxfv_wxWidgetsFrame::OnPaint(wxPaintEvent& event)
 
     for( dxfv::CSpline& spline : dxf->m_Spline )
     {
-        if( ! spline.m_FitPointCount )
-            continue;
+//        if( ! spline.m_FitPointCount )
+//            continue;
         dxf->Init( draw );
         while( spline.getDraw( draw ) )
         {

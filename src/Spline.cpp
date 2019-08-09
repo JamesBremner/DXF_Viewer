@@ -18,7 +18,8 @@ static char THIS_FILE[]=__FILE__;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-namespace dxfv {
+namespace dxfv
+{
 
 CSpline::CSpline()
 {
@@ -69,31 +70,34 @@ bool CSpline::Read( FILE * fp, int& code, char* lpValue )
         case 73:
             m_ControlPointCount = atoi(lpValue);
             break;
-//        case 10:
-//            x[point_index] = atof(lpValue);
-//            break;
-//        case 20:
-//            y[point_index++] = atof(lpValue);
-//            break;
+        case 10:
+            x[point_index] = atof(lpValue);
+            break;
+        case 20:
+            y[point_index++] = atof(lpValue);
+            break;
 
 
         }
     }
     return true;
 }
-	void CSpline::Update( cBoundingRectangle& rect )
-	{
-	    for( int k = 0; k < m_FitPointCount; k++ )
-        {
-            rect.Update( x[k], y[k] );
-        }
-	}
+void CSpline::Update( cBoundingRectangle& rect )
+{
+    int count = m_FitPointCount;
+    if( ! count )
+        count = m_ControlPointCount;
+    for( int k = 0; k < count; k++ )
+    {
+        rect.Update( x[k], y[k] );
+    }
+}
 void CSpline::Generate()
 {
     if( ! m_FitPointCount )
         return;
 
-    float AMag , AMagOld;
+    float AMag, AMagOld;
     vector<float> k;
     vector< vector<float> > Mat( 3, vector<float>(m_FitPointCount) );
 
@@ -111,7 +115,7 @@ void CSpline::Generate()
         k.push_back( AMagOld / AMag );
         AMagOld = AMag;
     }
-	k.push_back( 1.0f );
+    k.push_back( 1.0f );
 
     // Matrix
     for( int i=1; i<=(int)m_FitPointCount-2; i++)
@@ -126,15 +130,15 @@ void CSpline::Generate()
     Mat[1][m_FitPointCount-1] = 2.0f*k[m_FitPointCount-2];
 
     //
-	Bx.push_back( 3.0f*Ax[0] );
+    Bx.push_back( 3.0f*Ax[0] );
     By.push_back( 3.0f*Ay[0] );
     for(int i=1; i<=(int)m_FitPointCount-2; i++)
     {
         Bx.push_back( 3.0f*(Ax[i-1] + k[i-1]*k[i-1]*Ax[i]) );
         By.push_back( 3.0f*(Ay[i-1] + k[i-1]*k[i-1]*Ay[i]) );
     }
-	Bx.push_back( 3.0f*Ax[m_FitPointCount-2] );
-	By.push_back( 3.0f*Ay[m_FitPointCount-2] );
+    Bx.push_back( 3.0f*Ax[m_FitPointCount-2] );
+    By.push_back( 3.0f*Ay[m_FitPointCount-2] );
 
     //
     MatrixSolve(Bx, Mat );
@@ -186,6 +190,10 @@ void CSpline::MatrixSolve(
 
 bool CSpline::getDraw( s_dxf_draw& draw )
 {
+    if( ! m_FitPointCount)
+    {
+        return getDrawControlPoint( draw );
+    }
     //adjust this factor to adjust the curve smoothness
     // a smaller value will result in a smoother display
     const float DIV_FACTOR = 10.0;
@@ -245,7 +253,21 @@ bool CSpline::getDraw( s_dxf_draw& draw )
 
     return true;
 }
+bool CSpline::getDrawControlPoint( s_dxf_draw& draw )
+{
+    // check if more points are available
+    if( draw.index == m_ControlPointCount-1 )
+        return false;
 
+    draw.x1 = x[draw.index];
+    draw.y1 = y[draw.index];
+    draw.rect->ApplyScale(draw.x1,draw.y1);
+    draw.x2 = x[draw.index+1];
+    draw.y2 = y[draw.index+1];
+    draw.rect->ApplyScale(draw.x2,draw.y2);
+    draw.index++;
+    return true;
+}
 
 }
 

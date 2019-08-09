@@ -47,6 +47,7 @@ private:
 	void Generate();
 	void MatrixSolve(std::vector<float>& B,
             std::vector< std::vector<float> >& Mat );
+    bool getDrawControlPoint( s_dxf_draw& draw );
 };
 
 }

@@ -106,7 +106,7 @@ void CDxf::ReadUntilCode(  FILE * fp, int TargetCode,  char* lpValue )
 @param[in] str path and filename
 
 */
-void CDxf::LoadFile(const string& filepath)
+void CDxf::LoadFile(const std::string& filepath)
 {
 	Init();
 	FILE *fp;

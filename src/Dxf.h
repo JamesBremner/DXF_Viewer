@@ -9,7 +9,7 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-
+#include <iostream>
 
 namespace dxfv {
 
@@ -69,6 +69,8 @@ void Update( double x, double y )
 		if( y > y2 )
 			y2 = y;
 	}
+//	std::cout << "BRUpdate  "<< x <<" "<< y <<" "<< x1 <<" "<< x2
+//        <<" "<< y1 <<" "<< y2 <<"\n";
 }
 /**  Increase zoom ( make contents display larger ) */
 void ZoomIn()
@@ -140,12 +142,14 @@ void CalcScale( int w, int h )
 */
 void ApplyScale( double& x, double& y )
 {
+    //std::cout << "ApplyScale " << myScale <<" "<< x <<" " << y << " -> ";
     x = (x / myScale ) + x_offset;
     y = myWindowHeight - (( y / myScale ) + y_offset );
 
     x += xpan;
     y += ypan;
 
+    //std::cout << x <<" " << y << "\n";
 }
 };
 
