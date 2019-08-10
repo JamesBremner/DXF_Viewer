@@ -11,6 +11,8 @@
 
 #include <vector>
 
+#define MAXPOINTS 128
+
 namespace dxfv
 {
 
@@ -20,7 +22,7 @@ public:
     std::string m_Layer;
     int m_FitPointCount;
     int m_ControlPointCount;
-    double x[128],y[128];
+    double x[MAXPOINTS],y[MAXPOINTS];
     BYTE m_Select;
     BYTE m_Nest;
 

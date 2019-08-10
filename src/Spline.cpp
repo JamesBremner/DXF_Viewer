@@ -60,6 +60,8 @@ bool CSpline::Read( FILE * fp, int& code, char* lpValue )
 
         case 74:
             m_FitPointCount = atoi(lpValue);
+            if( point_index >= MAXPOINTS )
+                throw std::runtime_error("Too many spline points");
             break;
         case 11:
             x[point_index] = atof(lpValue);
@@ -71,6 +73,8 @@ bool CSpline::Read( FILE * fp, int& code, char* lpValue )
 
         case 73:
             m_ControlPointCount = atoi(lpValue);
+            if( point_index >= MAXPOINTS )
+                throw std::runtime_error("Too many spline points");
             break;
         case 10:
             x[point_index] = atof(lpValue);

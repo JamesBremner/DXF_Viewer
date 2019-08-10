@@ -132,7 +132,15 @@ void dxfv_wxWidgetsFrame::OnOpen(wxCommandEvent& event)
     if (openFileDialog.ShowModal() == wxID_CANCEL)
         return;     // the user changed idea...
 
-    dxf->LoadFile( std::string(openFileDialog.GetPath().utf8_str()));
+    try
+    {
+        dxf->LoadFile( std::string(openFileDialog.GetPath().utf8_str()));
+    }
+    catch( std::runtime_error& e )
+    {
+        wxMessageBox(e.what(),"Error reading file");
+        exit(1);
+    }
 
 #ifdef DEMO
     if( dxf->myLoadStatus == dxfv::CDxf::demo )
