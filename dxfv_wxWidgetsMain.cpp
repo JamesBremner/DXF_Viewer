@@ -58,7 +58,7 @@ BEGIN_EVENT_TABLE(dxfv_wxWidgetsFrame, wxFrame)
     EVT_MENU(idMenuQuit, dxfv_wxWidgetsFrame::OnQuit)
     EVT_MENU(idMenuAbout, dxfv_wxWidgetsFrame::OnAbout)
     EVT_MENU(idMenuOpen, dxfv_wxWidgetsFrame::OnOpen)
-   EVT_MENU(idMenuFit, dxfv_wxWidgetsFrame::OnFit)
+    EVT_MENU(idMenuFit, dxfv_wxWidgetsFrame::OnFit)
     EVT_PAINT(dxfv_wxWidgetsFrame::OnPaint )
     EVT_SIZE(dxfv_wxWidgetsFrame::OnSize )
     EVT_MOUSEWHEEL( dxfv_wxWidgetsFrame::OnWheel)
@@ -134,23 +134,13 @@ void dxfv_wxWidgetsFrame::OnOpen(wxCommandEvent& event)
 
     dxf->LoadFile( std::string(openFileDialog.GetPath().utf8_str()));
 
-    // check for control point splines
-    for( dxfv::CSpline& spline : dxf->m_Spline ) {
-        if( ! spline.m_FitPointCount) {
-                wxMessageBox(
-                    "File contains control point splines\n"
-                    "These will be displayed as straight lines between the control points",
-                    "WARNING");
-                break;
-        }
-    }
-
-    #ifdef DEMO
-    if( dxf->myLoadStatus == dxfv::CDxf::demo ) {
+#ifdef DEMO
+    if( dxf->myLoadStatus == dxfv::CDxf::demo )
+    {
         wxMessageBox( "Demo limit exceeded!", "Sorry");
         exit(1);
     }
-    #endif // DEMO
+#endif // DEMO
     SetTitle( openFileDialog.GetPath() );
 
     dxf->myBoundingRectangle.Fit();
@@ -222,12 +212,24 @@ void dxfv_wxWidgetsFrame::OnPaint(wxPaintEvent& event)
 
     for( dxfv::CSpline& spline : dxf->m_Spline )
     {
-//        if( ! spline.m_FitPointCount )
-//            continue;
         dxf->Init( draw );
-        while( spline.getDraw( draw ) )
+        if( dxf->wxwidgets() & spline.m_ControlPointCount>0  )
         {
-            dc.DrawLine( draw.x1, draw.y1, draw.x2, draw.y2 );
+            spline.wxwidgets();
+            wxPoint pa[spline.m_ControlPointCount];
+            while( spline.getDraw( draw ) )
+            {
+                wxPoint p( draw.x1, draw.y1 );
+                pa[draw.index-1] = p;
+            }
+            dc.DrawSpline( spline.m_ControlPointCount, pa );
+        }
+        else
+        {
+            while( spline.getDraw( draw ) )
+            {
+                dc.DrawLine( draw.x1, draw.y1, draw.x2, draw.y2 );
+            }
         }
 
     }
@@ -267,7 +269,8 @@ void dxfv_wxWidgetsFrame::OnLeftDown(wxMouseEvent& event)
 }
 void dxfv_wxWidgetsFrame::OnMouseMove(wxMouseEvent& event)
 {
-    if( ! event.Dragging() ) {
+    if( ! event.Dragging() )
+    {
         return;
     }
 

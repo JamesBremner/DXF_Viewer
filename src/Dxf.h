@@ -260,8 +260,13 @@ public:
 	UINT GetLwPolyLineCount();
 	UINT GetSplineCount();
 
+	bool wxwidgets() const
+	{
+	    return myfwxwidgets;
+	}
 
 private:
+    bool  myfwxwidgets;          ///< true if using wxwidgets method for control point splines
 	void ReadTwoLines( FILE * fp, int& iCode, char* lpCode, char* lpValue );
 	void ReadUntilCode(  FILE * fp, int TargetCode,  char* lpValue );
 	void UpdateBoundingRectangle();

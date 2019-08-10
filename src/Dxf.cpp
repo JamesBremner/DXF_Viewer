@@ -47,10 +47,11 @@ namespace dxfv {
 //////////////////////////////////////////////////////////////////////
 
 CDxf::CDxf()
+ : m_InitialDraw( false )
+ , myLoadStatus( none )
+ , m_Nesting( false )
+ , myfwxwidgets( true )
 {
-	myLoadStatus = none;
-	m_InitialDraw = FALSE;
-	m_Nesting = FALSE;
 }
 
 CDxf::~CDxf()
@@ -158,7 +159,6 @@ void CDxf::LoadFile(const std::string& filepath)
 			if( spline.Read( fp, iCode, lpValue ) ) {
 				m_Spline.push_back( spline );
 				continue;
-
 			}
 
 			CText text;

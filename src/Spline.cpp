@@ -22,11 +22,13 @@ namespace dxfv
 {
 
 CSpline::CSpline()
+    : m_Layer("0")
+    , m_FitPointCount( 0 )
+    , m_ControlPointCount( 0 )
+    , m_Select( false )
+    , m_Nest( false )
+    , myfwxwidgets( false )
 {
-    m_FitPointCount = 0;
-    m_Layer = "0";
-    m_Select = FALSE;
-    m_Nest = FALSE;
 }
 
 CSpline::~CSpline()
@@ -253,19 +255,82 @@ bool CSpline::getDraw( s_dxf_draw& draw )
 
     return true;
 }
+
+void CSpline::QuadraticBezierInterpolation(
+    double& bx, double& by,
+    int index,
+    float f )
+{
+    double qx0 = x[index] + (x[index+1]-x[index]) * f;
+    double qy0 = y[index] + (y[index+1]-y[index]) * f;
+    double qx1 = x[index+1] + (x[index+2]-x[index+1]) * f;
+    double qy1 = y[index+1] + (y[index+2]-y[index+1]) * f;
+    bx = qx0 + (qx1-qx0)*f;
+    by = qy0 + (qy1-qy0)*f;
+}
 bool CSpline::getDrawControlPoint( s_dxf_draw& draw )
 {
+    if( myfwxwidgets )
+    {
+        // check if more points are available
+        if( draw.index == m_ControlPointCount )
+            return false;
+
+        draw.x1 = x[draw.index];
+        draw.y1 = y[draw.index];
+        draw.rect->ApplyScale(draw.x1,draw.y1);
+        draw.x2 = x[draw.index+1];
+        draw.y2 = y[draw.index+1];
+        draw.rect->ApplyScale(draw.x2,draw.y2);
+        draw.index++;
+        return true;
+    }
+
     // check if more points are available
-    if( draw.index == m_ControlPointCount-1 )
+    if( draw.index == m_ControlPointCount-2 )
         return false;
 
-    draw.x1 = x[draw.index];
-    draw.y1 = y[draw.index];
+    const int ndiv = 10;
+
+    cout << "f ";
+    if( draw.index_curve == 0 )
+    {
+        cout << "0 ";
+        draw.x1 = x[draw.index];
+        draw.y1 = y[draw.index];
+        float f = 1.0 / ndiv;
+        cout << f << "\n";
+        QuadraticBezierInterpolation( draw.x2, draw.y2, draw.index, f );
+        draw.index_curve++;
+    }
+    else if( draw.index_curve < ndiv-1 )
+    {
+        float f = ( draw.index_curve - 1.0 ) / ndiv;
+        cout << f << " ";
+        QuadraticBezierInterpolation( draw.x1, draw.y1, draw.index, f );
+        f = ( (float) draw.index_curve ) / ndiv;
+        cout << f << "\n";
+        QuadraticBezierInterpolation( draw.x2, draw.y2, draw.index, f );
+        draw.index_curve++;
+    }
+    else
+    {
+        float f = ( (float)draw.index_curve ) / ndiv;
+        cout << f << " ";
+        QuadraticBezierInterpolation( draw.x1, draw.y1, draw.index, f );
+        cout << "0\n";
+        draw.x2 = x[draw.index+2];
+        draw.y2 = y[draw.index+2];
+        draw.index_curve = 0;
+        draw.index++;
+    }
+
+    std::cout << "getDrawControlPoint "
+              << draw.index <<" "<< draw.index_curve <<" "<< draw.x1 <<" "<< draw.y1 <<" "<< draw.x2 <<" "<< draw.y2 << "\n";
+
     draw.rect->ApplyScale(draw.x1,draw.y1);
-    draw.x2 = x[draw.index+1];
-    draw.y2 = y[draw.index+1];
     draw.rect->ApplyScale(draw.x2,draw.y2);
-    draw.index++;
+
     return true;
 }
 
