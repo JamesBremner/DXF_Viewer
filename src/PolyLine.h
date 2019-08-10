@@ -14,7 +14,7 @@ class CPolyLine   : public cDXFGraphObject
 
 {
 public:
-	UINT m_VertexCount,m_PolyLineFlag;
+	UINT m_VertexCount;
 	double x[1024],y[1024];
 	std::string m_Layer;
 	BYTE m_Select;
@@ -35,6 +35,9 @@ public:
 
 */
     bool getDraw( s_dxf_draw& draw );
+
+private:
+    bool myfClosed;
 };
 }
 #endif // !defined(AFX_POLYLINE_H__2845A691_54B0_40CE_9000_80D63B888975__INCLUDED_)
