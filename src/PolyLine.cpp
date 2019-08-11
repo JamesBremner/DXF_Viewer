@@ -97,6 +97,7 @@ bool CPolyLine::getDraw( s_dxf_draw& draw )
             draw.y1 = y[draw.index];
             draw.x2 = x[0];
             draw.y2 = y[0];
+            draw.index++;
         }
     }
     else
