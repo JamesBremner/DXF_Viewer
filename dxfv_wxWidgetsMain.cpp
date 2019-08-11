@@ -64,10 +64,13 @@ BEGIN_EVENT_TABLE(dxfv_wxWidgetsFrame, wxFrame)
     EVT_MOUSEWHEEL( dxfv_wxWidgetsFrame::OnWheel)
     EVT_MOTION( dxfv_wxWidgetsFrame::OnMouseMove )
     EVT_LEFT_DOWN( dxfv_wxWidgetsFrame::OnLeftDown )
+    EVT_KEY_DOWN(dxfv_wxWidgetsFrame::OnKeyDown)
 END_EVENT_TABLE()
 
 dxfv_wxWidgetsFrame::dxfv_wxWidgetsFrame(wxFrame *frame, const wxString& title)
-    : wxFrame(frame, -1, title)
+    : wxFrame(frame, -1, title,
+              wxDefaultPosition, wxDefaultSize,
+              wxDEFAULT_FRAME_STYLE | wxWANTS_CHARS )
 {
 
     // create a menu bar
@@ -265,10 +268,17 @@ void dxfv_wxWidgetsFrame::OnSize(wxSizeEvent& event)
 
 void dxfv_wxWidgetsFrame::OnWheel(wxMouseEvent& event)
 {
+    // remember where the window center is in the model
+    wxPoint model_at_center = ModelAtWindowCenter();
+
     if( event.GetWheelRotation() > 0 )
         dxf->myBoundingRectangle.ZoomIn();
     else
         dxf->myBoundingRectangle.ZoomOut();
+
+    // pan so window center remains at same location in model
+    PanToWindowCenter( model_at_center );
+
     Refresh();
 }
 void dxfv_wxWidgetsFrame::OnLeftDown(wxMouseEvent& event)
@@ -286,4 +296,85 @@ void dxfv_wxWidgetsFrame::OnMouseMove(wxMouseEvent& event)
     dxf->myBoundingRectangle.Pan( old_pos.x,old_pos.y,now.x,now.y);
     Refresh();
     old_pos = now;
+}
+wxPoint dxfv_wxWidgetsFrame::ModelAtWindowCenter()
+{
+    wxSize sz = GetClientSize();
+    double x = sz.GetWidth() / 2;
+    double y = sz.GetHeight() / 2;
+    dxf->myBoundingRectangle.RemoveScale( x, y );
+    return wxPoint( x, y )    ;
+}
+void dxfv_wxWidgetsFrame::PanToWindowCenter( wxPoint& P )
+{
+    wxSize sz = GetClientSize();
+    dxf->myBoundingRectangle.CalcScale( sz.GetWidth(), sz.GetHeight() );
+    double x = P.x;
+    double y = P.y;
+    dxf->myBoundingRectangle.ApplyScale( x, y );
+    dxf->myBoundingRectangle.Pan( x, y, sz.GetWidth() / 2, sz.GetHeight() / 2 );
+}
+void dxfv_wxWidgetsFrame::OnKeyDown(wxKeyEvent& event)
+{
+    // Ensure we want a zoom
+    int key = event.GetKeyCode();
+    if( key != WXK_UP && key != WXK_DOWN )
+        return;
+
+    // remember where the window center is in the model
+    wxPoint model_at_center = ModelAtWindowCenter();
+
+    // zoom
+    if (key==WXK_UP)
+        dxf->myBoundingRectangle.ZoomOut();
+    if (key==WXK_DOWN)
+        dxf->myBoundingRectangle.ZoomIn();
+
+    // pan so window center remains at same location in model
+    PanToWindowCenter( model_at_center );
+
+    // display
+    Refresh();
+
+//    double xd = x_model_at_center;
+//    double yd = y_model_at_center;
+//    dxf->myBoundingRectangle.ApplyScale( xd, yd );
+
+//    wxPoint m = event.GetPosition();
+//    double xold = m.x;
+//    double yold = m.y;
+//    dxf->myBoundingRectangle.RemoveScale( xold, yold );
+//    if (event.GetKeyCode()==WXK_UP)
+//         dxf->myBoundingRectangle.ZoomOut();
+//    if (event.GetKeyCode()==WXK_DOWN)
+//         dxf->myBoundingRectangle.ZoomIn();
+//        // Get window dimensions
+//    wxSize sz = GetClientSize();
+//
+//    // scale to window
+//    dxf->myBoundingRectangle.CalcScale( sz.GetWidth(), sz.GetHeight() );
+//    double xnew = m.x;
+//    double ynew = m.y;
+//    dxf->myBoundingRectangle.RemoveScale( xnew, ynew );
+//    double xt = xnew - xold;
+//    double yt = ynew - yold;
+//    //dxf->myBoundingRectangle.ApplyScale( xt, yt );
+//    xt = dxf->myBoundingRectangle.myScale * xt;
+//    yt = dxf->myBoundingRectangle.myScale * yt;
+//    xt *= -1;
+//    xt *= 3;
+//    yt *= 3;
+//    std::cout << xnew <<" "<< ynew <<" "<< xold <<" "<< yold
+//        <<" "<< xt <<" "<< yt << "\n";
+//    dxf->myBoundingRectangle.Pan( m.x+xt, m.y+yt, m.x, m.y );
+//
+//    double dx = m.x;
+//    double dy = m.y;
+//    dxf->myBoundingRectangle.RemoveScale( dx, dy );
+
+//    std::cout << "dxdy " << dx <<" "<< dy << "\n";
+//    std::cout << "<zoom\n";
+
+
+
 }

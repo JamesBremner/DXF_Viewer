@@ -41,6 +41,62 @@ namespace dxfv {
 	iCode = atoi( lpCode );
     }
 
+void cBoundingRectangle::CalcScale( int w, int h )
+{
+    myWindowHeight = h;
+
+    double dx = x2 - x1;
+	double dy = y2 - y1;
+
+	double sx = dx / w;
+	double sy = dy / h;
+
+	sx *= myZoom;
+	sy *= myZoom;
+
+	if(sx > sy)
+	{
+		myScale = sx;
+		x_offset = int(-x1 / myScale);
+		y_offset = int((h / 2) + (dy / (2 * myScale)) - (y2 / myScale));
+	}
+	else
+	{
+		myScale = sy;
+		x_offset = int((w / 2) - (dx / (2 * myScale)) - (x1 / myScale));
+		y_offset = int(-y1 / myScale);
+	}
+
+	//std::cout << "CalcScale " << myScale << "\n";
+}
+
+void cBoundingRectangle::ApplyScale( double& x, double& y )
+{
+   // std::cout << "ApplyScale " << myScale <<" "<< x <<" " << y << " -> ";
+
+    x = (x / myScale ) + x_offset;
+    y = myWindowHeight - (( y / myScale ) + y_offset );
+
+    x += xpan;
+    y += ypan;
+
+//    std::cout << x <<" " << y << "\n";
+//
+//    double xt = x;
+//    double yt = y;
+//    RemoveScale( xt, yt );
+//    std::cout <<"test " << xt <<" " << yt << "\n";
+}
+ void cBoundingRectangle::RemoveScale( double& x, double& y )
+ {
+     //std::cout << "RemoveScale " << myScale <<" "<< x <<" " << y << " -> ";
+     x -= xpan;
+     y -= ypan;
+     x = ( x - x_offset ) * myScale;
+     y = myWindowHeight - y;
+     y = ( y - y_offset ) * myScale;
+     // std::cout << x <<" " << y << "\n";
+ }
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction

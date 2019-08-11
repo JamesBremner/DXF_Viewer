@@ -44,10 +44,17 @@ class dxfv_wxWidgetsFrame: public wxFrame
         void OnWheel(wxMouseEvent& event);
         void OnMouseMove(wxMouseEvent& event);
         void OnLeftDown(wxMouseEvent& event);
+        void OnKeyDown(wxKeyEvent& event);
         DECLARE_EVENT_TABLE()
 
 
         dxfv::CDxf * dxf;
+
+        /// Model co-ordinates of window center
+        wxPoint ModelAtWindowCenter();
+
+        /// Pan so model point is at window center
+        void PanToWindowCenter( wxPoint& P );
 };
 
 
