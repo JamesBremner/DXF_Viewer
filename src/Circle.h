@@ -19,7 +19,9 @@ public:
 	BYTE m_Nest;
 
 	CCircle();
+	CCircle( cCodeValue& cv );
 	virtual ~CCircle();
+	bool Append( std::vector<cCodeValue>::iterator& cvit );
 	bool Read( FILE * fp, int& code, char* value );
 
 	void Update( cBoundingRectangle& rect );

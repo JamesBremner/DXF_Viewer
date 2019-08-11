@@ -213,6 +213,14 @@ void CDxf::LoadFile(const std::string& filepath)
             continue;
         }
 
+        CCircle circle( *cvit );
+        if( circle.myfValid )
+        {
+            circle.Append( cvit );
+            m_Circle.push_back( circle );
+            continue;
+        }
+
     }
     UpdateBoundingRectangle();
     myLoadStatus = OK;

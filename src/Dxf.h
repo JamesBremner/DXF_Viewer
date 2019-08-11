@@ -133,6 +133,16 @@ class cDXFGraphObject
 public:
     bool myfValid;
 
+    cDXFGraphObject()
+    {
+
+    }
+    cDXFGraphObject( const std::string& c )
+    : myCode( c )
+    {
+
+    }
+
     /**  Read details of graphical object from DXF file
 
     @param[in] fp open file pointer
@@ -151,6 +161,7 @@ public:
     virtual bool Read( FILE * fp, int& code, char* value ) = 0;
 
 protected:
+    std::string myCode;
     void ReadTwoLines( FILE * fp, int& iCode, char* lpValue );
 
 };

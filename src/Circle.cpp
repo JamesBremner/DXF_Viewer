@@ -16,13 +16,21 @@ static char THIS_FILE[]=__FILE__;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-namespace dxfv {
+namespace dxfv
+{
 
 CCircle::CCircle()
+    : cDXFGraphObject("CIRCLE")
 {
-	m_Layer = "0";
-	m_Select = FALSE;
-	m_Nest = FALSE;
+    m_Layer = "0";
+    m_Select = FALSE;
+    m_Nest = FALSE;
+}
+
+CCircle::CCircle( cCodeValue& cv )
+    : CCircle()
+{
+    myfValid =( cv.myValue == myCode );
 }
 
 CCircle::~CCircle()
@@ -31,49 +39,78 @@ CCircle::~CCircle()
 }
 
 
-	void CCircle::Update( cBoundingRectangle& rect )
-	{
-	    rect.Update( x, y+r );
-	    rect.Update( x, y-r );
-	    rect.Update( x+r, y );
-	    rect.Update( x-r, y );
-	}
+void CCircle::Update( cBoundingRectangle& rect )
+{
+    rect.Update( x, y+r );
+    rect.Update( x, y-r );
+    rect.Update( x+r, y );
+    rect.Update( x-r, y );
+}
+bool CCircle::Append( cvit_t& cvit )
+{
+    while( true )
+    {
+        cvit++;
+        switch( cvit->Code() )
+        {
+        case 0:
+            // a new object
+            cvit--;
+            return false;
+        case 8:
+            m_Layer = cvit->myValue;
+            break;
+        case 10:
+            x = atof(cvit->myValue.c_str());
+            break;
+        case 20:
+            y = atof(cvit->myValue.c_str());
+        case 40:
+            r = atof(cvit->myValue.c_str());
+            break;
+        }
+    }
+    return true;
+}
 bool CCircle::Read( FILE * fp, int& code, char* lpValue )
 {
-	if( strcmp(lpValue,"CIRCLE") != 0 ) {
-		// not a line
-		return false;
-	}
-	while( fp != NULL ) {
-		ReadTwoLines(fp, code, lpValue );
-		switch ( code ) {
-		case 0:
-			// a new object
-			return true;
-		case 8:
-			m_Layer = lpValue;
-			break;
-		case 10:
-			x = atof(lpValue);
-			break;
-		case 20:
-			y = atof(lpValue);
-		case 40:
-			r = atof(lpValue);
-			break;
-		}
-	}
-	return true;
+    if( strcmp(lpValue,"CIRCLE") != 0 )
+    {
+        // not a line
+        return false;
+    }
+    while( fp != NULL )
+    {
+        ReadTwoLines(fp, code, lpValue );
+        switch ( code )
+        {
+        case 0:
+            // a new object
+            return true;
+        case 8:
+            m_Layer = lpValue;
+            break;
+        case 10:
+            x = atof(lpValue);
+            break;
+        case 20:
+            y = atof(lpValue);
+        case 40:
+            r = atof(lpValue);
+            break;
+        }
+    }
+    return true;
 }
 
 
-    bool CCircle::getDraw( s_dxf_draw& draw )
-    {
-        draw.x1 = x;
-        draw.y1 = y;
-        draw.r  = r;
-        draw.rect->ApplyScale( draw.x1, draw.y1 );
-        draw.r /= draw.rect->myScale;
-        return true;
-    }
+bool CCircle::getDraw( s_dxf_draw& draw )
+{
+    draw.x1 = x;
+    draw.y1 = y;
+    draw.r  = r;
+    draw.rect->ApplyScale( draw.x1, draw.y1 );
+    draw.r /= draw.rect->myScale;
+    return true;
+}
 }
