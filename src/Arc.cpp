@@ -20,10 +20,17 @@ static char THIS_FILE[]=__FILE__;
 namespace dxfv {
 
 CArc::CArc()
+: cDXFGraphObject("ARC")
 {
 	m_Layer = "0";
 	m_Select = FALSE;
 	m_Nest = FALSE;
+}
+
+CArc::CArc( cCodeValue& cv )
+    : CArc()
+{
+    myfValid =( cv.myValue == myCode );
 }
 
 CArc::~CArc()
@@ -52,6 +59,41 @@ CArc::~CArc()
        }
         return true;
     }
+
+    bool CArc::Append(  cvit_t& cvit )
+{
+    int point_index = 0;
+    while( true )
+    {
+        cvit++;
+        switch( cvit->Code() )
+        {
+        case 0:
+            // a new object
+            cvit--;
+            return false;
+		case 8:
+			m_Layer = cvit->myValue;
+			break;
+		case 10:
+			x = atof(cvit->myValue.c_str());
+			break;
+		case 20:
+			y = atof(cvit->myValue.c_str());
+			break;
+		case 40:
+			r = atof(cvit->myValue.c_str());
+			break;
+		case 50:
+			sa = atof(cvit->myValue.c_str());
+			break;
+		case 51:
+			ea = atof(cvit->myValue.c_str());
+			break;
+		}
+	}
+	return true;
+}
 
 bool CArc::Read( FILE * fp, int& code, char* lpValue )
 {

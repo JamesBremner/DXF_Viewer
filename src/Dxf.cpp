@@ -221,6 +221,13 @@ void CDxf::LoadFile(const std::string& filepath)
             continue;
         }
 
+        CArc arc( *cvit );
+        if( arc.myfValid )
+        {
+            arc.Append( cvit );
+            m_Arc.push_back( arc );
+            continue;
+        }
     }
     UpdateBoundingRectangle();
     myLoadStatus = OK;

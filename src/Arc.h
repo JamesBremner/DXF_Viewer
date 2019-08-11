@@ -20,6 +20,7 @@ public:
 	BYTE m_Nest;
 
 	CArc();
+	CArc( cCodeValue& cv );
 	virtual ~CArc();
 
 
@@ -49,6 +50,7 @@ To run on other platforms or frameworks this code will need to be adjusted
 */
     bool getDraw( s_dxf_draw& draw );
 
+    bool Append( std::vector<cCodeValue>::iterator& cvit );
 bool Read( FILE * fp, int& code, char* value );
 
 };
