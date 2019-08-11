@@ -31,9 +31,67 @@ CSpline::CSpline()
 {
 }
 
+CSpline::CSpline( cCodeValue& cv )
+    : CSpline()
+{
+    myfValid =( cv.myValue == "SPLINE" );
+}
+
 CSpline::~CSpline()
 {
 
+}
+
+bool CSpline::Append(  cvit_t& cvit )
+{
+    int point_index = 0;
+    while( true )
+    {
+        cvit++;
+        switch( cvit->Code() )
+        {
+        case 0:
+            // a new object
+            Generate();
+            cvit--;
+            return false;
+
+        case 8:
+            m_Layer = cvit->myValue;
+            break;
+
+        case 74:
+            m_FitPointCount = atoi(cvit->myValue.c_str());
+            if( point_index >= MAXPOINTS )
+                throw std::runtime_error("Too many spline points");
+            if( m_ControlPointCount )
+                throw std::runtime_error("Spline has both fit AND control points");
+            break;
+        case 11:
+            x[point_index] = atof(cvit->myValue.c_str());
+            break;
+        case 21:
+            y[point_index++] = atof(cvit->myValue.c_str());
+            break;
+
+
+        case 73:
+            m_ControlPointCount = atoi(cvit->myValue.c_str());
+            if( point_index >= MAXPOINTS )
+                throw std::runtime_error("Too many spline points");
+            if( m_FitPointCount )
+                throw std::runtime_error("Spline has both fit AND control points");
+            break;
+        case 10:
+            x[point_index] = atof(cvit->myValue.c_str());
+            break;
+        case 20:
+            y[point_index++] = atof(cvit->myValue.c_str());
+            break;
+
+        }
+    }
+    return true;
 }
 bool CSpline::Read( FILE * fp, int& code, char* lpValue )
 {

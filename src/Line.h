@@ -11,6 +11,8 @@
 
 namespace dxfv {
 
+    class cCodeValue;
+
 class CLine : public cDXFGraphObject
 
 {
@@ -21,6 +23,7 @@ public:
 	BYTE m_Nest;
 
 	CLine();
+	CLine( cCodeValue& cv );
 	virtual ~CLine();
 
 
@@ -32,6 +35,8 @@ public:
 
 
 	bool Read( FILE * fp, int& code, char* value );
+
+	bool Append( std::vector<cCodeValue>::iterator& cvit );
 
 
 	/**  get drawing parameters, scaled to display window

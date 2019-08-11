@@ -27,7 +27,9 @@ public:
     BYTE m_Nest;
 
     CSpline();
+    CSpline( cCodeValue& cv );
     virtual ~CSpline();
+    bool Append( std::vector<cCodeValue>::iterator& cvit );
     bool Read( FILE * fp, int& code, char* value );
     void Update( cBoundingRectangle& rect );
 

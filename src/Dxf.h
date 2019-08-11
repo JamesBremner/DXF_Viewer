@@ -10,6 +10,7 @@
 #endif // _MSC_VER > 1000
 
 #include <iostream>
+#include <fstream>
 
 namespace dxfv
 {
@@ -130,6 +131,8 @@ public:
 class cDXFGraphObject
 {
 public:
+    bool myfValid;
+
     /**  Read details of graphical object from DXF file
 
     @param[in] fp open file pointer
@@ -190,6 +193,26 @@ struct s_dxf_draw
 
 namespace dxfv
 {
+class cCodeValue
+{
+public:
+    std::string myCode;
+    std::string myValue;
+
+    bool Read( std::ifstream& f )
+    {
+        if( ! std::getline(f, myCode) )
+            return false;
+        if( ! std::getline(f, myValue) )
+            return false;
+        return true;
+    }
+    int Code()
+    {
+        return atoi( myCode.c_str() );
+    }
+};
+typedef std::vector< cCodeValue >::iterator cvit_t;
 
 /** A container for the graphical objects in a .DXF file
 */
@@ -242,8 +265,8 @@ public:
 
 private:
     bool  myfwxwidgets;          ///< true if using wxwidgets method for control point splines
+    std::vector< cCodeValue > myCodeValue;
     void ReadTwoLines( FILE * fp, int& iCode, char* lpCode, char* lpValue );
-    void ReadUntilCode(  FILE * fp, int TargetCode,  char* lpValue );
     void UpdateBoundingRectangle();
 };
 }

@@ -9,31 +9,36 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-namespace dxfv {
+namespace dxfv
+{
 class CPolyLine   : public cDXFGraphObject
 
 {
 public:
-	UINT m_VertexCount;
-	double x[1024],y[1024];
-	std::string m_Layer;
-	BYTE m_Select;
-	BYTE m_Nest;
+    UINT m_VertexCount;
+    double x[1024],y[1024];
+    std::string m_Layer;
+    BYTE m_Select;
+    BYTE m_Nest;
 
-	CPolyLine();
-	virtual ~CPolyLine();
+    CPolyLine();
+    CPolyLine( cCodeValue& cv );
 
-	void Update( cBoundingRectangle& rect );
+    virtual ~CPolyLine();
+
+    void Update( cBoundingRectangle& rect );
 
 
-	bool Read( FILE * fp, int& code, char* value );
+    bool Read( FILE * fp, int& code, char* value );
 
-/**  get drawing parameters, scaled to display window, for the 'next' line
+    bool Append(  std::vector<cCodeValue>::iterator& cvit );
 
-@param[in/out] draw  structure holding parameters, intialize index to zero on first call
-@return true if valid line has been returned
+    /**  get drawing parameters, scaled to display window, for the 'next' line
 
-*/
+    @param[in/out] draw  structure holding parameters, intialize index to zero on first call
+    @return true if valid line has been returned
+
+    */
     bool getDraw( s_dxf_draw& draw );
 
 private:

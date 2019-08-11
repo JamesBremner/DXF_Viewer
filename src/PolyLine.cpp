@@ -28,9 +28,47 @@ CPolyLine::CPolyLine()
     m_Nest = FALSE;
 }
 
+CPolyLine::CPolyLine( cCodeValue& cv )
+    : CPolyLine()
+{
+    myfValid =( cv.myValue == "LWPOLYLINE" );
+}
+
 CPolyLine::~CPolyLine()
 {
 
+}
+
+bool CPolyLine::Append(  cvit_t& cvit )
+{
+    int point_index = 0;
+    while( true )
+    {
+        cvit++;
+        switch( cvit->Code() )
+        {
+        case 0:
+            // a new object
+            cvit--;
+            return false;
+        case 8:
+            m_Layer = cvit->myCode;
+            break;
+        case 90:
+            m_VertexCount = atoi(cvit->myValue.c_str());
+            break;
+        case 70:
+            myfClosed = atoi(cvit->myValue.c_str());
+            break;
+        case 10:
+            x[point_index] = atof(cvit->myValue.c_str());
+            break;
+        case 20:
+            y[point_index++] = atof(cvit->myValue.c_str());
+            break;
+        }
+    }
+    return true;
 }
 
 void CPolyLine::Update( cBoundingRectangle& rect )
