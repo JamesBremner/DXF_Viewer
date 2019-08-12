@@ -55,10 +55,6 @@
 			<Add library="Comdlg32" />
 			<Add directory="$(#wxwidgets.lib)" />
 		</Linker>
-		<Unit filename="../../../dxfv_wxWidgetsApp.cpp" />
-		<Unit filename="../../../dxfv_wxWidgetsApp.h" />
-		<Unit filename="../../../dxfv_wxWidgetsMain.cpp" />
-		<Unit filename="../../../dxfv_wxWidgetsMain.h" />
 		<Unit filename="../../../src/Arc.cpp" />
 		<Unit filename="../../../src/Arc.h" />
 		<Unit filename="../../../src/Circle.cpp" />
@@ -76,6 +72,7 @@
 		<Unit filename="../../../src/StdAfx.h" />
 		<Unit filename="../../../src/Text.cpp" />
 		<Unit filename="../../../src/Text.h" />
+		<Unit filename="../../../src/wxWidgets.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

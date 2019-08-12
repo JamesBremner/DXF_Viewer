@@ -1,18 +1,4 @@
-/***************************************************************
- * Name:      dxfv_wxWidgetsMain.cpp
- * Purpose:   Code for Application Frame
- * Author:     ()
- * Created:   2014-06-09
- * Copyright:  ()
- * License:
- **************************************************************/
-
-#ifdef WX_PRECOMP
-#include "wx_pch.h"
-#endif
-
-#include "dxfv_wxWidgetsMain.h"
-
+#include <wx/wx.h>
 #include <string>
 #include <vector>
 #include <cstdio>
@@ -20,8 +6,64 @@
 #include <cstdlib>
 #include <cmath>
 
+#include "dxf.h"
 
-#include "src/dxf.h"
+class dxfv_wxWidgetsApp : public wxApp
+{
+    public:
+        virtual bool OnInit();
+};
+
+IMPLEMENT_APP(dxfv_wxWidgetsApp);
+
+class dxfv_wxWidgetsFrame: public wxFrame
+{
+    public:
+        dxfv_wxWidgetsFrame(wxFrame *frame, const wxString& title);
+        ~dxfv_wxWidgetsFrame();
+    private:
+        enum
+        {
+            idMenuQuit = 1000,
+            idMenuAbout,
+            idMenuOpen,
+            idMenuFit
+        };
+        wxPoint old_pos;
+
+        void OnClose(wxCloseEvent& event);
+        void OnQuit(wxCommandEvent& event);
+        void OnAbout(wxCommandEvent& event);
+        void OnOpen(wxCommandEvent& event);
+        void OnFit(wxCommandEvent& event);
+        void OnPaint(wxPaintEvent& event);
+        void OnSize(wxSizeEvent& event);
+        void OnWheel(wxMouseEvent& event);
+        void OnMouseMove(wxMouseEvent& event);
+        void OnLeftDown(wxMouseEvent& event);
+        void OnKeyDown(wxKeyEvent& event);
+        DECLARE_EVENT_TABLE()
+
+
+        dxfv::CDxf * dxf;
+
+        /// Model co-ordinates of window center
+        wxPoint ModelAtWindowCenter();
+
+        /// Pan so model point is at window center
+        void PanToWindowCenter( wxPoint& P );
+};
+
+
+
+bool dxfv_wxWidgetsApp::OnInit()
+{
+    dxfv_wxWidgetsFrame* frame = new dxfv_wxWidgetsFrame(0L, _("DXF File Viewer"));
+    frame->SetIcon(wxICON(aaaa)); // To Set App Icon
+    frame->Show();
+
+    return true;
+}
 
 //helper functions
 enum wxbuildinfoformat
