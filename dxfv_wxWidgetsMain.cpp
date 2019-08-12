@@ -292,6 +292,9 @@ void dxfv_wxWidgetsFrame::OnMouseMove(wxMouseEvent& event)
         return;
     }
 
+    if( ! event.ButtonIsDown(wxMOUSE_BTN_LEFT) )
+        return;
+
     wxPoint now = event.GetPosition();
     dxf->myBoundingRectangle.Pan( old_pos.x,old_pos.y,now.x,now.y);
     Refresh();
