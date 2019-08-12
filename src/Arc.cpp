@@ -21,7 +21,7 @@ namespace dxfv
 {
 
 CArc::CArc()
-    : cDXFGraphObject("ARC")
+    : cDXFGraphObject("ARC",cDXFGraphObject::eType::arc)
 {
     m_Layer = "0";
     m_Select = FALSE;

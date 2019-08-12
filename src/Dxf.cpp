@@ -15,33 +15,6 @@ static char THIS_FILE[]=__FILE__;
 namespace dxfv
 {
 
-/**  Read next two lines from a DXF file - a group code and a value
-
-@param[in]  fp     the open DXF file
-@param[out]  iCode  the group code, as an integer
-@param[out]  lpValue  a 255 character array to hold the value string ( may contain spaces )
-
-*/
-void cDXFGraphObject::ReadTwoLines( FILE * fp, int& iCode, char* lpValue )
-{
-    // read next two lines in their entirety
-    char lpCode[256];
-    fgets(lpCode,255,fp);
-    fgets(lpValue,255,fp);
-
-    // delete the newlines
-    lpCode[strlen(lpCode)-1] = '\0';
-    lpValue[strlen(lpValue)-1] = '\0';
-
-    // remove leading whitespace from the group code
-    string sCode( lpCode );
-    size_t p = sCode.find_first_not_of(" ");
-    sCode.erase(0,p-1);
-
-    // decode the group code
-    iCode = atoi( lpCode );
-}
-
 void cBoundingRectangle::CalcScale( int w, int h )
 {
     myWindowHeight = h;
@@ -75,7 +48,7 @@ void cBoundingRectangle::CalcScale( int w, int h )
 
 void cBoundingRectangle::ApplyScale( double& x, double& y )
 {
-     //std::cout << "ApplyScale " << myScale <<" "<< x <<" " << y << " -> ";
+    //std::cout << "ApplyScale " << myScale <<" "<< x <<" " << y << " -> ";
 
     x = (x / myScale ) + x_offset;
     y = myWindowHeight - (( y / myScale ) + y_offset );
@@ -161,52 +134,42 @@ void CDxf::LoadFile(const std::string& filepath)
 
         //std::cout << cvit->myValue << "\n";
 
-        CLine line( *cvit );
-        if( line.myfValid )
+        cDXFGraphObject * po = (cDXFGraphObject*)new CLine( *cvit );
+        if( po->myfValid )
         {
-            line.Append( cvit );
-            m_Line.push_back( line );
+            po->Append( cvit );
+            myGraphObject.push_back( po );
             continue;
         }
-
-        CPolyLine PolyLine( *cvit );
-        if( PolyLine.myfValid )
+        po = (cDXFGraphObject*)new CPolyLine( *cvit );
+        if( po->myfValid )
         {
-            PolyLine.Append( cvit );
-            m_PolyLine.push_back( PolyLine );
-            continue;
+            po->Append( cvit );
+            myGraphObject.push_back( po );
         }
-
-        CSpline spline( *cvit );
-        if( spline.myfValid )
+        po = (cDXFGraphObject*)new CSpline( *cvit );
+        if( po->myfValid )
         {
-            spline.Append( cvit );
-            m_Spline.push_back( spline );
-            continue;
+            po->Append( cvit );
+            myGraphObject.push_back( po );
         }
-
-        CCircle circle( *cvit );
-        if( circle.myfValid )
+        po = (cDXFGraphObject*)new CCircle( *cvit );
+        if( po->myfValid )
         {
-            circle.Append( cvit );
-            m_Circle.push_back( circle );
-            continue;
+            po->Append( cvit );
+            myGraphObject.push_back( po );
         }
-
-        CArc arc( *cvit );
-        if( arc.myfValid )
+       po = (cDXFGraphObject*)new CArc( *cvit );
+        if( po->myfValid )
         {
-            arc.Append( cvit );
-            m_Arc.push_back( arc );
-            continue;
+            po->Append( cvit );
+            myGraphObject.push_back( po );
         }
-
-        CText text( *cvit );
-        if( text.myfValid )
+        po = (cDXFGraphObject*)new CText( *cvit );
+        if( po->myfValid )
         {
-            text.Append( cvit );
-            myText.push_back( text );
-            continue;
+            po->Append( cvit );
+            myGraphObject.push_back( po );
         }
     }
     UpdateBoundingRectangle();
@@ -216,81 +179,55 @@ void CDxf::LoadFile(const std::string& filepath)
 
 void CDxf::UpdateBoundingRectangle()
 {
-#ifdef __GNUWIN32__
     myBoundingRectangle.init = false;
-    for( CLine& line : m_Line )
-    {
-        line.Update( myBoundingRectangle );
-    }
-    for( CCircle& circle : m_Circle )
-    {
-        circle.Update( myBoundingRectangle );
-    }
-    for( CArc& arc : m_Arc )
-    {
-        arc.Update( myBoundingRectangle );
-    }
-    for( CPolyLine& polyline : m_PolyLine)
-    {
-        polyline.Update( myBoundingRectangle );
-    }
-    for( CSpline& spline: m_Spline )
-    {
-        spline.Update( myBoundingRectangle );
-    }
-#endif
+    for( auto po : myGraphObject )
+        po->Update( myBoundingRectangle );
 }
 
-UINT CDxf::GetLineCount()
-{
-#ifdef DEMO
-    if( m_Line.size() > 1 )
-    {
-        printf("Demo Version limit - sorry\n");
-        exit(1);
-    }
-#endif // DEMO
-    return m_Line.size();
-}
-
-UINT CDxf::GetCircleCount()
-{
-    return m_Circle.size();
-}
-
-UINT CDxf::GetArcCount()
-{
-    return m_Arc.size();
-}
-
-UINT CDxf::GetLwPolyLineCount()
-{
-#ifdef DEMO
-    if( m_PolyLine.size() > 1 )
-    {
-        printf("Demo Version limit - sorry\n");
-        exit(1);
-    }
-#endif // DEMO
-    return m_PolyLine.size();
-}
-
-UINT CDxf::GetSplineCount()
-{
-    return m_Spline.size();
-}
+//UINT CDxf::GetLineCount()
+//{
+//#ifdef DEMO
+//    if( m_Line.size() > 1 )
+//    {
+//        printf("Demo Version limit - sorry\n");
+//        exit(1);
+//    }
+//#endif // DEMO
+//    return m_Line.size();
+//}
+//
+//UINT CDxf::GetCircleCount()
+//{
+//    return m_Circle.size();
+//}
+//
+//UINT CDxf::GetArcCount()
+//{
+//    return m_Arc.size();
+//}
+//
+//UINT CDxf::GetLwPolyLineCount()
+//{
+//#ifdef DEMO
+//    if( m_PolyLine.size() > 1 )
+//    {
+//        printf("Demo Version limit - sorry\n");
+//        exit(1);
+//    }
+//#endif // DEMO
+//    return m_PolyLine.size();
+//}
+//
+//UINT CDxf::GetSplineCount()
+//{
+//    return m_Spline.size();
+//}
 
 void CDxf::Init()
 {
     myLoadStatus = none;
     m_InitialDraw = FALSE;
-    m_Line.clear();
-    m_Arc.clear();
-    m_Circle.clear();
-    m_PolyLine.clear();
-    m_Spline.clear();
-    myText.clear();
-    myDimension.clear();
+    myGraphObject.clear();
     m_Nesting = FALSE;
 }
 

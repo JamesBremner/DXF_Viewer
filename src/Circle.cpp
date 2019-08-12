@@ -20,7 +20,7 @@ namespace dxfv
 {
 
 CCircle::CCircle()
-    : cDXFGraphObject("CIRCLE")
+    : cDXFGraphObject("CIRCLE",cDXFGraphObject::eType::circle)
 {
     m_Layer = "0";
     m_Select = FALSE;
@@ -72,37 +72,6 @@ bool CCircle::Append( cvit_t& cvit )
     }
     return true;
 }
-bool CCircle::Read( FILE * fp, int& code, char* lpValue )
-{
-    if( strcmp(lpValue,"CIRCLE") != 0 )
-    {
-        // not a line
-        return false;
-    }
-    while( fp != NULL )
-    {
-        ReadTwoLines(fp, code, lpValue );
-        switch ( code )
-        {
-        case 0:
-            // a new object
-            return true;
-        case 8:
-            m_Layer = lpValue;
-            break;
-        case 10:
-            x = atof(lpValue);
-            break;
-        case 20:
-            y = atof(lpValue);
-        case 40:
-            r = atof(lpValue);
-            break;
-        }
-    }
-    return true;
-}
-
 
 bool CCircle::getDraw( s_dxf_draw& draw )
 {

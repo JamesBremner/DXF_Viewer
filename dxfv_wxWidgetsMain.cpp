@@ -186,80 +186,74 @@ void dxfv_wxWidgetsFrame::OnPaint(wxPaintEvent& event)
 
     dxfv::s_dxf_draw draw;
 
-
-    for( dxfv::CLine& line : dxf->m_Line )
+    for( auto po : dxf->Objects() )
     {
         dxf->Init( draw );
-        line.getDraw( draw );
-        dc.DrawLine( draw.x1, draw.y1, draw.x2, draw.y2 );
-    }
-
-
-    for( dxfv::CPolyLine& polyline : dxf->m_PolyLine )
-    {
-        dxf->Init( draw );
-        while( polyline.getDraw( draw ) )
+        //while( po->getDraw( draw ) ) {
+        switch( po->myType )
         {
-            dc.DrawLine( draw.x1, draw.y1, draw.x2, draw.y2 );
-        }
-    }
-
-    for( dxfv::CCircle& circle : dxf->m_Circle )
-    {
-        dxf->Init( draw );
-        circle.getDraw( draw );
-        dc.DrawCircle( draw.x1, draw.y1, draw.r );
-    }
-
-    for ( dxfv::CArc& arc : dxf->m_Arc )
-    {
-        dxf->Init( draw );
-        arc.getDraw( draw );
-        dc.DrawEllipticArc (
-            draw.x1, draw.y1,
-            draw.r, draw.r,
-            draw.sa, draw.ea );
-    }
-
-    for( dxfv::CSpline& spline : dxf->m_Spline )
-    {
-        dxf->Init( draw );
-        if( dxf->wxwidgets() & spline.m_ControlPointCount>0  )
-        {
-            spline.wxwidgets();
-            wxPoint pa[spline.m_ControlPointCount];
-            while( spline.getDraw( draw ) )
-            {
-                wxPoint p( draw.x1, draw.y1 );
-                pa[draw.index-1] = p;
-            }
-            dc.DrawSpline( spline.m_ControlPointCount, pa );
-        }
-        else
-        {
-            while( spline.getDraw( draw ) )
-            {
+        case dxfv::cDXFGraphObject::eType::line:
+        case dxfv::cDXFGraphObject::eType::polyline:
+            while( po->getDraw( draw ) )
                 dc.DrawLine( draw.x1, draw.y1, draw.x2, draw.y2 );
+            break;
+        case dxfv::cDXFGraphObject::eType::circle:
+            po->getDraw( draw );
+            dc.DrawCircle( draw.x1, draw.y1, draw.r );
+            break;
+        case dxfv::cDXFGraphObject::eType::arc:
+            po->getDraw( draw );
+            dc.DrawEllipticArc (
+                draw.x1, draw.y1,
+                draw.r, draw.r,
+                draw.sa, draw.ea );
+            break;
+        case dxfv::cDXFGraphObject::eType::spline:
+        {
+            dxfv::CSpline* spline = (dxfv::CSpline*)po;
+
+            if( dxf->wxwidgets() & spline->m_ControlPointCount>0  )
+            {
+                spline->wxwidgets();
+                wxPoint pa[spline->m_ControlPointCount];
+                while( spline->getDraw( draw ) )
+                {
+                    wxPoint p( draw.x1, draw.y1 );
+                    pa[draw.index-1] = p;
+                }
+                dc.DrawSpline( spline->m_ControlPointCount, pa );
+            }
+            else
+            {
+                while( po->getDraw( draw ) )
+                {
+                    dc.DrawLine( draw.x1, draw.y1, draw.x2, draw.y2 );
+                }
             }
         }
-
+        break;
+        case dxfv::cDXFGraphObject::eType::text:
+            po->getDraw( draw );
+            //dc.DrawLabel( draw.text, wxRect( draw.x1, draw.y1,draw.x1+100, draw.y1+100 ) );
+            dc.DrawText( draw.text, draw.x1, draw.y1 );
+            break;
+        }
+        //}
     }
 
-    for ( dxfv::CText& text : dxf->myText )
-    {
-        dxf->Init( draw );
-        text.getDraw( draw );
-        //dc.DrawLabel( draw.text, wxRect( draw.x1, draw.y1,draw.x1+100, draw.y1+100 ) );
-        dc.DrawText( draw.text, draw.x1, draw.y1 );
-    }
 
-    dc.SetTextForeground( *wxBLUE );
-    for ( dxfv::CDimension& dim : dxf->myDimension )
-    {
-        dxf->Init( draw );
-        dim.getDraw( draw );
-        dc.DrawText( draw.text, draw.x1, draw.y1 );
-    }
+
+
+
+//
+//
+//    dc.SetTextForeground( *wxBLUE );
+//    for ( dxfv::CDimension& dim : dxf->myDimension )
+//    {
+//        dxf->Init( draw );
+//        dim.getDraw( draw );
+//        dc.DrawText( draw.text, draw.x1, draw.y1 );
+//    }
 }
 void dxfv_wxWidgetsFrame::OnSize(wxSizeEvent& event)
 {

@@ -152,30 +152,6 @@ public:
 
 };
 
-/**  Base class for all dxf graphical objects
-*/
-class cDXFGraphObject
-{
-public:
-    bool myfValid;
-
-    cDXFGraphObject()
-    {
-
-    }
-    cDXFGraphObject( const std::string& c )
-        : myCode( c )
-    {
-
-    }
-
-protected:
-    std::string myCode;
-    void ReadTwoLines( FILE * fp, int& iCode, char* lpValue );
-
-};
-
-
 /**  Structure holding parameters for the operation needed to draw all or part of graphical object
 
 Some objects can be drawn in one operation - a line, a circle, an arc
@@ -198,6 +174,42 @@ struct s_dxf_draw
     int index_curve;
     std::string text;
     cBoundingRectangle* rect;   // bounding rectange scaled to window
+};
+
+/**  Base class for all dxf graphical objects
+*/
+class cDXFGraphObject
+{
+public:
+    enum class eType
+    {
+        line,
+        polyline,
+        arc,
+        text,
+        circle,
+        spline,
+    } myType;
+
+    bool myfValid;
+
+    cDXFGraphObject()
+    {
+    }
+
+    cDXFGraphObject( const std::string& c, eType t  )
+        : myCode( c )
+        , myType( t )
+    {
+    }
+
+    virtual bool Append( cvit_t& cvit ) = 0;
+    virtual void Update( cBoundingRectangle& rect ) = 0;
+    virtual bool getDraw( s_dxf_draw& draw ) = 0;
+
+protected:
+    std::string myCode;
+
 };
 
 
@@ -231,14 +243,6 @@ public:
     } myLoadStatus;
     BYTE m_Nesting;
 
-    std::vector< CLine > m_Line;
-    std::vector< CArc > m_Arc;
-    std::vector< CCircle > m_Circle;
-    std::vector < CPolyLine > m_PolyLine;
-    std::vector< CSpline > m_Spline;
-    std::vector < CText > myText;
-    std::vector < CDimension > myDimension;
-
     cBoundingRectangle myBoundingRectangle;
 
     CDxf();
@@ -253,20 +257,21 @@ public:
     void Init( s_dxf_draw& draw );
 
     void LoadFile(const std::string& filepath );
-    UINT GetLineCount();
-    UINT GetCircleCount();
-    UINT GetArcCount();
-    UINT GetLwPolyLineCount();
-    UINT GetSplineCount();
 
     bool wxwidgets() const
     {
         return myfwxwidgets;
     }
 
+    std::vector< cDXFGraphObject* >& Objects()
+    {
+        return myGraphObject;
+    }
+
 private:
     bool  myfwxwidgets;          ///< true if using wxwidgets method for control point splines
     std::vector< cCodeValue > myCodeValue;
+    std::vector< cDXFGraphObject* > myGraphObject;
 
     void UpdateBoundingRectangle();
 };

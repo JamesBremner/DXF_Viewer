@@ -20,6 +20,7 @@ namespace dxfv
 {
 
 CPolyLine::CPolyLine()
+: cDXFGraphObject("LWPOLYLINE",cDXFGraphObject::eType::polyline )
 {
     m_VertexCount = 0;
     myfClosed = false;
@@ -31,7 +32,7 @@ CPolyLine::CPolyLine()
 CPolyLine::CPolyLine( cCodeValue& cv )
     : CPolyLine()
 {
-    myfValid =( cv.myValue == "LWPOLYLINE" );
+    myfValid =( cv.myValue == myCode );
 }
 
 CPolyLine::~CPolyLine()
@@ -79,43 +80,6 @@ void CPolyLine::Update( cBoundingRectangle& rect )
     }
 }
 
-bool CPolyLine::Read( FILE * fp, int& code, char* lpValue )
-{
-    if( strcmp(lpValue,"LWPOLYLINE") != 0 )
-    {
-        // not a line
-        return false;
-    }
-    int point_index = 0;
-    while( fp != NULL )
-    {
-        ReadTwoLines(fp, code, lpValue );
-        switch ( code )
-        {
-        case 0:
-            // a new object
-            if( point_index != (int)m_VertexCount )
-                return false;
-            return true;
-        case 8:
-            m_Layer = lpValue;
-            break;
-        case 90:
-            m_VertexCount = atoi(lpValue);
-            break;
-        case 70:
-            myfClosed = atoi(lpValue);
-            break;
-        case 10:
-            x[point_index] = atof(lpValue);
-            break;
-        case 20:
-            y[point_index++] = atof(lpValue);
-            break;
-        }
-    }
-    return true;
-}
 
 bool CPolyLine::getDraw( s_dxf_draw& draw )
 {

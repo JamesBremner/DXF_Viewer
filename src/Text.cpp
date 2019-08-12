@@ -7,7 +7,7 @@ namespace dxfv
 {
 
 CText::CText()
-    : cDXFGraphObject("MTEXT")
+    : cDXFGraphObject("MTEXT",cDXFGraphObject::eType::text)
 {
 
 }
@@ -19,7 +19,6 @@ CText::CText( cCodeValue& cv )
 
 bool CText::Append(  cvit_t& cvit )
 {
-    int point_index = 0;
     while( true )
     {
         cvit++;

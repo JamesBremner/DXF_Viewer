@@ -22,7 +22,8 @@ namespace dxfv
 {
 
 CSpline::CSpline()
-    : m_Layer("0")
+    : cDXFGraphObject("SPLINE",cDXFGraphObject::eType::spline)
+    , m_Layer("0")
     , m_FitPointCount( 0 )
     , m_ControlPointCount( 0 )
     , m_Select( false )
@@ -34,7 +35,7 @@ CSpline::CSpline()
 CSpline::CSpline( cCodeValue& cv )
     : CSpline()
 {
-    myfValid =( cv.myValue == "SPLINE" );
+    myfValid =( cv.myValue == myCode );
 }
 
 CSpline::~CSpline()
@@ -103,64 +104,7 @@ bool CSpline::Append(  cvit_t& cvit )
     }
     return true;
 }
-bool CSpline::Read( FILE * fp, int& code, char* lpValue )
-{
-    if( strcmp(lpValue,"SPLINE") != 0 )
-    {
-        // not a line
-        return false;
-    }
-    int point_index = 0;
-    while( fp != NULL )
-    {
-        ReadTwoLines(fp, code, lpValue );
-        switch ( code )
-        {
 
-        case 0:
-            // a new object
-            Generate();
-            return true;
-
-        case 8:
-            m_Layer = lpValue;
-            break;
-
-        case 74:
-            m_FitPointCount = atoi(lpValue);
-            if( point_index >= MAXPOINTS )
-                throw std::runtime_error("Too many spline points");
-            if( m_ControlPointCount )
-                throw std::runtime_error("Spline has both fit AND control points");
-            break;
-        case 11:
-            x[point_index] = atof(lpValue);
-            break;
-        case 21:
-            y[point_index++] = atof(lpValue);
-            break;
-
-
-        case 73:
-            m_ControlPointCount = atoi(lpValue);
-            if( point_index >= MAXPOINTS )
-                throw std::runtime_error("Too many spline points");
-            if( m_FitPointCount )
-                throw std::runtime_error("Spline has both fit AND control points");
-            break;
-        case 10:
-            x[point_index] = atof(lpValue);
-            break;
-        case 20:
-            y[point_index++] = atof(lpValue);
-            break;
-
-
-        }
-    }
-
-    return true;
-}
 void CSpline::Update( cBoundingRectangle& rect )
 {
     int count = m_FitPointCount;

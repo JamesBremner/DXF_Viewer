@@ -34,8 +34,6 @@ public:
 	}
 
 
-	bool Read( FILE * fp, int& code, char* value );
-
 	bool Append( std::vector<cCodeValue>::iterator& cvit );
 
 

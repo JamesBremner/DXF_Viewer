@@ -20,6 +20,7 @@ namespace dxfv
 {
 
 CLine::CLine()
+: cDXFGraphObject("LINE", cDXFGraphObject::eType::line )
 {
     m_Layer = "0";
     m_Select = FALSE;
@@ -29,7 +30,7 @@ CLine::CLine()
 CLine::CLine( cCodeValue& cv )
     : CLine()
 {
-    myfValid =( cv.myValue == "LINE" );
+    myfValid =( cv.myValue == myCode );
 }
 
 CLine::~CLine()
