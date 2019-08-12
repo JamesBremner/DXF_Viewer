@@ -149,7 +149,7 @@ bool CPolyLine::getDraw( s_dxf_draw& draw )
     draw.rect->ApplyScale( draw.x1, draw.y1 );
     draw.rect->ApplyScale( draw.x2, draw.y2 );
 
-    return true;
+     return true;
 }
 }
 

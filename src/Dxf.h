@@ -14,6 +14,31 @@
 
 namespace dxfv
 {
+/// DXF code value pair
+class cCodeValue
+{
+public:
+    std::string myCode;
+    std::string myValue;
+
+    bool Read( std::ifstream& f )
+    {
+        if( ! std::getline(f, myCode) )
+            return false;
+        if( ! std::getline(f, myValue) )
+            return false;
+        // remove leading whitespace from the group code
+        size_t p = myCode.find_first_not_of(" ");
+        if( p > 0 )
+            myCode.erase(0,p-1);
+        return true;
+    }
+    int Code()
+    {
+        return atoi( myCode.c_str() );
+    }
+};
+typedef std::vector< cCodeValue >::iterator cvit_t;
 
 /**  Manage zooming and scaling
 */
@@ -55,6 +80,7 @@ public:
     */
     void Update( double x, double y )
     {
+        //std::cout << "brupdate " << y << "\n";
         if( ! init )
         {
             init = true;
@@ -138,27 +164,10 @@ public:
 
     }
     cDXFGraphObject( const std::string& c )
-    : myCode( c )
+        : myCode( c )
     {
 
     }
-
-    /**  Read details of graphical object from DXF file
-
-    @param[in] fp open file pointer
-    @param[out] code  code of next line in file that does not belong to this object
-    @param[in/out] value  tagged value of current line
-    @return true if object successfully read
-
-    This virtual abstract method must be implemented by each object type to read its own dtails
-
-    When called, the value should contain the ID of the object e.g LINE, ARC, etc
-    If the value contains something else, method returns false and does nothing
-    If the value contains the ID for this object, then the details are read and
-    the method returns true with code and value containing the code/value pair of the next object
-
-    */
-    virtual bool Read( FILE * fp, int& code, char* value ) = 0;
 
 protected:
     std::string myCode;
@@ -196,34 +205,15 @@ struct s_dxf_draw
 
 #include "line.h"
 #include "arc.h"
-#include "Circle.h"	// Added by ClassView
-#include "PolyLine.h"	// Added by ClassView
-#include "Spline.h"	// Added by ClassView
+#include "Circle.h"
+#include "PolyLine.h"
+#include "Spline.h"
 #include "text.h"
 #include "Dimension.h"
 
 namespace dxfv
 {
-class cCodeValue
-{
-public:
-    std::string myCode;
-    std::string myValue;
 
-    bool Read( std::ifstream& f )
-    {
-        if( ! std::getline(f, myCode) )
-            return false;
-        if( ! std::getline(f, myValue) )
-            return false;
-        return true;
-    }
-    int Code()
-    {
-        return atoi( myCode.c_str() );
-    }
-};
-typedef std::vector< cCodeValue >::iterator cvit_t;
 
 /** A container for the graphical objects in a .DXF file
 */
@@ -277,7 +267,7 @@ public:
 private:
     bool  myfwxwidgets;          ///< true if using wxwidgets method for control point splines
     std::vector< cCodeValue > myCodeValue;
-    void ReadTwoLines( FILE * fp, int& iCode, char* lpCode, char* lpValue );
+
     void UpdateBoundingRectangle();
 };
 }

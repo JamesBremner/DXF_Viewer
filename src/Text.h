@@ -8,8 +8,7 @@ class CText : public cDXFGraphObject
 public:
     CText();
     CText( cCodeValue& cv );
-    	bool Append( std::vector<cCodeValue>::iterator& cvit );
-    bool Read( FILE * fp, int& code, char* value );
+    bool Append( cvit_t& cvit );
     bool getDraw( s_dxf_draw& draw );
     void Update( cBoundingRectangle& rect )
     {

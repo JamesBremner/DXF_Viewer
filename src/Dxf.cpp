@@ -68,12 +68,14 @@ void cBoundingRectangle::CalcScale( int w, int h )
         y_offset = int(-y1 / myScale);
     }
 
-    //std::cout << "CalcScale " << myScale << "\n";
+//    std::cout << "CalcScale " << myScale
+//        <<" "<< x1<<" "<<x2
+//        <<" "<<w<<" "<<h<< "\n";
 }
 
 void cBoundingRectangle::ApplyScale( double& x, double& y )
 {
-    // std::cout << "ApplyScale " << myScale <<" "<< x <<" " << y << " -> ";
+     //std::cout << "ApplyScale " << myScale <<" "<< x <<" " << y << " -> ";
 
     x = (x / myScale ) + x_offset;
     y = myWindowHeight - (( y / myScale ) + y_offset );
@@ -81,7 +83,7 @@ void cBoundingRectangle::ApplyScale( double& x, double& y )
     x += xpan;
     y += ypan;
 
-//    std::cout << x <<" " << y << "\n";
+    //std::cout << x <<" " << y << "\n";
 //
 //    double xt = x;
 //    double yt = y;
@@ -115,50 +117,6 @@ CDxf::~CDxf()
 {
 
 }
-/**  Read next two lines from a DXF file - a group code and a value
-
-@param[in]  fp     the open DXF file
-@param[out]  iCode  the group code, as an integer
-@param[out]  lpCode a 255 character array to hold the group code string
-@param[out]  lpValue  a 255 character array to hold the value string ( may contain spaces )
-
-*/
-void CDxf::ReadTwoLines( FILE * fp, int& iCode, char* lpCode, char* lpValue )
-{
-    // read next two lines in their entirety
-    fgets(lpCode,255,fp);
-    fgets(lpValue,255,fp);
-
-    // delete the newlines
-    lpCode[strlen(lpCode)-1] = '\0';
-    lpValue[strlen(lpValue)-1] = '\0';
-
-    // remove leading whitespace from the group code
-    string sCode( lpCode );
-    size_t p = sCode.find_first_not_of(" ");
-    sCode.erase(0,p-1);
-
-    // decode the group code
-    iCode = atoi( lpCode );
-
-}
-/**  Read DXF file until get a particular group code
-
-@param[in] fp  the open DXF file
-@param[in] TargetCode  The group code we are looking for
-@param[out]  lpValue  a 255 character array to hold the value string ( may contain spaces )
-void CDxf::ReadUntilCode(  FILE * fp, int TargetCode,  char* lpValue )
-
-*/
-//void CDxf::ReadUntilCode(  FILE * fp, int TargetCode,  char* lpValue )
-//{
-//	char lpCode[256];
-//	int iCode;
-//	do {
-//		ReadTwoLines(fp,iCode,lpCode,lpValue );
-//	} while( iCode != TargetCode ) ;
-//}
-
 /**  Read DXF file
 
 @param[in] str path and filename
@@ -176,11 +134,23 @@ void CDxf::LoadFile(const std::string& filepath)
         return;
     }
 
+    bool entities = false;
     cCodeValue cv;
     while( cv.Read( f ) )
     {
+        // ignore everything until the ENTITIES section is reached
+        if( ! entities )
+        {
+            if( cv.myValue == "ENTITIES")
+                entities = true;
+            continue;
+        }
+        //std::cout << cv.myCode <<" " << cv.myValue << "\n";
         myCodeValue.push_back( cv );
     }
+    if( ! entities )
+        throw std::runtime_error("DXF file has no ENTITIES section");
+
     for(
         vector<cCodeValue>::iterator cvit = myCodeValue.begin();
         cvit != myCodeValue.end();
@@ -188,6 +158,8 @@ void CDxf::LoadFile(const std::string& filepath)
     {
         if( cvit->Code() != 0 )
             continue;
+
+        //std::cout << cvit->myValue << "\n";
 
         CLine line( *cvit );
         if( line.myfValid )

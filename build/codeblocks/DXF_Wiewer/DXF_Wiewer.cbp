@@ -36,6 +36,9 @@
 			<Add directory="$(#wxwidgets.setup)" />
 		</Compiler>
 		<Linker>
+			<Add option="-static-libstdc++" />
+			<Add option="-static-libgcc" />
+			<Add option="-static" />
 			<Add library="wxmsw31u" />
 			<Add library="wxpng" />
 			<Add library="wxzlib" />

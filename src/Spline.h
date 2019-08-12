@@ -29,7 +29,7 @@ public:
     CSpline();
     CSpline( cCodeValue& cv );
     virtual ~CSpline();
-    bool Append( std::vector<cCodeValue>::iterator& cvit );
+    bool Append( cvit_t& cvit );
     bool Read( FILE * fp, int& code, char* value );
     void Update( cBoundingRectangle& rect );
 

@@ -48,10 +48,16 @@ bool CSpline::Append(  cvit_t& cvit )
     while( true )
     {
         cvit++;
+        //std::cout << "spline " << cvit->myCode <<", " << cvit->myValue << "\n";
         switch( cvit->Code() )
         {
         case 0:
             // a new object
+            //std::cout << "spline points " << m_FitPointCount  <<" "<< m_ControlPointCount<<" "<< point_index << "\n";
+            if( m_FitPointCount == 0 && m_ControlPointCount == 0 )
+                throw std::runtime_error("Spline has no points");
+            if( point_index != m_FitPointCount && point_index != m_ControlPointCount )
+                throw std::runtime_error("Spline has unexpected number of points");
             Generate();
             cvit--;
             return false;
@@ -71,6 +77,8 @@ bool CSpline::Append(  cvit_t& cvit )
             x[point_index] = atof(cvit->myValue.c_str());
             break;
         case 21:
+            if( ! m_FitPointCount )
+                throw std::runtime_error("Spline has unexpected fit point");
             y[point_index++] = atof(cvit->myValue.c_str());
             break;
 
@@ -86,6 +94,8 @@ bool CSpline::Append(  cvit_t& cvit )
             x[point_index] = atof(cvit->myValue.c_str());
             break;
         case 20:
+            if( ! m_ControlPointCount )
+                throw std::runtime_error("Spline has unexpected control point");
             y[point_index++] = atof(cvit->myValue.c_str());
             break;
 
@@ -148,6 +158,7 @@ bool CSpline::Read( FILE * fp, int& code, char* lpValue )
 
         }
     }
+
     return true;
 }
 void CSpline::Update( cBoundingRectangle& rect )
@@ -358,24 +369,24 @@ bool CSpline::getDrawControlPoint( s_dxf_draw& draw )
 
     const int ndiv = 10;
 
-    cout << "f ";
+    //cout << "f ";
     if( draw.index_curve == 0 )
     {
         cout << "0 ";
         draw.x1 = x[draw.index];
         draw.y1 = y[draw.index];
         float f = 1.0 / ndiv;
-        cout << f << "\n";
+        //cout << f << "\n";
         QuadraticBezierInterpolation( draw.x2, draw.y2, draw.index, f );
         draw.index_curve++;
     }
     else if( draw.index_curve < ndiv-1 )
     {
         float f = ( draw.index_curve - 1.0 ) / ndiv;
-        cout << f << " ";
+        //cout << f << " ";
         QuadraticBezierInterpolation( draw.x1, draw.y1, draw.index, f );
         f = ( (float) draw.index_curve ) / ndiv;
-        cout << f << "\n";
+        //cout << f << "\n";
         QuadraticBezierInterpolation( draw.x2, draw.y2, draw.index, f );
         draw.index_curve++;
     }
@@ -391,8 +402,8 @@ bool CSpline::getDrawControlPoint( s_dxf_draw& draw )
         draw.index++;
     }
 
-    std::cout << "getDrawControlPoint "
-              << draw.index <<" "<< draw.index_curve <<" "<< draw.x1 <<" "<< draw.y1 <<" "<< draw.x2 <<" "<< draw.y2 << "\n";
+//    std::cout << "getDrawControlPoint "
+//              << draw.index <<" "<< draw.index_curve <<" "<< draw.x1 <<" "<< draw.y1 <<" "<< draw.x2 <<" "<< draw.y2 << "\n";
 
     draw.rect->ApplyScale(draw.x1,draw.y1);
     draw.rect->ApplyScale(draw.x2,draw.y2);

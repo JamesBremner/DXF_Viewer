@@ -52,43 +52,6 @@ bool CText::Append(  cvit_t& cvit )
     return true;
 }
 
-bool CText::Read( FILE * fp, int& code, char* lpValue )
-{
-    if( strcmp(lpValue,"MTEXT") != 0 )
-    {
-        // not a text
-        return false;
-    }
-    while( fp != NULL )
-    {
-        ReadTwoLines(fp, code, lpValue );
-        switch ( code )
-        {
-        case 0:
-            // a new object
-            return true;
-        case 1:
-            // the text to display
-            myText = lpValue;
-//            if( myText.find("{\\f") != -1 ) {
-//                int p = myText.find(";");
-//                if( p == -1 )
-//                    return false;
-//                myText = myText.substr(p+1);
-//            }
-            clean_mtext( myText );
-            break;
-        case 10:
-            x1 = atof(lpValue);
-            break;
-        case 20:
-            y1 = atof(lpValue);
-            break;
-        }
-
-    }
-    return true;
-}
 
 bool CText::getDraw( s_dxf_draw& draw )
 {

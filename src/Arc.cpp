@@ -17,14 +17,15 @@ static char THIS_FILE[]=__FILE__;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-namespace dxfv {
+namespace dxfv
+{
 
 CArc::CArc()
-: cDXFGraphObject("ARC")
+    : cDXFGraphObject("ARC")
 {
-	m_Layer = "0";
-	m_Select = FALSE;
-	m_Nest = FALSE;
+    m_Layer = "0";
+    m_Select = FALSE;
+    m_Nest = FALSE;
 }
 
 CArc::CArc( cCodeValue& cv )
@@ -37,32 +38,32 @@ CArc::~CArc()
 {
 
 }
-	void CArc::Update( cBoundingRectangle& rect )
-	{
-	    rect.Update( x, y+r );
-	    rect.Update( x, y-r );
-	    rect.Update( x+r, y );
-	    rect.Update( x-r, y );
-	}
-    bool CArc::getDraw( s_dxf_draw& draw )
-    {
-        draw.x1 = x - r;
-        draw.y1 = y + r;
-        draw.rect->ApplyScale( draw.x1, draw.y1);
-        draw.r =  2 * r / draw.rect->myScale;
-        draw.sa = sa;
-        draw.ea = ea;
-          if( ea < sa ) {
-            // required to draw in clockwise direction
-            // work arround for wxWidgets bug http://trac.wxwidgets.org/ticket/4437
-          draw.ea += 360;
-       }
-        return true;
-    }
-
-    bool CArc::Append(  cvit_t& cvit )
+void CArc::Update( cBoundingRectangle& rect )
 {
-    int point_index = 0;
+    rect.Update( x, y+r );
+    rect.Update( x, y-r );
+    rect.Update( x+r, y );
+    rect.Update( x-r, y );
+}
+bool CArc::getDraw( s_dxf_draw& draw )
+{
+    draw.x1 = x - r;
+    draw.y1 = y + r;
+    draw.rect->ApplyScale( draw.x1, draw.y1);
+    draw.r =  2 * r / draw.rect->myScale;
+    draw.sa = sa;
+    draw.ea = ea;
+    if( ea < sa )
+    {
+        // required to draw in clockwise direction
+        // work arround for wxWidgets bug http://trac.wxwidgets.org/ticket/4437
+        draw.ea += 360;
+    }
+    return true;
+}
+
+bool CArc::Append(  cvit_t& cvit )
+{
     while( true )
     {
         cvit++;
@@ -72,62 +73,27 @@ CArc::~CArc()
             // a new object
             cvit--;
             return false;
-		case 8:
-			m_Layer = cvit->myValue;
-			break;
-		case 10:
-			x = atof(cvit->myValue.c_str());
-			break;
-		case 20:
-			y = atof(cvit->myValue.c_str());
-			break;
-		case 40:
-			r = atof(cvit->myValue.c_str());
-			break;
-		case 50:
-			sa = atof(cvit->myValue.c_str());
-			break;
-		case 51:
-			ea = atof(cvit->myValue.c_str());
-			break;
-		}
-	}
-	return true;
-}
-
-bool CArc::Read( FILE * fp, int& code, char* lpValue )
-{
-	if( strcmp(lpValue,"ARC") != 0 ) {
-		// not a line
-		return false;
-	}
-	while( fp != NULL ) {
-		ReadTwoLines(fp, code, lpValue );
-		switch ( code ) {
-		case 0:
-			// a new object
-			return true;
-		case 8:
-			m_Layer = lpValue;
-			break;
-		case 10:
-			x = atof(lpValue);
-			break;
-		case 20:
-			y = atof(lpValue);
-			break;
-		case 40:
-			r = atof(lpValue);
-			break;
-		case 50:
-			sa = atof(lpValue);
-			break;
-		case 51:
-			ea = atof(lpValue);
-			break;
-		}
-	}
-	return true;
+        case 8:
+            m_Layer = cvit->myValue;
+            break;
+        case 10:
+            x = atof(cvit->myValue.c_str());
+            break;
+        case 20:
+            y = atof(cvit->myValue.c_str());
+            break;
+        case 40:
+            r = atof(cvit->myValue.c_str());
+            break;
+        case 50:
+            sa = atof(cvit->myValue.c_str());
+            break;
+        case 51:
+            ea = atof(cvit->myValue.c_str());
+            break;
+        }
+    }
+    return true;
 }
 
 }

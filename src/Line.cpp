@@ -67,41 +67,6 @@ bool CLine::Append(  cvit_t& cvit )
     }
     return true;
 }
-bool CLine::Read( FILE * fp, int& code, char* lpValue )
-{
-    if( strcmp(lpValue,"LINE") != 0 )
-    {
-        // not a line
-        return false;
-    }
-    while( fp != NULL )
-    {
-        ReadTwoLines(fp, code, lpValue );
-        switch ( code )
-        {
-        case 0:
-            // a new object
-            return true;
-        case 8:
-            m_Layer = lpValue;
-            break;
-        case 10:
-            x1 = atof(lpValue);
-            break;
-        case 20:
-            y1 = atof(lpValue);
-            break;
-        case 11:
-            x2 = atof(lpValue);
-            break;
-        case 21:
-            y2 = atof(lpValue);
-            break;
-        }
-    }
-    return true;
-
-}
 
 bool CLine::getDraw( s_dxf_draw& draw )
 {
