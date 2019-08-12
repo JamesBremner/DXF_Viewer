@@ -181,6 +181,8 @@ struct s_dxf_draw
 class cDXFGraphObject
 {
 public:
+
+    /// graph object types using this base class
     enum class eType
     {
         line,
@@ -191,17 +193,30 @@ public:
         spline,
     } myType;
 
+    /// true if valid construction
     bool myfValid;
 
+    /// default contructor
     cDXFGraphObject()
     {
     }
 
+    /// construct base for a type
     cDXFGraphObject( const std::string& c, eType t  )
-        : myCode( c )
-        , myType( t )
+        : myType( t )
+        , myCode( c )
     {
     }
+    virtual ~cDXFGraphObject()
+    {
+
+    }
+
+    /** Construct specified type
+        @param[in] cv DXF file code value pair specifying the type
+        @return pointer to valid  constructed graph type, or nullptr
+    */
+    static cDXFGraphObject* Factory( cCodeValue& cv );
 
     virtual bool Append( cvit_t& cvit ) = 0;
     virtual void Update( cBoundingRectangle& rect ) = 0;

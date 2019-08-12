@@ -15,6 +15,37 @@ static char THIS_FILE[]=__FILE__;
 namespace dxfv
 {
 
+cDXFGraphObject* cDXFGraphObject::Factory( cCodeValue& cv )
+{
+    if( cv.Code() )
+        throw std::runtime_error( "cDXFGraphObject::Factory bad code");
+    cDXFGraphObject* po = (cDXFGraphObject*)new CLine( cv );
+    if( po->myfValid )
+        return po;
+    delete po;
+    po = (cDXFGraphObject*)new CPolyLine( cv );
+    if( po->myfValid )
+        return po;
+    delete po;
+    po = (cDXFGraphObject*)new CSpline( cv );
+    if( po->myfValid )
+        return po;
+    delete po;
+        po = (cDXFGraphObject*)new CCircle( cv );
+    if( po->myfValid )
+        return po;
+    delete po;
+        po = (cDXFGraphObject*)new CArc( cv );
+    if( po->myfValid )
+        return po;
+    delete po;
+        po = (cDXFGraphObject*)new CText( cv );
+    if( po->myfValid )
+        return po;
+    delete po;
+    return nullptr;
+}
+
 void cBoundingRectangle::CalcScale( int w, int h )
 {
     myWindowHeight = h;
@@ -125,7 +156,7 @@ void CDxf::LoadFile(const std::string& filepath)
         throw std::runtime_error("DXF file has no ENTITIES section");
 
     for(
-        vector<cCodeValue>::iterator cvit = myCodeValue.begin();
+        cvit_t cvit = myCodeValue.begin();
         cvit != myCodeValue.end();
         cvit++ )
     {
@@ -134,43 +165,13 @@ void CDxf::LoadFile(const std::string& filepath)
 
         //std::cout << cvit->myValue << "\n";
 
-        cDXFGraphObject * po = (cDXFGraphObject*)new CLine( *cvit );
-        if( po->myfValid )
-        {
-            po->Append( cvit );
-            myGraphObject.push_back( po );
-            continue;
-        }
-        po = (cDXFGraphObject*)new CPolyLine( *cvit );
-        if( po->myfValid )
+        cDXFGraphObject * po = cDXFGraphObject::Factory( *cvit );
+        if( po )
         {
             po->Append( cvit );
             myGraphObject.push_back( po );
         }
-        po = (cDXFGraphObject*)new CSpline( *cvit );
-        if( po->myfValid )
-        {
-            po->Append( cvit );
-            myGraphObject.push_back( po );
-        }
-        po = (cDXFGraphObject*)new CCircle( *cvit );
-        if( po->myfValid )
-        {
-            po->Append( cvit );
-            myGraphObject.push_back( po );
-        }
-       po = (cDXFGraphObject*)new CArc( *cvit );
-        if( po->myfValid )
-        {
-            po->Append( cvit );
-            myGraphObject.push_back( po );
-        }
-        po = (cDXFGraphObject*)new CText( *cvit );
-        if( po->myfValid )
-        {
-            po->Append( cvit );
-            myGraphObject.push_back( po );
-        }
+
     }
     UpdateBoundingRectangle();
     myLoadStatus = OK;
