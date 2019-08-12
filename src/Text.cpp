@@ -6,6 +6,52 @@
 namespace dxfv
 {
 
+CText::CText()
+    : cDXFGraphObject("MTEXT")
+{
+
+}
+CText::CText( cCodeValue& cv )
+    : CText()
+{
+    myfValid =( cv.myValue == myCode );
+}
+
+bool CText::Append(  cvit_t& cvit )
+{
+    int point_index = 0;
+    while( true )
+    {
+        cvit++;
+        switch( cvit->Code() )
+        {
+        case 0:
+            // a new object
+            cvit--;
+            return false;
+        case 1:
+            // the text to display
+            myText = cvit->myValue;
+//            if( myText.find("{\\f") != -1 ) {
+//                int p = myText.find(";");
+//                if( p == -1 )
+//                    return false;
+//                myText = myText.substr(p+1);
+//            }
+            clean_mtext( myText );
+            break;
+        case 10:
+            x1 = atof(cvit->myValue.c_str());
+            break;
+        case 20:
+            y1 = atof(cvit->myValue.c_str());
+            break;
+        }
+
+    }
+    return true;
+}
+
 bool CText::Read( FILE * fp, int& code, char* lpValue )
 {
     if( strcmp(lpValue,"MTEXT") != 0 )
@@ -79,8 +125,9 @@ void CText::clean_mtext( std::string& text )
         {
             text = text.substr(0,esc) + "\n" + text.substr(esc+2);
         }
-        else if ( text[esc+1] == 'A' ) {
-             text = text.substr(0,esc) + text.substr(esc+2);
+        else if ( text[esc+1] == 'A' )
+        {
+            text = text.substr(0,esc) + text.substr(esc+2);
         }
         else if ( text[esc+1] == 'p' )
         {
@@ -92,7 +139,7 @@ void CText::clean_mtext( std::string& text )
             }
             text = text.substr(0,esc) + text.substr(p+1);
         }
-       else if ( text[esc+1] == 'H' )
+        else if ( text[esc+1] == 'H' )
         {
             int p = text.find(";",esc+1);
             if( p == -1 )
@@ -102,7 +149,7 @@ void CText::clean_mtext( std::string& text )
             }
             text = text.substr(0,esc) + text.substr(p+1);
         }
-       else if ( text[esc+1] == 'S' )
+        else if ( text[esc+1] == 'S' )
         {
             int p = text.find(";",esc+1);
             if( p == -1 )

@@ -228,102 +228,18 @@ void CDxf::LoadFile(const std::string& filepath)
             m_Arc.push_back( arc );
             continue;
         }
+
+        CText text( *cvit );
+        if( text.myfValid )
+        {
+            text.Append( cvit );
+            myText.push_back( text );
+            continue;
+        }
     }
     UpdateBoundingRectangle();
     myLoadStatus = OK;
 
-//    FILE *fp;
-//
-//    fp = fopen(filepath.c_str(),"r");
-//    if(fp != NULL)
-//    {
-//
-//        char lpCode[256], lpValue[256];
-//        int iCode;
-//
-//        ReadTwoLines( fp, iCode, lpCode, lpValue );
-//
-//        while(!feof(fp))
-//        {
-//            if( iCode != 0 )
-//            {
-//                ReadTwoLines( fp, iCode, lpCode, lpValue );
-//                continue;
-//            }
-//
-//            CLine line;
-//            if( line.Read( fp, iCode, lpValue ) )
-//            {
-//                m_Line.push_back( line );
-//                continue;
-//            }
-//
-//            CPolyLine PolyLine;
-//            if( PolyLine.Read( fp, iCode, lpValue ) )
-//            {
-//                m_PolyLine.push_back( PolyLine );
-//                continue;
-//            }
-//
-//
-//            CCircle circle;
-//            if( circle.Read( fp, iCode, lpValue ) )
-//            {
-//                m_Circle.push_back( circle );
-//                continue;
-//
-//            }
-//
-//            CArc arc;
-//            if( arc.Read( fp, iCode, lpValue ) )
-//            {
-//                m_Arc.push_back( arc );
-//                continue;
-//            }
-//
-//
-//            CSpline spline;
-//            if( spline.Read( fp, iCode, lpValue ) )
-//            {
-//                m_Spline.push_back( spline );
-//                continue;
-//            }
-//
-//            CText text;
-//            if( text.Read( fp, iCode, lpValue ) )
-//            {
-//                myText.push_back( text );
-//                continue;
-//            }
-//
-//            CDimension dim;
-//            if( dim.Read( fp, iCode, lpValue ) )
-//            {
-//                myDimension.push_back( dim );
-//                continue;
-//            }
-//
-//            ReadTwoLines( fp, iCode, lpCode, lpValue );
-//
-//        }
-//
-//        myLoadStatus = OK;
-//#ifdef DEMO
-//        if( m_PolyLine.size() > 5  ||
-//                m_Line.size() > 5
-//          )
-//        {
-//            myLoadStatus = demo;
-//        }
-//#endif // DEMO
-//
-//
-//        UpdateBoundingRectangle();
-//    }
-//    else
-//    {
-//        myLoadStatus = none;
-//    }
 }
 
 void CDxf::UpdateBoundingRectangle()
