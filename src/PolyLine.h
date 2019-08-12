@@ -1,17 +1,15 @@
-// PolyLine.h: interface for the CPolyLine class.
+// PolyLine.h: interface for the cLWPolyLine class.
 //
 //////////////////////////////////////////////////////////////////////
 
-#if !defined(AFX_POLYLINE_H__2845A691_54B0_40CE_9000_80D63B888975__INCLUDED_)
-#define AFX_POLYLINE_H__2845A691_54B0_40CE_9000_80D63B888975__INCLUDED_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
+
 
 namespace dxfv
 {
-class CPolyLine   : public cDXFGraphObject
+/// Light Weight polyline
+
+class cLWPolyLine   : public cDXFGraphObject
 
 {
 public:
@@ -21,17 +19,14 @@ public:
     BYTE m_Select;
     BYTE m_Nest;
 
-    CPolyLine();
-    CPolyLine( cCodeValue& cv );
+    cLWPolyLine();
+    cLWPolyLine( cCodeValue& cv );
 
-    virtual ~CPolyLine();
+    virtual ~cLWPolyLine();
 
     void Update( cBoundingRectangle& rect );
 
-
-    bool Read( FILE * fp, int& code, char* value );
-
-    bool Append(  std::vector<cCodeValue>::iterator& cvit );
+    bool Append( cvit_t& cvit );
 
     /**  get drawing parameters, scaled to display window, for the 'next' line
 
@@ -41,8 +36,21 @@ public:
     */
     bool getDraw( s_dxf_draw& draw );
 
-private:
+protected:
     bool myfClosed;
 };
+
+/// Polyline
+
+class cPolyLine : public cLWPolyLine
+{
+public:
+    cPolyLine();
+    cPolyLine( cCodeValue& cv );
+
+    virtual ~cPolyLine();
+
+    bool Append( cvit_t& cvit );
+};
 }
-#endif // !defined(AFX_POLYLINE_H__2845A691_54B0_40CE_9000_80D63B888975__INCLUDED_)
+

@@ -186,6 +186,7 @@ public:
     enum class eType
     {
         line,
+        lwpolyline,
         polyline,
         arc,
         text,

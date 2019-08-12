@@ -1,4 +1,4 @@
-// PolyLine.cpp: implementation of the CPolyLine class.
+// PolyLine.cpp: implementation of the cLWPolyLine class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -19,8 +19,8 @@ static char THIS_FILE[]=__FILE__;
 namespace dxfv
 {
 
-CPolyLine::CPolyLine()
-: cDXFGraphObject("LWPOLYLINE",cDXFGraphObject::eType::polyline )
+cLWPolyLine::cLWPolyLine()
+: cDXFGraphObject("LWPOLYLINE",cDXFGraphObject::eType::lwpolyline )
 {
     m_VertexCount = 0;
     myfClosed = false;
@@ -29,18 +29,35 @@ CPolyLine::CPolyLine()
     m_Nest = FALSE;
 }
 
-CPolyLine::CPolyLine( cCodeValue& cv )
-    : CPolyLine()
+cLWPolyLine::cLWPolyLine( cCodeValue& cv )
+    : cLWPolyLine()
 {
     myfValid =( cv.myValue == myCode );
 }
 
-CPolyLine::~CPolyLine()
+cLWPolyLine::~cLWPolyLine()
 {
 
 }
 
-bool CPolyLine::Append(  cvit_t& cvit )
+cPolyLine::cPolyLine()
+{
+    myCode = "POLYLINE";
+    myType = cDXFGraphObject::eType::polyline;
+}
+
+cPolyLine::cPolyLine( cCodeValue& cv )
+    : cPolyLine()
+{
+    myfValid =( cv.myValue == myCode );
+}
+
+cPolyLine::~cPolyLine()
+{
+
+}
+
+bool cLWPolyLine::Append(  cvit_t& cvit )
 {
     int point_index = 0;
     while( true )
@@ -72,7 +89,45 @@ bool CPolyLine::Append(  cvit_t& cvit )
     return true;
 }
 
-void CPolyLine::Update( cBoundingRectangle& rect )
+bool cPolyLine::Append(  cvit_t& cvit )
+{
+    int point_index = 0;
+    bool fVertex = false;
+    while( true )
+    {
+        cvit++;
+        switch( cvit->Code() )
+        {
+        case 0:
+            // a new object
+            if( cvit->myValue == "VERTEX" ) {
+                    fVertex = true;
+                break;
+            }
+            m_VertexCount = point_index;
+            cvit--;
+            return false;
+        case 8:
+            m_Layer = cvit->myCode;
+            break;
+        case 70:
+            myfClosed = atoi(cvit->myValue.c_str());
+            break;
+        case 10:
+            if( fVertex )
+                x[point_index] = atof(cvit->myValue.c_str());
+            break;
+        case 20:
+            if( fVertex )
+                y[point_index++] = atof(cvit->myValue.c_str());
+            break;
+        }
+    }
+
+    return true;
+}
+
+void cLWPolyLine::Update( cBoundingRectangle& rect )
 {
     for( int k = 0; k < (int)m_VertexCount; k++ )
     {
@@ -81,7 +136,7 @@ void CPolyLine::Update( cBoundingRectangle& rect )
 }
 
 
-bool CPolyLine::getDraw( s_dxf_draw& draw )
+bool cLWPolyLine::getDraw( s_dxf_draw& draw )
 {
     if( 0 > draw.index || draw.index == (int)m_VertexCount )
         return false;

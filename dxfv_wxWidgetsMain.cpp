@@ -193,6 +193,7 @@ void dxfv_wxWidgetsFrame::OnPaint(wxPaintEvent& event)
         switch( po->myType )
         {
         case dxfv::cDXFGraphObject::eType::line:
+        case dxfv::cDXFGraphObject::eType::lwpolyline:
         case dxfv::cDXFGraphObject::eType::polyline:
             while( po->getDraw( draw ) )
                 dc.DrawLine( draw.x1, draw.y1, draw.x2, draw.y2 );

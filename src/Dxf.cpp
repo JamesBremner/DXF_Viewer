@@ -19,11 +19,16 @@ cDXFGraphObject* cDXFGraphObject::Factory( cCodeValue& cv )
 {
     if( cv.Code() )
         throw std::runtime_error( "cDXFGraphObject::Factory bad code");
+    //std::cout << cv.myValue << "\n";
     cDXFGraphObject* po = (cDXFGraphObject*)new CLine( cv );
     if( po->myfValid )
         return po;
     delete po;
-    po = (cDXFGraphObject*)new CPolyLine( cv );
+    po = (cDXFGraphObject*)new cLWPolyLine( cv );
+    if( po->myfValid )
+        return po;
+    delete po;
+    po = (cDXFGraphObject*)new cPolyLine( cv );
     if( po->myfValid )
         return po;
     delete po;
