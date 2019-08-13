@@ -140,7 +140,7 @@ void cLWPolyLine::Update( cBoundingRectangle& rect )
 }
 
 
-bool cLWPolyLine::getDraw( s_dxf_draw& draw )
+bool cLWPolyLine::getDraw( cDrawPrimitiveData& draw )
 {
     if( 0 > draw.index || draw.index == (int)m_VertexCount )
         return false;

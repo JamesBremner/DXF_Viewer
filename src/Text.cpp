@@ -52,7 +52,7 @@ bool CText::Append(  cvit_t& cvit )
 }
 
 
-bool CText::getDraw( s_dxf_draw& draw )
+bool CText::getDraw( cDrawPrimitiveData& draw )
 {
     if( draw.index )
         return false;

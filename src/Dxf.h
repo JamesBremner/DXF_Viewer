@@ -9,6 +9,10 @@
 
 #define MAXPOINTS 1024
 
+#ifdef wxwbuild
+class wxDC;
+#endif // wxwbuild
+
 namespace dxfv
 {
 
@@ -161,8 +165,9 @@ The exact meaning of the elements of this structure depends on the graphical obj
 
 The values are in pixels, scaled to fit into the display window
 */
-struct s_dxf_draw
+class cDrawPrimitiveData
 {
+public:
     double x1;
     double y1;
     double x2;
@@ -174,6 +179,8 @@ struct s_dxf_draw
     int index_curve;
     std::string text;
     cBoundingRectangle* rect;   // bounding rectange scaled to window
+
+    cDrawPrimitiveData( CDxf * dxf );
 };
 
 /**  Base class for all dxf graphical objects
@@ -229,7 +236,11 @@ public:
 
     virtual bool Append( cvit_t& cvit ) = 0;
     virtual void Update( cBoundingRectangle& rect ) = 0;
-    virtual bool getDraw( s_dxf_draw& draw ) = 0;
+    virtual bool getDraw( cDrawPrimitiveData& draw ) = 0;
+
+#ifdef wxwbuild
+    virtual void Draw( wxDC& dc, CDxf * dxf ) {}
+#endif // wxwbuild
 
 protected:
     std::string myCode;
@@ -274,12 +285,6 @@ public:
     virtual ~CDxf();
 
     void Init();
-
-    /** Initializing drawing parameters
-
-    @param[in/out] draw  The drawing parameter structure to be initialized
-    */
-    void Init( s_dxf_draw& draw );
 
     void LoadFile(const std::string& filepath );
 

@@ -33,7 +33,11 @@ public:
     @return true if valid line has been returned
 
     */
-    bool getDraw( s_dxf_draw& draw );
+    bool getDraw( cDrawPrimitiveData& draw );
+
+#ifdef wxwbuild
+    void Draw( wxDC& dc, CDxf * dxf );
+#endif // wxwbuild
 
 protected:
     bool myfClosed;

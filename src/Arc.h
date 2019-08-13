@@ -48,10 +48,13 @@ The starting/ending angles are adjusted to the peculiarities of wxWidgets on win
 To run on other platforms or frameworks this code will need to be adjusted
 
 */
-    bool getDraw( s_dxf_draw& draw );
+    bool getDraw( cDrawPrimitiveData& draw );
 
     bool Append( cvit_t& cvit );
 
+#ifdef wxwbuild
+    void Draw( wxDC& dc, CDxf * dxf );
+#endif // wxwbuild
 
 };
 }

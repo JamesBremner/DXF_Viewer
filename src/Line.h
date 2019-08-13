@@ -9,44 +9,49 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-namespace dxfv {
+namespace dxfv
+{
 
-    class cCodeValue;
+class cCodeValue;
 
 class CLine : public cDXFGraphObject
 
 {
 public:
-	double x1,y1,x2,y2;
-	std::string m_Layer;
-	BYTE m_Select;
-	BYTE m_Nest;
+    double x1,y1,x2,y2;
+    std::string m_Layer;
+    BYTE m_Select;
+    BYTE m_Nest;
 
-	CLine();
-	CLine( cCodeValue& cv );
-	virtual ~CLine();
-
-
-	void Update( cBoundingRectangle& rect )
-	{
-	    rect.Update( x1, y1 );
-	    rect.Update( x2, y2 );
-	}
+    CLine();
+    CLine( cCodeValue& cv );
+    virtual ~CLine();
 
 
-	bool Append( std::vector<cCodeValue>::iterator& cvit );
+    void Update( cBoundingRectangle& rect )
+    {
+        rect.Update( x1, y1 );
+        rect.Update( x2, y2 );
+    }
 
 
-	/**  get drawing parameters, scaled to display window
+    bool Append( std::vector<cCodeValue>::iterator& cvit );
 
-@param[in/out] draw  structure holding parameters
-@return true if valid line has been returned
 
-draw.x1, draw.y1  first endpoint of line
-draw.x2, draw.y2  second endpoint of line
+    /**  get drawing parameters, scaled to display window
 
-*/
-    bool getDraw( s_dxf_draw& draw );
+    @param[in/out] draw  structure holding parameters
+    @return true if valid line has been returned
+
+    draw.x1, draw.y1  first endpoint of line
+    draw.x2, draw.y2  second endpoint of line
+
+    */
+    bool getDraw( cDrawPrimitiveData& draw );
+
+#ifdef wxwbuild
+    void Draw( wxDC& dc, CDxf * dxf );
+#endif // wxwbuild
 
 };
 }

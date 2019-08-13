@@ -45,7 +45,7 @@ void CArc::Update( cBoundingRectangle& rect )
     rect.Update( x+r, y );
     rect.Update( x-r, y );
 }
-bool CArc::getDraw( s_dxf_draw& draw )
+bool CArc::getDraw( cDrawPrimitiveData& draw )
 {
     if( draw.index )
         return false;

@@ -216,7 +216,7 @@ void CSpline::MatrixSolve(
     delete[] WorkB;
 }
 
-bool CSpline::getDraw( s_dxf_draw& draw )
+bool CSpline::getDraw( cDrawPrimitiveData& draw )
 {
     if( ! m_FitPointCount)
     {
@@ -294,7 +294,7 @@ void CSpline::QuadraticBezierInterpolation(
     bx = qx0 + (qx1-qx0)*f;
     by = qy0 + (qy1-qy0)*f;
 }
-bool CSpline::getDrawControlPoint( s_dxf_draw& draw )
+bool CSpline::getDrawControlPoint( cDrawPrimitiveData& draw )
 {
     // check if using wxwidgets spline method
     if( myfwxwidgets )

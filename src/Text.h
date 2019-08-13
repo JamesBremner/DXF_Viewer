@@ -9,7 +9,7 @@ public:
     CText();
     CText( cCodeValue& cv );
     bool Append( cvit_t& cvit );
-    bool getDraw( s_dxf_draw& draw );
+    bool getDraw( cDrawPrimitiveData& draw );
     void Update( cBoundingRectangle& rect )
     {
         rect.Update( x1, y1 );

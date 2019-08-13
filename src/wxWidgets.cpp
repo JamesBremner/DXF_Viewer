@@ -220,82 +220,14 @@ void dxfv_wxWidgetsFrame::OnPaint(wxPaintEvent& event)
     dc.SetBrush(*wxTRANSPARENT_BRUSH);
     dc.SetTextForeground( *wxYELLOW );
 
-    // Get window dimensions
-    wxSize sz = GetClientSize();
-
     // scale to window
+    wxSize sz = GetClientSize();
     dxf->myBoundingRectangle.CalcScale( sz.GetWidth(), sz.GetHeight() );
-
-    // data for drawing primitives
-    dxfv::s_dxf_draw draw;
-
-    // array to hold control points for wxwidgets spline method TID6
-    wxPoint spline_points[MAXPOINTS];
 
     // loop over graphical entities
     for( auto po : dxf->Objects() )
     {
-        dxf->Init( draw );
-
-        // loop over drawing primitives
-        while( po->getDraw( draw ) )
-        {
-            // select drawing primitive for entity type
-            switch( po->myType )
-            {
-
-            case dxfv::cDXFGraphObject::eType::line:
-            case dxfv::cDXFGraphObject::eType::lwpolyline:
-            case dxfv::cDXFGraphObject::eType::polyline:
-                dc.DrawLine( draw.x1, draw.y1, draw.x2, draw.y2 );
-                break;
-
-            case dxfv::cDXFGraphObject::eType::circle:
-                dc.DrawCircle( draw.x1, draw.y1, draw.r );
-                break;
-
-            case dxfv::cDXFGraphObject::eType::arc:
-                dc.DrawEllipticArc (
-                    draw.x1, draw.y1,
-                    draw.r, draw.r,
-                    draw.sa, draw.ea );
-                break;
-
-            case dxfv::cDXFGraphObject::eType::spline:
-                if( dxf->wxwidgets() && ((dxfv::CSpline*)po)->m_ControlPointCount>0  )
-                {
-                    // use wxwidgets spline method for control point spline TID6
-
-                    if( ! draw.index_curve )
-                    {
-                        // collect control point
-                        wxPoint p( draw.x1, draw.y1 );
-                        spline_points[ draw.index-1] = p;
-                    }
-                    else
-                    {
-                        // all contol points
-                        // use wxwidget spline method
-                        dc.DrawSpline(
-                            ((dxfv::CSpline*)po)->m_ControlPointCount,
-                            spline_points );
-                    }
-                }
-                else
-                {
-                    // use wxwidgets drawing primitive for spline
-
-                    dc.DrawLine( draw.x1, draw.y1, draw.x2, draw.y2 );
-                }
-                break;
-
-            case dxfv::cDXFGraphObject::eType::text:
-                //po->getDraw( draw );
-                //dc.DrawLabel( draw.text, wxRect( draw.x1, draw.y1,draw.x1+100, draw.y1+100 ) );
-                dc.DrawText( draw.text, draw.x1, draw.y1 );
-                break;
-            }
-        }
+        po->Draw( dc, dxf );
     }
 
 //
@@ -427,4 +359,86 @@ void dxfv_wxWidgetsFrame::OnKeyDown(wxKeyEvent& event)
 
 
 
+}
+
+namespace dxfv
+{
+void CLine::Draw( wxDC& dc, CDxf* dxf )
+{
+    cDrawPrimitiveData draw( dxf );
+
+    // loop over drawing primitives
+    while( getDraw( draw ) )
+    {
+        dc.DrawLine( draw.x1, draw.y1, draw.x2, draw.y2 );
+    }
+}
+void CArc::Draw( wxDC& dc, CDxf* dxf )
+{
+    cDrawPrimitiveData draw( dxf );
+
+    // loop over drawing primitives
+    while( getDraw( draw ) )
+    {
+        dc.DrawEllipticArc (
+            draw.x1, draw.y1,
+            draw.r, draw.r,
+            draw.sa, draw.ea );
+    }
+}
+void CCircle::Draw( wxDC& dc, CDxf* dxf )
+{
+    cDrawPrimitiveData draw( dxf );
+
+    // loop over drawing primitives
+    while( getDraw( draw ) )
+    {
+        dc.DrawCircle( draw.x1, draw.y1, draw.r );
+    }
+}
+void cLWPolyLine::Draw( wxDC& dc, CDxf* dxf )
+{
+    cDrawPrimitiveData draw( dxf );
+
+    // loop over drawing primitives
+    while( getDraw( draw ) )
+    {
+        dc.DrawLine( draw.x1, draw.y1, draw.x2, draw.y2 );
+    }
+}
+void CSpline::Draw( wxDC& dc, CDxf* dxf )
+{
+    wxPoint spline_points[MAXPOINTS];
+    cDrawPrimitiveData draw( dxf );
+
+    // loop over drawing primitives
+    while( getDraw( draw ) )
+    {
+        if( dxf->wxwidgets() && m_ControlPointCount>0  )
+        {
+            // use wxwidgets spline method for control point spline TID6
+
+            if( ! draw.index_curve )
+            {
+                // collect control point
+                wxPoint p( draw.x1, draw.y1 );
+                spline_points[ draw.index-1] = p;
+            }
+            else
+            {
+                // all contol points
+                // use wxwidget spline method
+                dc.DrawSpline(
+                    m_ControlPointCount,
+                    spline_points );
+            }
+        }
+        else
+        {
+            // use wxwidgets drawing primitive for spline
+
+            dc.DrawLine( draw.x1, draw.y1, draw.x2, draw.y2 );
+        }
+    }
+}
 }

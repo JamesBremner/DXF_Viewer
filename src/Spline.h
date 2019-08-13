@@ -37,7 +37,11 @@ public:
     @return true if valid line has been returned
 
     */
-    bool getDraw( s_dxf_draw& draw );
+    bool getDraw( cDrawPrimitiveData& draw );
+
+#ifdef wxwbuild
+    void Draw( wxDC& dc, CDxf * dxf );
+#endif // wxwbuild
 
     void wxwidgets( bool f = true )
     {
@@ -58,7 +62,7 @@ private:
     void Generate();
     void MatrixSolve(std::vector<float>& B,
                      std::vector< std::vector<float> >& Mat );
-    bool getDrawControlPoint( s_dxf_draw& draw );
+    bool getDrawControlPoint( cDrawPrimitiveData& draw );
     void QuadraticBezierInterpolation(
         double& x, double& y,
         int index,

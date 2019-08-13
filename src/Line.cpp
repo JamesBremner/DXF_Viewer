@@ -69,7 +69,7 @@ bool CLine::Append(  cvit_t& cvit )
     throw std::runtime_error("DXF file incorrectly terminated");
 }
 
-bool CLine::getDraw( s_dxf_draw& draw )
+bool CLine::getDraw( cDrawPrimitiveData& draw )
 {
     if( draw.index )
         return false;

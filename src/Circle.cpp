@@ -73,7 +73,7 @@ bool CCircle::Append( cvit_t& cvit )
     return true;
 }
 
-bool CCircle::getDraw( s_dxf_draw& draw )
+bool CCircle::getDraw( cDrawPrimitiveData& draw )
 {
     if( draw.index )
         return false;

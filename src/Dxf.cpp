@@ -238,10 +238,10 @@ void CDxf::Init()
     m_Nesting = FALSE;
 }
 
-void CDxf::Init( s_dxf_draw& draw )
-{
-    draw.index = 0;
-    draw.index_curve = 0;
-    draw.rect = &myBoundingRectangle;
-}
+    cDrawPrimitiveData::cDrawPrimitiveData( CDxf * dxf )
+    {
+        index = 0;
+        index_curve = 0;
+        rect = &(dxf->myBoundingRectangle);
+    }
 }

@@ -7,7 +7,7 @@ namespace dxfv
 {
 
 
-bool CDimension::getDraw( s_dxf_draw& draw )
+bool CDimension::getDraw( cDrawPrimitiveData& draw )
 {
     draw.text = myText;
     draw.x1 = x1;
