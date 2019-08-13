@@ -86,7 +86,7 @@ bool cLWPolyLine::Append(  cvit_t& cvit )
             break;
         }
     }
-    return true;
+    throw std::runtime_error("DXF file incorrectly terminated");
 }
 
 bool cPolyLine::Append(  cvit_t& cvit )
@@ -124,7 +124,7 @@ bool cPolyLine::Append(  cvit_t& cvit )
         }
     }
 
-    return true;
+    throw std::runtime_error("DXF file incorrectly terminated");
 }
 
 void cLWPolyLine::Update( cBoundingRectangle& rect )
