@@ -66,7 +66,7 @@ bool CLine::Append(  cvit_t& cvit )
             break;
         }
     }
-    return true;
+    throw std::runtime_error("DXF file incorrectly terminated");
 }
 
 bool CLine::getDraw( s_dxf_draw& draw )

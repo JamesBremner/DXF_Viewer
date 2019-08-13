@@ -36,15 +36,15 @@ cDXFGraphObject* cDXFGraphObject::Factory( cCodeValue& cv )
     if( po->myfValid )
         return po;
     delete po;
-        po = (cDXFGraphObject*)new CCircle( cv );
+    po = (cDXFGraphObject*)new CCircle( cv );
     if( po->myfValid )
         return po;
     delete po;
-        po = (cDXFGraphObject*)new CArc( cv );
+    po = (cDXFGraphObject*)new CArc( cv );
     if( po->myfValid )
         return po;
     delete po;
-        po = (cDXFGraphObject*)new CText( cv );
+    po = (cDXFGraphObject*)new CText( cv );
     if( po->myfValid )
         return po;
     delete po;
@@ -168,20 +168,21 @@ void CDxf::LoadFile(const std::string& filepath)
         if( cvit->Code() != 0 )
             continue;
 
-        //std::cout << cvit->myValue << "\n";
+        //std::cout << cvit->myCode << ", "<< cvit->myValue << "\n";
 
         cDXFGraphObject * po = cDXFGraphObject::Factory( *cvit );
         if( po )
         {
             po->Append( cvit );
+            po->Options( this );
             myGraphObject.push_back( po );
         }
 
     }
     UpdateBoundingRectangle();
     myLoadStatus = OK;
-
 }
+
 
 void CDxf::UpdateBoundingRectangle()
 {

@@ -75,6 +75,9 @@ bool CCircle::Append( cvit_t& cvit )
 
 bool CCircle::getDraw( s_dxf_draw& draw )
 {
+    if( draw.index )
+        return false;
+    draw.index++;
     draw.x1 = x;
     draw.y1 = y;
     draw.r  = r;

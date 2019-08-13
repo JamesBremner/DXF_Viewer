@@ -10,48 +10,48 @@
 
 class dxfv_wxWidgetsApp : public wxApp
 {
-    public:
-        virtual bool OnInit();
+public:
+    virtual bool OnInit();
 };
 
 IMPLEMENT_APP(dxfv_wxWidgetsApp);
 
 class dxfv_wxWidgetsFrame: public wxFrame
 {
-    public:
-        dxfv_wxWidgetsFrame(wxFrame *frame, const wxString& title);
-        ~dxfv_wxWidgetsFrame();
-    private:
-        enum
-        {
-            idMenuQuit = 1000,
-            idMenuAbout,
-            idMenuOpen,
-            idMenuFit
-        };
-        wxPoint old_pos;
+public:
+    dxfv_wxWidgetsFrame(wxFrame *frame, const wxString& title);
+    ~dxfv_wxWidgetsFrame();
+private:
+    enum
+    {
+        idMenuQuit = 1000,
+        idMenuAbout,
+        idMenuOpen,
+        idMenuFit
+    };
+    wxPoint old_pos;
 
-        void OnClose(wxCloseEvent& event);
-        void OnQuit(wxCommandEvent& event);
-        void OnAbout(wxCommandEvent& event);
-        void OnOpen(wxCommandEvent& event);
-        void OnFit(wxCommandEvent& event);
-        void OnPaint(wxPaintEvent& event);
-        void OnSize(wxSizeEvent& event);
-        void OnWheel(wxMouseEvent& event);
-        void OnMouseMove(wxMouseEvent& event);
-        void OnLeftDown(wxMouseEvent& event);
-        void OnKeyDown(wxKeyEvent& event);
-        DECLARE_EVENT_TABLE()
+    void OnClose(wxCloseEvent& event);
+    void OnQuit(wxCommandEvent& event);
+    void OnAbout(wxCommandEvent& event);
+    void OnOpen(wxCommandEvent& event);
+    void OnFit(wxCommandEvent& event);
+    void OnPaint(wxPaintEvent& event);
+    void OnSize(wxSizeEvent& event);
+    void OnWheel(wxMouseEvent& event);
+    void OnMouseMove(wxMouseEvent& event);
+    void OnLeftDown(wxMouseEvent& event);
+    void OnKeyDown(wxKeyEvent& event);
+    DECLARE_EVENT_TABLE()
 
 
-        dxfv::CDxf * dxf;
+    dxfv::CDxf * dxf;
 
-        /// Model co-ordinates of window center
-        wxPoint ModelAtWindowCenter();
+    /// Model co-ordinates of window center
+    wxPoint ModelAtWindowCenter();
 
-        /// Pan so model point is at window center
-        void PanToWindowCenter( wxPoint& P );
+    /// Pan so model point is at window center
+    void PanToWindowCenter( wxPoint& P );
 };
 
 
@@ -226,67 +226,77 @@ void dxfv_wxWidgetsFrame::OnPaint(wxPaintEvent& event)
     // scale to window
     dxf->myBoundingRectangle.CalcScale( sz.GetWidth(), sz.GetHeight() );
 
+    // data for drawing primitives
     dxfv::s_dxf_draw draw;
 
+    // array to hold control points for wxwidgets spline method TID6
+    wxPoint spline_points[MAXPOINTS];
+
+    // loop over graphical entities
     for( auto po : dxf->Objects() )
     {
         dxf->Init( draw );
-        //while( po->getDraw( draw ) ) {
-        switch( po->myType )
-        {
-        case dxfv::cDXFGraphObject::eType::line:
-        case dxfv::cDXFGraphObject::eType::lwpolyline:
-        case dxfv::cDXFGraphObject::eType::polyline:
-            while( po->getDraw( draw ) )
-                dc.DrawLine( draw.x1, draw.y1, draw.x2, draw.y2 );
-            break;
-        case dxfv::cDXFGraphObject::eType::circle:
-            po->getDraw( draw );
-            dc.DrawCircle( draw.x1, draw.y1, draw.r );
-            break;
-        case dxfv::cDXFGraphObject::eType::arc:
-            po->getDraw( draw );
-            dc.DrawEllipticArc (
-                draw.x1, draw.y1,
-                draw.r, draw.r,
-                draw.sa, draw.ea );
-            break;
-        case dxfv::cDXFGraphObject::eType::spline:
-        {
-            dxfv::CSpline* spline = (dxfv::CSpline*)po;
 
-            if( dxf->wxwidgets() & spline->m_ControlPointCount>0  )
+        // loop over drawing primitives
+        while( po->getDraw( draw ) )
+        {
+            // select drawing primitive for entity type
+            switch( po->myType )
             {
-                spline->wxwidgets();
-                wxPoint pa[spline->m_ControlPointCount];
-                while( spline->getDraw( draw ) )
+
+            case dxfv::cDXFGraphObject::eType::line:
+            case dxfv::cDXFGraphObject::eType::lwpolyline:
+            case dxfv::cDXFGraphObject::eType::polyline:
+                dc.DrawLine( draw.x1, draw.y1, draw.x2, draw.y2 );
+                break;
+
+            case dxfv::cDXFGraphObject::eType::circle:
+                dc.DrawCircle( draw.x1, draw.y1, draw.r );
+                break;
+
+            case dxfv::cDXFGraphObject::eType::arc:
+                dc.DrawEllipticArc (
+                    draw.x1, draw.y1,
+                    draw.r, draw.r,
+                    draw.sa, draw.ea );
+                break;
+
+            case dxfv::cDXFGraphObject::eType::spline:
+                if( dxf->wxwidgets() && ((dxfv::CSpline*)po)->m_ControlPointCount>0  )
                 {
-                    wxPoint p( draw.x1, draw.y1 );
-                    pa[draw.index-1] = p;
+                    // use wxwidgets spline method for control point spline TID6
+
+                    if( ! draw.index_curve )
+                    {
+                        // collect control point
+                        wxPoint p( draw.x1, draw.y1 );
+                        spline_points[ draw.index-1] = p;
+                    }
+                    else
+                    {
+                        // all contol points
+                        // use wxwidget spline method
+                        dc.DrawSpline(
+                            ((dxfv::CSpline*)po)->m_ControlPointCount,
+                            spline_points );
+                    }
                 }
-                dc.DrawSpline( spline->m_ControlPointCount, pa );
-            }
-            else
-            {
-                while( po->getDraw( draw ) )
+                else
                 {
+                    // use wxwidgets drawing primitive for spline
+
                     dc.DrawLine( draw.x1, draw.y1, draw.x2, draw.y2 );
                 }
+                break;
+
+            case dxfv::cDXFGraphObject::eType::text:
+                //po->getDraw( draw );
+                //dc.DrawLabel( draw.text, wxRect( draw.x1, draw.y1,draw.x1+100, draw.y1+100 ) );
+                dc.DrawText( draw.text, draw.x1, draw.y1 );
+                break;
             }
         }
-        break;
-        case dxfv::cDXFGraphObject::eType::text:
-            po->getDraw( draw );
-            //dc.DrawLabel( draw.text, wxRect( draw.x1, draw.y1,draw.x1+100, draw.y1+100 ) );
-            dc.DrawText( draw.text, draw.x1, draw.y1 );
-            break;
-        }
-        //}
     }
-
-
-
-
 
 //
 //

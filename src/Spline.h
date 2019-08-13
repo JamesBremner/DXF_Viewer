@@ -44,6 +44,8 @@ public:
         myfwxwidgets = f;
     }
 
+    void Options( CDxf * dxf );
+
 private:
     bool myfwxwidgets;          ///< true if using wxwidgets method for control points
     std::vector<float> Ax;

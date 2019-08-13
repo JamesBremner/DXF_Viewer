@@ -105,6 +105,11 @@ bool CSpline::Append(  cvit_t& cvit )
     return true;
 }
 
+void CSpline::Options( CDxf * dxf )
+{
+    myfwxwidgets = dxf->wxwidgets();
+}
+
 void CSpline::Update( cBoundingRectangle& rect )
 {
     int count = m_FitPointCount;
@@ -291,11 +296,17 @@ void CSpline::QuadraticBezierInterpolation(
 }
 bool CSpline::getDrawControlPoint( s_dxf_draw& draw )
 {
+    // check if using wxwidgets spline method
     if( myfwxwidgets )
     {
         // check if more points are available
         if( draw.index == m_ControlPointCount )
-            return false;
+        {
+            if( draw.index_curve )
+                return false;
+            draw.index_curve = 1;
+            return true;
+        }
 
         draw.x1 = x[draw.index];
         draw.y1 = y[draw.index];
@@ -304,6 +315,7 @@ bool CSpline::getDrawControlPoint( s_dxf_draw& draw )
         draw.y2 = y[draw.index+1];
         draw.rect->ApplyScale(draw.x2,draw.y2);
         draw.index++;
+        draw.index_curve = 0;
         return true;
     }
 

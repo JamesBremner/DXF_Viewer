@@ -11,6 +11,9 @@
 
 namespace dxfv
 {
+
+class CDxf;
+
 /// DXF code value pair
 class cCodeValue
 {
@@ -215,6 +218,14 @@ public:
         @return pointer to valid  constructed graph type, or nullptr
     */
     static cDXFGraphObject* Factory( cCodeValue& cv );
+
+    /** Set options fron CDxf
+        @param[in] CDxf to set options from
+
+        NOP in base class,
+        override in entity type that needs to set options
+    */
+    virtual void Options( CDxf * dxf ) {}
 
     virtual bool Append( cvit_t& cvit ) = 0;
     virtual void Update( cBoundingRectangle& rect ) = 0;

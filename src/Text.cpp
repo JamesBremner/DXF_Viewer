@@ -54,6 +54,9 @@ bool CText::Append(  cvit_t& cvit )
 
 bool CText::getDraw( s_dxf_draw& draw )
 {
+    if( draw.index )
+        return false;
+    draw.index++;
     draw.text = myText;
     draw.x1 = x1;
     draw.y1 = y1;
