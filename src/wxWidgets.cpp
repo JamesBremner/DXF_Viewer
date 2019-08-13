@@ -406,6 +406,16 @@ void cLWPolyLine::Draw( wxDC& dc, CDxf* dxf )
         dc.DrawLine( draw.x1, draw.y1, draw.x2, draw.y2 );
     }
 }
+void CText::Draw( wxDC& dc, CDxf* dxf )
+{
+    cDrawPrimitiveData draw( dxf );
+
+    // loop over drawing primitives
+    while( getDraw( draw ) )
+    {
+         dc.DrawText( draw.text, draw.x1, draw.y1 );
+    }
+}
 void CSpline::Draw( wxDC& dc, CDxf* dxf )
 {
     wxPoint spline_points[MAXPOINTS];

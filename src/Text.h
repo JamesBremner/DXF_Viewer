@@ -14,6 +14,10 @@ public:
     {
         rect.Update( x1, y1 );
     }
+#ifdef wxwbuild
+    void Draw( wxDC& dc, CDxf * dxf );
+#endif // wxwbuild
+
 private:
     std::string myText;
     double x1;

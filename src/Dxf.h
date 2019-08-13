@@ -239,7 +239,11 @@ public:
     virtual bool getDraw( cDrawPrimitiveData& draw ) = 0;
 
 #ifdef wxwbuild
-    virtual void Draw( wxDC& dc, CDxf * dxf ) {}
+    /** Use wxWidget graphic primitives to draw the entity
+        @param[in] dc the device context where entity is to be drawn
+        @param[in] dxf pointer to the DXF entity container
+    */
+    virtual void Draw( wxDC& dc, CDxf * dxf ) = 0;
 #endif // wxwbuild
 
 protected:
