@@ -71,12 +71,15 @@ bool CLine::Append(  cvit_t& cvit )
 
 bool CLine::getDraw( s_dxf_draw& draw )
 {
+    if( draw.index )
+        return false;
     draw.x1 = x1;
     draw.y1 = y1;
     draw.x2 = x2;
     draw.y2 = y2;
     draw.rect->ApplyScale(draw.x1, draw.y1);
     draw.rect->ApplyScale(draw.x2, draw.y2);
+    draw.index++;
     return true;
 }
 }
