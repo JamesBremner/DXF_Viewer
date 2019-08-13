@@ -12,7 +12,13 @@
 #ifdef wxwbuild
 class wxDC;
 #endif // wxwbuild
-
+#ifdef nanabuild
+namespace nana {
+    namespace paint {
+    class graphics;
+    }
+}
+#endif // nanabuild
 namespace dxfv
 {
 
@@ -245,6 +251,9 @@ public:
     */
     virtual void Draw( wxDC& dc, CDxf * dxf ) = 0;
 #endif // wxwbuild
+#ifdef nanabuild
+    virtual void Draw( nana::paint::graphics& graph, CDxf * dxf ) { std::cout << "base draw\n"; }
+#endif // nanabuild
 
 protected:
     std::string myCode;
@@ -273,7 +282,7 @@ class CDxf
 {
 public:
 
-    BYTE m_InitialDraw;
+    unsigned char m_InitialDraw;
 
     enum eLoadStatus
     {
@@ -281,7 +290,7 @@ public:
         OK,
         demo,
     } myLoadStatus;
-    BYTE m_Nesting;
+    unsigned char m_Nesting;
 
     cBoundingRectangle myBoundingRectangle;
 

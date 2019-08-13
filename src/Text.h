@@ -17,6 +17,9 @@ public:
 #ifdef wxwbuild
     void Draw( wxDC& dc, CDxf * dxf );
 #endif // wxwbuild
+#ifdef nanabuild
+    void Draw( nana::paint::graphics& graph, CDxf * dxf );
+#endif // nanabuild
 
 private:
     std::string myText;

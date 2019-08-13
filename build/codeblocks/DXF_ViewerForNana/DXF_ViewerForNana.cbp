@@ -2,12 +2,12 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-		<Option title="DXF_Wiewer" />
+		<Option title="DXF_ViewerForNana" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc_v83" />
 		<Build>
 			<Target title="Debug">
-				<Option output="../../../bin/DXF_Wiewer" prefix_auto="1" extension_auto="1" />
+				<Option output="../../../bin/DXF_ViewerForNana" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc_v83" />
@@ -16,7 +16,7 @@
 				</Compiler>
 			</Target>
 			<Target title="Release">
-				<Option output="../../../bin/DXF_Wiewer" prefix_auto="1" extension_auto="1" />
+				<Option output="../../../bin/DXF_ViewerForNana" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="gcc_v83" />
@@ -32,29 +32,20 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 			<Add option="-D__GNUWIN32__" />
-			<Add option="-Dwxwbuild" />
-			<Add directory="$(#wxwidgets.include)" />
-			<Add directory="$(#wxwidgets.setup)" />
+			<Add option="-Dnanabuild" />
+			<Add directory="$(#nana.include)" />
 		</Compiler>
 		<Linker>
 			<Add option="-static-libstdc++" />
 			<Add option="-static-libgcc" />
 			<Add option="-static" />
-			<Add library="wxmsw31u" />
-			<Add library="wxpng" />
-			<Add library="wxzlib" />
-			<Add library="ole32" />
-			<Add library="Comctl32" />
-			<Add library="uuid" />
-			<Add library="OleAut32" />
-			<Add library="Winspool" />
-			<Add library="version" />
-			<Add library="shlwapi" />
-			<Add library="uxtheme" />
-			<Add library="oleacc" />
+			<Add library="nana" />
 			<Add library="gdi32" />
-			<Add library="Comdlg32" />
-			<Add directory="$(#wxwidgets.lib)" />
+			<Add library="comdlg32" />
+			<Add library="ws2_32" />
+			<Add library="wsock32" />
+			<Add library="stdc++fs" />
+			<Add directory="$(#nana.lib)" />
 		</Linker>
 		<Unit filename="../../../src/Arc.cpp" />
 		<Unit filename="../../../src/Arc.h" />
@@ -73,7 +64,7 @@
 		<Unit filename="../../../src/StdAfx.h" />
 		<Unit filename="../../../src/Text.cpp" />
 		<Unit filename="../../../src/Text.h" />
-		<Unit filename="../../../src/wxWidgets.cpp" />
+		<Unit filename="../../../src/nana.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

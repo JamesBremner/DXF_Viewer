@@ -21,8 +21,8 @@ public:
     int m_FitPointCount;
     int m_ControlPointCount;
     double x[MAXPOINTS],y[MAXPOINTS];
-    BYTE m_Select;
-    BYTE m_Nest;
+    unsigned char m_Select;
+    unsigned char m_Nest;
 
     CSpline();
     CSpline( cCodeValue& cv );
@@ -42,6 +42,9 @@ public:
 #ifdef wxwbuild
     void Draw( wxDC& dc, CDxf * dxf );
 #endif // wxwbuild
+#ifdef nanabuild
+    void Draw( nana::paint::graphics& graph, CDxf * dxf );
+#endif // nanabuild
 
     void wxwidgets( bool f = true )
     {

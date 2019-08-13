@@ -12,11 +12,11 @@ class cLWPolyLine   : public cDXFGraphObject
 
 {
 public:
-    UINT m_VertexCount;
+    unsigned int m_VertexCount;
     double x[MAXPOINTS],y[MAXPOINTS];
     std::string m_Layer;
-    BYTE m_Select;
-    BYTE m_Nest;
+    unsigned char m_Select;
+    unsigned char m_Nest;
 
     cLWPolyLine();
     cLWPolyLine( cCodeValue& cv );
@@ -38,6 +38,9 @@ public:
 #ifdef wxwbuild
     void Draw( wxDC& dc, CDxf * dxf );
 #endif // wxwbuild
+#ifdef nanabuild
+    void Draw( nana::paint::graphics& graph, CDxf * dxf );
+#endif // nanabuild
 
 protected:
     bool myfClosed;

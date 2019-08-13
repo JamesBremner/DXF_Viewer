@@ -16,8 +16,8 @@ class CCircle  : public cDXFGraphObject
 public:
     double x,y,r;
     std::string m_Layer;
-    BYTE m_Select;
-    BYTE m_Nest;
+    unsigned char m_Select;
+    unsigned char m_Nest;
 
     CCircle();
     CCircle( cCodeValue& cv );
@@ -41,6 +41,9 @@ public:
 #ifdef wxwbuild
     void Draw( wxDC& dc, CDxf * dxf );
 #endif // wxwbuild
+#ifdef nanabuild
+    void Draw( nana::paint::graphics& graph, CDxf * dxf );
+#endif // nanabuild
 };
 }
 #endif // !defined(AFX_CIRCLE_H__B468D98B_7FA1_4A99_B55F_2A56932403A7__INCLUDED_)

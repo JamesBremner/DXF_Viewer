@@ -16,8 +16,8 @@ class CArc  : public cDXFGraphObject
 public:
 	double x,y,r,sa,ea;
 	std::string m_Layer;
-	BYTE m_Select;
-	BYTE m_Nest;
+	unsigned char m_Select;
+	unsigned char m_Nest;
 
 	CArc();
 	CArc( cCodeValue& cv );
@@ -55,7 +55,9 @@ To run on other platforms or frameworks this code will need to be adjusted
 #ifdef wxwbuild
     void Draw( wxDC& dc, CDxf * dxf );
 #endif // wxwbuild
-
+#ifdef nanabuild
+    void Draw( nana::paint::graphics& graph, CDxf * dxf );
+#endif // nanabuild
 };
 }
 #endif // !defined(AFX_ARC_H__F3B30C5E_D3C4_4380_844A_03369FF97719__INCLUDED_)
