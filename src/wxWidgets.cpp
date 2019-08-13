@@ -216,6 +216,7 @@ void dxfv_wxWidgetsFrame::OnFit(wxCommandEvent& event)
 void dxfv_wxWidgetsFrame::OnPaint(wxPaintEvent& event)
 {
     wxPaintDC dc(this);
+    dxf->DC( &dc );
     dc.SetPen(*wxWHITE_PEN);
     dc.SetBrush(*wxTRANSPARENT_BRUSH);
     dc.SetTextForeground( *wxYELLOW );
@@ -227,7 +228,7 @@ void dxfv_wxWidgetsFrame::OnPaint(wxPaintEvent& event)
     // loop over graphical entities
     for( auto po : dxf->Objects() )
     {
-        po->Draw( dc, dxf );
+        po->Draw( dxf );
     }
 
 //
@@ -363,60 +364,60 @@ void dxfv_wxWidgetsFrame::OnKeyDown(wxKeyEvent& event)
 
 namespace dxfv
 {
-void CLine::Draw( wxDC& dc, CDxf* dxf )
+void CLine::Draw( CDxf* dxf )
 {
     cDrawPrimitiveData draw( dxf );
 
     // loop over drawing primitives
     while( getDraw( draw ) )
     {
-        dc.DrawLine( draw.x1, draw.y1, draw.x2, draw.y2 );
+        dxf->DC()->DrawLine( draw.x1, draw.y1, draw.x2, draw.y2 );
     }
 }
-void CArc::Draw( wxDC& dc, CDxf* dxf )
+void CArc::Draw( CDxf* dxf )
 {
     cDrawPrimitiveData draw( dxf );
 
     // loop over drawing primitives
     while( getDraw( draw ) )
     {
-        dc.DrawEllipticArc (
+        dxf->DC()->DrawEllipticArc (
             draw.x1, draw.y1,
             draw.r, draw.r,
             draw.sa, draw.ea );
     }
 }
-void CCircle::Draw( wxDC& dc, CDxf* dxf )
+void CCircle::Draw( CDxf* dxf )
 {
     cDrawPrimitiveData draw( dxf );
 
     // loop over drawing primitives
     while( getDraw( draw ) )
     {
-        dc.DrawCircle( draw.x1, draw.y1, draw.r );
+        dxf->DC()->DrawCircle( draw.x1, draw.y1, draw.r );
     }
 }
-void cLWPolyLine::Draw( wxDC& dc, CDxf* dxf )
+void cLWPolyLine::Draw( CDxf* dxf )
 {
     cDrawPrimitiveData draw( dxf );
 
     // loop over drawing primitives
     while( getDraw( draw ) )
     {
-        dc.DrawLine( draw.x1, draw.y1, draw.x2, draw.y2 );
+        dxf->DC()->DrawLine( draw.x1, draw.y1, draw.x2, draw.y2 );
     }
 }
-void CText::Draw( wxDC& dc, CDxf* dxf )
+void CText::Draw( CDxf* dxf )
 {
     cDrawPrimitiveData draw( dxf );
 
     // loop over drawing primitives
     while( getDraw( draw ) )
     {
-         dc.DrawText( draw.text, draw.x1, draw.y1 );
+         dxf->DC()->DrawText( draw.text, draw.x1, draw.y1 );
     }
 }
-void CSpline::Draw( wxDC& dc, CDxf* dxf )
+void CSpline::Draw( CDxf* dxf )
 {
     wxPoint spline_points[MAXPOINTS];
     cDrawPrimitiveData draw( dxf );
@@ -438,7 +439,7 @@ void CSpline::Draw( wxDC& dc, CDxf* dxf )
             {
                 // all contol points
                 // use wxwidget spline method
-                dc.DrawSpline(
+                dxf->DC()->DrawSpline(
                     m_ControlPointCount,
                     spline_points );
             }
@@ -447,7 +448,7 @@ void CSpline::Draw( wxDC& dc, CDxf* dxf )
         {
             // use wxwidgets drawing primitive for spline
 
-            dc.DrawLine( draw.x1, draw.y1, draw.x2, draw.y2 );
+            dxf->DC()->DrawLine( draw.x1, draw.y1, draw.x2, draw.y2 );
         }
     }
 }

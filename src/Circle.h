@@ -38,12 +38,7 @@ public:
     */
     bool getDraw( cDrawPrimitiveData& draw );
 
-#ifdef wxwbuild
-    void Draw( wxDC& dc, CDxf * dxf );
-#endif // wxwbuild
-#ifdef nanabuild
-    void Draw( nana::paint::graphics& graph, CDxf * dxf );
-#endif // nanabuild
+void Draw( CDxf * dxf );
 };
 }
 #endif // !defined(AFX_CIRCLE_H__B468D98B_7FA1_4A99_B55F_2A56932403A7__INCLUDED_)

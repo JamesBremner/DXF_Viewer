@@ -40,6 +40,8 @@ int main()
     nana::drawing dw{fm};
     dw.draw([&dxf](nana::paint::graphics& graph)
     {
+        dxf->graph( &graph );
+
         // scale to window
         dxf->myBoundingRectangle.CalcScale(
             graph.width(),
@@ -48,7 +50,7 @@ int main()
         // loop over graphical entities
         for( auto po : dxf->Objects() )
         {
-            po->Draw( graph, dxf );
+            po->Draw( dxf );
         }
     });
 
@@ -59,16 +61,16 @@ int main()
 
 namespace dxfv
 {
-void CLine::Draw( nana::paint::graphics& graph, CDxf* dxf )
+void CLine::Draw( CDxf* dxf )
 {
     cDrawPrimitiveData draw( dxf );
     getDraw( draw );
-    graph.line(
+    dxf->graph()->line(
     {draw.x1, draw.y1},
     {draw.x2, draw.y2},
     nana::colors::white);
 }
-void CArc::Draw( nana::paint::graphics& graph, CDxf* dxf )
+void CArc::Draw( CDxf* dxf )
 {
     cDrawPrimitiveData draw( dxf );
     getDraw( draw );
@@ -78,39 +80,39 @@ void CArc::Draw( nana::paint::graphics& graph, CDxf* dxf )
 //    {draw.x2, draw.y2},
 //    nana::colors::white);
 }
-void CCircle::Draw( nana::paint::graphics& graph, CDxf* dxf )
+void CCircle::Draw( CDxf* dxf )
 {
     cDrawPrimitiveData draw( dxf );
     getDraw( draw );
     ::Ellipse(
-        reinterpret_cast<HDC>(const_cast<void*>(graph.context())),
+        reinterpret_cast<HDC>(const_cast<void*>(dxf->graph()->context())),
         draw.x1-draw.r, draw.y1-draw.r,
         draw.x1+draw.r, draw.y1+draw.r );
 }
-void cLWPolyLine::Draw( nana::paint::graphics& graph, CDxf* dxf )
+void cLWPolyLine::Draw( CDxf* dxf )
 {
     cDrawPrimitiveData draw( dxf );
 
     // loop over drawing primitives
     while( getDraw( draw ) )
     {
-        graph.line(
+        dxf->graph()->line(
         {draw.x1, draw.y1},
         {draw.x2, draw.y2},
         nana::colors::white);
     }
 }
-void CText::Draw( nana::paint::graphics& graph, CDxf* dxf )
+void CText::Draw( CDxf* dxf )
 {
     cDrawPrimitiveData draw( dxf );
 
     // loop over drawing primitives
     while( getDraw( draw ) )
     {
-        graph.string( { draw.x1, draw.y1 }, draw.text, nana::colors::yellow );
+        dxf->graph()->string( { draw.x1, draw.y1 }, draw.text, nana::colors::yellow );
     }
 }
-void CSpline::Draw( nana::paint::graphics& graph, CDxf* dxf )
+void CSpline::Draw( CDxf* dxf )
 {
     if( m_ControlPointCount  )
     {
@@ -122,7 +124,7 @@ void CSpline::Draw( nana::paint::graphics& graph, CDxf* dxf )
     // loop over drawing primitives
     while( getDraw( draw ) )
     {
-        graph.line(
+        dxf->graph()->line(
         {draw.x1, draw.y1},
         {draw.x2, draw.y2},
         nana::colors::white);

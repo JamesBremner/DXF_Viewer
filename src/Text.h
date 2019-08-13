@@ -14,12 +14,7 @@ public:
     {
         rect.Update( x1, y1 );
     }
-#ifdef wxwbuild
-    void Draw( wxDC& dc, CDxf * dxf );
-#endif // wxwbuild
-#ifdef nanabuild
-    void Draw( nana::paint::graphics& graph, CDxf * dxf );
-#endif // nanabuild
+    void Draw( CDxf * dxf );
 
 private:
     std::string myText;

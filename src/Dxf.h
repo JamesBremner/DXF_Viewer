@@ -242,18 +242,17 @@ public:
 
     virtual bool Append( cvit_t& cvit ) = 0;
     virtual void Update( cBoundingRectangle& rect ) = 0;
+
+    /** Get data for next call to graphic primitive
+        @param[in/out] draw data for previous/next graphic primitive call
+        @return false if no more needed, true otherwise
+    */
     virtual bool getDraw( cDrawPrimitiveData& draw ) = 0;
 
-#ifdef wxwbuild
-    /** Use wxWidget graphic primitives to draw the entity
-        @param[in] dc the device context where entity is to be drawn
+    /** Use graphic primitives to draw the entity
         @param[in] dxf pointer to the DXF entity container
     */
-    virtual void Draw( wxDC& dc, CDxf * dxf ) = 0;
-#endif // wxwbuild
-#ifdef nanabuild
-    virtual void Draw( nana::paint::graphics& graph, CDxf * dxf ) { std::cout << "base draw\n"; }
-#endif // nanabuild
+    virtual void Draw( CDxf * dxf ) = 0;
 
 protected:
     std::string myCode;
@@ -311,10 +310,37 @@ public:
         return myGraphObject;
     }
 
+    #ifdef wxwbuild
+    void DC( wxDC* dc )
+    {
+        myDC = dc;
+    }
+    wxDC* DC()
+    {
+        return myDC;
+    }
+    #endif // wxwbuild
+    #ifdef nanabuild
+    void graph( nana::paint::graphics * g )
+    {
+        myGraph = g;
+    }
+    nana::paint::graphics * graph()
+    {
+        return myGraph;
+    }
+    #endif // nanabuild
+
 private:
     bool  myfwxwidgets;          ///< true if using wxwidgets method for control point splines
     std::vector< cCodeValue > myCodeValue;
     std::vector< cDXFGraphObject* > myGraphObject;
+    #ifdef wxwbuild
+    wxDC* myDC;
+    #endif // wxwbuild
+    #ifdef nanabuild
+    nana::paint::graphics * myGraph;
+    #endif // nanabuild
 
     void UpdateBoundingRectangle();
 };
