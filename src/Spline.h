@@ -11,8 +11,6 @@
 
 #include <vector>
 
-#define MAXPOINTS 128
-
 namespace dxfv
 {
 

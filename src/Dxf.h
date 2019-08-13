@@ -2,15 +2,12 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#if !defined(AFX_DXF_H__148A5C6F_8B80_49A1_A007_2259EB5655F5__INCLUDED_)
-#define AFX_DXF_H__148A5C6F_8B80_49A1_A007_2259EB5655F5__INCLUDED_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
 
 #include <iostream>
 #include <fstream>
+
+#define MAXPOINTS 1024
 
 namespace dxfv
 {
@@ -239,6 +236,7 @@ protected:
 #include "text.h"
 #include "Dimension.h"
 
+
 namespace dxfv
 {
 
@@ -292,4 +290,4 @@ private:
     void UpdateBoundingRectangle();
 };
 }
-#endif // !defined(AFX_DXF_H__148A5C6F_8B80_49A1_A007_2259EB5655F5__INCLUDED_)
+

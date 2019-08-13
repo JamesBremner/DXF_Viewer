@@ -4,7 +4,6 @@
 
 #pragma once
 
-
 namespace dxfv
 {
 /// Light Weight polyline
@@ -14,7 +13,7 @@ class cLWPolyLine   : public cDXFGraphObject
 {
 public:
     UINT m_VertexCount;
-    double x[1024],y[1024];
+    double x[MAXPOINTS],y[MAXPOINTS];
     std::string m_Layer;
     BYTE m_Select;
     BYTE m_Nest;

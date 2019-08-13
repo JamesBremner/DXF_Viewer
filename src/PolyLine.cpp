@@ -83,6 +83,8 @@ bool cLWPolyLine::Append(  cvit_t& cvit )
             break;
         case 20:
             y[point_index++] = atof(cvit->myValue.c_str());
+            if( point_index >= MAXPOINTS )
+                throw std::runtime_error("Too many LWPOLYLINE points");
             break;
         }
     }
@@ -120,6 +122,8 @@ bool cPolyLine::Append(  cvit_t& cvit )
         case 20:
             if( fVertex )
                 y[point_index++] = atof(cvit->myValue.c_str());
+            if( point_index >= MAXPOINTS )
+                throw std::runtime_error("Too many POLYLINE points");
             break;
         }
     }
