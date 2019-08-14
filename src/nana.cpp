@@ -55,6 +55,22 @@ int main()
         }
     });
 
+    nana::point old_pos;
+    fm.events().mouse_down([&old_pos](const nana::arg_mouse&arg)
+    {
+        if( arg.left_button )
+            old_pos = arg.pos;
+    });
+    fm.events().mouse_move([&](const nana::arg_mouse&arg)
+    {
+        if( ! arg.left_button )
+            return;
+        auto now = arg.pos;
+        dxf->myBoundingRectangle.Pan( old_pos.x,old_pos.y,now.x,now.y);
+        nana::API::refresh_window( fm );
+        old_pos = now;
+    });
+
     fm.show();
 
     nana::exec();
