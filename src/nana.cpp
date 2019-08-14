@@ -1,3 +1,4 @@
+#include <cmath>
 #include <nana/gui.hpp>
 #include <nana/gui/filebox.hpp>
 #include <nana/gui/widgets/menu.hpp>
@@ -72,13 +73,14 @@ void CLine::Draw( CDxf* dxf )
 }
 void CArc::Draw( CDxf* dxf )
 {
-    cDrawPrimitiveData draw( dxf );
-    getDraw( draw );
-//    HDC dc = reinterpret_cast<HDC>(const_cast<void*>(graph.context()));
-//    graph.line(
-//    {draw.x1, draw.y1},
-//    {draw.x2, draw.y2},
-//    nana::colors::white);
+    int xl, yt, xr, yb, sx, sy, ex, ey;
+    WAPData( xl, yt, xr, yb, sx, sy, ex, ey, dxf );
+    HDC hdc = reinterpret_cast<HDC>(const_cast<void*>(dxf->graph()->context()));
+    SelectObject(hdc, GetStockObject(DC_PEN));
+    SetDCPenColor(hdc, RGB(255,255,255));
+    ::Arc(
+        hdc,
+        xl, yt, xr, yb, sx, sy, ex, ey );
 }
 void CCircle::Draw( CDxf* dxf )
 {

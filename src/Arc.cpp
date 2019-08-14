@@ -2,20 +2,11 @@
 //
 //////////////////////////////////////////////////////////////////////
 
+#include <cmath>
 
 #include "stdafx.h"
 #include "dxf.h"
 #include "Arc.h"
-
-#ifdef _DEBUG
-#undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
-#define new DEBUG_NEW
-#endif
-
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
-//////////////////////////////////////////////////////////////////////
 
 namespace dxfv
 {
@@ -65,11 +56,39 @@ bool CArc::getDraw( cDrawPrimitiveData& draw )
     return true;
 }
 
+void CArc::WAPData(
+    int& xl, int& yt, int& xr, int& yb,
+    int& sx, int& sy, int& ex, int& ey,
+    CDxf* dxf )
+{
+    double dxl = x-r;
+    double dyt = y-r;
+    double dxr = x+r;
+    double dyb = y+r;
+    double dsx = x + r * cos(sa * M_PI/180);
+    double dsy = y + r * sin(sa * M_PI/180);
+    double dex = x + r * cos(ea * M_PI/180);
+    double dey = y + r * sin(ea * M_PI/180);
+    dxf->myBoundingRectangle.ApplyScale( dxl, dyt );
+    dxf->myBoundingRectangle.ApplyScale( dxr, dyb );
+    dxf->myBoundingRectangle.ApplyScale( dsx, dsy );
+    dxf->myBoundingRectangle.ApplyScale( dex, dey );
+    xl = round(dxl);
+    yt = round(dyt);
+    xr = round(dxr);
+    yb = round(dyb);
+    sx = round(dsx);
+    sy = round(dsy);
+    ex = round(dex);
+    ey = round(dey);
+}
+
 bool CArc::Append(  cvit_t& cvit )
 {
     while( true )
     {
         cvit++;
+        //std::cout << cvit->Code() <<" "<< cvit->myValue << "\n";
         switch( cvit->Code() )
         {
         case 0:
