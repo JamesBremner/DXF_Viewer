@@ -282,18 +282,6 @@ bool CSpline::getDraw( cDrawPrimitiveData& draw )
     return true;
 }
 
-void CSpline::QuadraticBezierInterpolation(
-    double& bx, double& by,
-    int index,
-    float f )
-{
-    double qx0 = x[index] + (x[index+1]-x[index]) * f;
-    double qy0 = y[index] + (y[index+1]-y[index]) * f;
-    double qx1 = x[index+1] + (x[index+2]-x[index+1]) * f;
-    double qy1 = y[index+1] + (y[index+2]-y[index+1]) * f;
-    bx = qx0 + (qx1-qx0)*f;
-    by = qy0 + (qy1-qy0)*f;
-}
 bool CSpline::getDrawControlPoint( cDrawPrimitiveData& draw )
 {
     // check if using wxwidgets spline method
@@ -319,52 +307,55 @@ bool CSpline::getDrawControlPoint( cDrawPrimitiveData& draw )
         return true;
     }
 
+    int Ndiv = 100;
+
     // check if more points are available
-    if( draw.index == m_ControlPointCount-2 )
+    if( draw.index == Ndiv - 1 )
         return false;
 
-    const int ndiv = 10;
-
-    //cout << "f ";
-    if( draw.index_curve == 0 )
-    {
-        cout << "0 ";
-        draw.x1 = x[draw.index];
-        draw.y1 = y[draw.index];
-        float f = 1.0 / ndiv;
-        //cout << f << "\n";
-        QuadraticBezierInterpolation( draw.x2, draw.y2, draw.index, f );
-        draw.index_curve++;
-    }
-    else if( draw.index_curve < ndiv-1 )
-    {
-        float f = ( draw.index_curve - 1.0 ) / ndiv;
-        //cout << f << " ";
-        QuadraticBezierInterpolation( draw.x1, draw.y1, draw.index, f );
-        f = ( (float) draw.index_curve ) / ndiv;
-        //cout << f << "\n";
-        QuadraticBezierInterpolation( draw.x2, draw.y2, draw.index, f );
-        draw.index_curve++;
-    }
-    else
-    {
-        float f = ( (float)draw.index_curve ) / ndiv;
-        cout << f << " ";
-        QuadraticBezierInterpolation( draw.x1, draw.y1, draw.index, f );
-        cout << "0\n";
-        draw.x2 = x[draw.index+2];
-        draw.y2 = y[draw.index+2];
-        draw.index_curve = 0;
-        draw.index++;
-    }
-
-//    std::cout << "getDrawControlPoint "
-//              << draw.index <<" "<< draw.index_curve <<" "<< draw.x1 <<" "<< draw.y1 <<" "<< draw.x2 <<" "<< draw.y2 << "\n";
-
+    getBezierPoint( draw.x1, draw.y1, ((float)draw.index)/Ndiv );
+    getBezierPoint( draw.x2, draw.y2, ((float)(draw.index+1))/Ndiv );
     draw.rect->ApplyScale(draw.x1,draw.y1);
     draw.rect->ApplyScale(draw.x2,draw.y2);
-
+    draw.index++;
+    draw.index_curve = 0;
     return true;
+
+}
+
+struct vec2 {
+    double x, y;
+    vec2() {}
+    vec2(double x, double y) : x(x), y(y) {}
+};
+
+vec2 operator + (vec2 a, vec2 b) {
+    return vec2(a.x + b.x, a.y + b.y);
+}
+
+vec2 operator - (vec2 a, vec2 b) {
+    return vec2(a.x - b.x, a.y - b.y);
+}
+
+vec2 operator * (double s, vec2 a) {
+    return vec2(s * a.x, s * a.y);
+}
+
+void CSpline::getBezierPoint( double& ox, double& oy, double t )
+{
+   // https://stackoverflow.com/a/21642962/16582
+
+    std::vector<vec2> tmp;
+    for( int k=0; k < m_ControlPointCount; k++ )
+        tmp.push_back( vec2( x[k], y[k] ) );
+    int i = m_ControlPointCount - 1;
+    while (i > 0) {
+        for (int k = 0; k < i; k++)
+            tmp[k] = tmp[k] + t * ( tmp[k+1] - tmp[k] );
+        i--;
+    }
+    ox = tmp[0].x;
+    oy = tmp[0].y;
 }
 
 }

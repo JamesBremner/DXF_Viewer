@@ -116,11 +116,6 @@ void CText::Draw( CDxf* dxf )
 }
 void CSpline::Draw( CDxf* dxf )
 {
-    if( m_ControlPointCount  )
-    {
-        // control point splines not supported
-        return;
-    }
     cDrawPrimitiveData draw( dxf );
 
     // loop over drawing primitives

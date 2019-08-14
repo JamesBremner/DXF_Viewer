@@ -118,7 +118,7 @@ CDxf::CDxf()
     : m_InitialDraw( false )
     , myLoadStatus( none )
     , m_Nesting( false )
-    , myfwxwidgets( true )
+    , myfwxwidgets( false ) // do not use wxwidgets for contol point splines
 {
 }
 

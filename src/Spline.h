@@ -2,12 +2,8 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#if !defined(AFX_SPLINE_H__E4B987FD_0798_424F_9D92_B5CA8CA37F17__INCLUDED_)
-#define AFX_SPLINE_H__E4B987FD_0798_424F_9D92_B5CA8CA37F17__INCLUDED_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
+
 
 #include <vector>
 
@@ -61,12 +57,15 @@ private:
     void MatrixSolve(std::vector<float>& B,
                      std::vector< std::vector<float> >& Mat );
     bool getDrawControlPoint( cDrawPrimitiveData& draw );
-    void QuadraticBezierInterpolation(
-        double& x, double& y,
-        int index,
-        float f );
+
+    /** Get point on Bezier curve defined by control points
+        @param[out] x
+        @param[out] y
+        @param[in]  t position along curve 0 to 1
+    */
+    void getBezierPoint( double& x, double& y, double t );
 };
 
 }
 
-#endif // !defined(AFX_SPLINE_H__E4B987FD_0798_424F_9D92_B5CA8CA37F17__INCLUDED_)
+
