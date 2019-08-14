@@ -15,7 +15,7 @@ Displaying sample file `dxf/Gear Sample-iss4.DXF`
 - TEXT
 - CIRCLE
 - SPLINE with fit points
-- SPLINE with control points ??? ( uses wxwidgets::dc::spline method )
+- SPLINE with control points 
 
 not supported:
 - SPLINE with fit AND control points
