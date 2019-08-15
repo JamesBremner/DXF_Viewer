@@ -82,4 +82,12 @@ bool CLine::getDraw( cDrawPrimitiveData& draw )
     draw.index++;
     return true;
 }
+
+void CLine::Adjust( double ax, double ay )
+{
+    x1 += ax;
+    y1 += ay;
+    x2 += ax;
+    y2 += ay;
+}
 }

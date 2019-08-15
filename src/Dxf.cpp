@@ -101,13 +101,18 @@ void cBoundingRectangle::ApplyScale( double& x, double& y )
 }
 void cBoundingRectangle::RemoveScale( double& x, double& y )
 {
-    //std::cout << "RemoveScale " << myScale <<" "<< x <<" " << y << " -> ";
+   // std::cout << "RemoveScale " << myScale <<" "<< x <<" " << y << " -> ";
     x -= xpan;
     y -= ypan;
     x = ( x - x_offset ) * myScale;
     y = myWindowHeight - y;
     y = ( y - y_offset ) * myScale;
-    // std::cout << x <<" " << y << "\n";
+//     std::cout << x <<" " << y << "\n";
+//     double xt = x;
+//     double yt = y;
+//     ApplyScale( xt, yt );
+//     std::cout << "test " << xt <<" "<< yt << "\n";
+
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -189,46 +194,24 @@ void CDxf::UpdateBoundingRectangle()
     myBoundingRectangle.init = false;
     for( auto po : myGraphObject )
         po->Update( myBoundingRectangle );
-}
 
-//UINT CDxf::GetLineCount()
-//{
-//#ifdef DEMO
-//    if( m_Line.size() > 1 )
-//    {
-//        printf("Demo Version limit - sorry\n");
-//        exit(1);
-//    }
-//#endif // DEMO
-//    return m_Line.size();
-//}
-//
-//UINT CDxf::GetCircleCount()
-//{
-//    return m_Circle.size();
-//}
-//
-//UINT CDxf::GetArcCount()
-//{
-//    return m_Arc.size();
-//}
-//
-//UINT CDxf::GetLwPolyLineCount()
-//{
-//#ifdef DEMO
-//    if( m_PolyLine.size() > 1 )
-//    {
-//        printf("Demo Version limit - sorry\n");
-//        exit(1);
-//    }
-//#endif // DEMO
-//    return m_PolyLine.size();
-//}
-//
-//UINT CDxf::GetSplineCount()
-//{
-//    return m_Spline.size();
-//}
+    if( myBoundingRectangle.y1 < 0 )
+    {
+        // entities with negative y co-ords present
+        // zoom code doesn't handle -ve y
+        // so adjust co-ords so that all y's are +ve
+
+        for( auto po : myGraphObject ) {
+            po->Adjust( 0, -myBoundingRectangle.y1 );
+        }
+
+        // recalculate bounding rectangle
+        myBoundingRectangle.init = false;
+        for( auto po : myGraphObject ) {
+            po->Update( myBoundingRectangle );
+        }
+    }
+}
 
 void CDxf::Init()
 {
@@ -238,10 +221,12 @@ void CDxf::Init()
     m_Nesting = FALSE;
 }
 
-    cDrawPrimitiveData::cDrawPrimitiveData( CDxf * dxf )
-    {
-        index = 0;
-        index_curve = 0;
-        rect = &(dxf->myBoundingRectangle);
-    }
+cDrawPrimitiveData::cDrawPrimitiveData( CDxf * dxf )
+{
+    index = 0;
+    index_curve = 0;
+    rect = &(dxf->myBoundingRectangle);
+}
+
+
 }

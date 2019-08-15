@@ -49,7 +49,9 @@ public:
     */
     bool getDraw( cDrawPrimitiveData& draw );
 
-void Draw( CDxf * dxf );
+    void Draw( CDxf * dxf );
+
+    void Adjust( double x, double y );
 
 };
 }

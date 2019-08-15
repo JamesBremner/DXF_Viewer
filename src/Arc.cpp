@@ -118,6 +118,12 @@ bool CArc::Append(  cvit_t& cvit )
     return true;
 }
 
+void CArc::Adjust( double ax, double ay )
+{
+    x += ax;
+    y += ay;
+}
+
 }
 
 

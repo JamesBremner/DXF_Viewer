@@ -35,7 +35,7 @@ public:
     */
     bool getDraw( cDrawPrimitiveData& draw );
 
-void Draw( CDxf * dxf );
+    void Draw( CDxf * dxf );
 
     void wxwidgets( bool f = true )
     {
@@ -43,6 +43,8 @@ void Draw( CDxf * dxf );
     }
 
     void Options( CDxf * dxf );
+
+    void Adjust( double ax, double ay );
 
 private:
     bool myfwxwidgets;          ///< true if using wxwidgets method for control points

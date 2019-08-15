@@ -55,6 +55,8 @@ public:
     bool Append( cvit_t& cvit );
 
     void Draw( CDxf * dxf );
+
+    void Adjust( double x, double y );
 };
 }
 

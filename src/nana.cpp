@@ -10,7 +10,7 @@
 
 int main()
 {
-    dxfv::CDxf* dxf = new dxfv::CDxf();
+    dxfv::CDxf dxf;
 
     // previous mouse position when dragged with left button pressed
     nana::point old_pos {-1, -1 };
@@ -24,17 +24,17 @@ int main()
     drawing.draw([&dxf](nana::paint::graphics& graph)
     {
         // store context so entity draw methods can use it
-        dxf->graph( &graph );
+        dxf.graph( &graph );
 
         // scale to window
-        dxf->myBoundingRectangle.CalcScale(
+        dxf.myBoundingRectangle.CalcScale(
             graph.width(),
             graph.height() );
 
         // loop over graphical entities
-        for( auto po : dxf->Objects() )
+        for( auto po : dxf.Objects() )
         {
-            po->Draw( dxf );
+            po->Draw( &dxf );
         }
     });
 
@@ -51,7 +51,7 @@ int main()
         try
         {
             // read the file
-            dxf->LoadFile( paths[0].string());
+            dxf.LoadFile( paths[0].string());
 
             // refresh display with contents of opened file
             drawing.update();
@@ -70,7 +70,7 @@ int main()
     mv.append("Fit",[&](nana::menu::item_proxy& ip)
     {
         // rescale and pan so all entities fit in the window
-        dxf->myBoundingRectangle.Fit();
+        dxf.myBoundingRectangle.Fit();
 
         // refresh
         drawing.update();
@@ -102,7 +102,7 @@ int main()
 
         // left button is down, pan the display so it moves with the mouse
 
-        dxf->myBoundingRectangle.Pan( old_pos.x,old_pos.y,now.x,now.y);
+        dxf.myBoundingRectangle.Pan( old_pos.x,old_pos.y,now.x,now.y);
         old_pos = now;
 
         // refresh display
@@ -114,23 +114,24 @@ int main()
     {
         // point in model located at center of window
         nana::size sz = fm.size();
+        dxf.myBoundingRectangle.CalcScale( sz.width, sz.height );
         double x = sz.width / 2;
         double y = sz.height / 2;
-        dxf->myBoundingRectangle.RemoveScale( x, y );
+        dxf.myBoundingRectangle.RemoveScale( x, y );
         nana::size modelAtWindowCenter { x, y };
 
         // zoom
         if( wheel.upwards )
-            dxf->myBoundingRectangle.ZoomIn();
+            dxf.myBoundingRectangle.ZoomIn();
         else
-            dxf->myBoundingRectangle.ZoomOut();
+            dxf.myBoundingRectangle.ZoomOut();
 
         // pan so that the same model point is returned to window center
-        dxf->myBoundingRectangle.CalcScale( sz.width, sz.height );
+        dxf.myBoundingRectangle.CalcScale( sz.width, sz.height );
         x = modelAtWindowCenter.width;
         y = modelAtWindowCenter.height;
-        dxf->myBoundingRectangle.ApplyScale( x, y );
-        dxf->myBoundingRectangle.Pan( x, y, sz.width / 2, sz.height / 2 );
+        dxf.myBoundingRectangle.ApplyScale( x, y );
+        dxf.myBoundingRectangle.Pan( x, y, sz.width / 2, sz.height / 2 );
 
         // refresh display
         drawing.update();

@@ -134,4 +134,9 @@ void CText::clean_mtext( std::string& text )
     if( text[ text.length()-1] == '}' )
         text = text.substr(0,text.length()-1);
 }
+    void CText::Adjust( double ax, double ay )
+    {
+        x1 += ax;
+        y1 += ay;
+    }
 }

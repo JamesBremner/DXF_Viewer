@@ -15,6 +15,7 @@ public:
         rect.Update( x1, y1 );
     }
     void Draw( CDxf * dxf );
+    void Adjust( double x, double y );
 
 private:
     std::string myText;

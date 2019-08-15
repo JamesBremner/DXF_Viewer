@@ -174,5 +174,13 @@ bool cLWPolyLine::getDraw( cDrawPrimitiveData& draw )
 
      return true;
 }
+    void cLWPolyLine::Adjust( double ax, double ay )
+    {
+        for( int k = 0; k << m_VertexCount; k++ )
+        {
+            x[k] += ax;
+            y[k] += ay;
+        }
+    }
 }
 

@@ -254,6 +254,8 @@ public:
     */
     virtual void Draw( CDxf * dxf ) = 0;
 
+    virtual void Adjust( double x, double y ) = 0;
+
 protected:
     std::string myCode;
 

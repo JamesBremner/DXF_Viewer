@@ -323,39 +323,56 @@ bool CSpline::getDrawControlPoint( cDrawPrimitiveData& draw )
 
 }
 
-struct vec2 {
+struct vec2
+{
     double x, y;
     vec2() {}
     vec2(double x, double y) : x(x), y(y) {}
 };
 
-vec2 operator + (vec2 a, vec2 b) {
+vec2 operator + (vec2 a, vec2 b)
+{
     return vec2(a.x + b.x, a.y + b.y);
 }
 
-vec2 operator - (vec2 a, vec2 b) {
+vec2 operator - (vec2 a, vec2 b)
+{
     return vec2(a.x - b.x, a.y - b.y);
 }
 
-vec2 operator * (double s, vec2 a) {
+vec2 operator * (double s, vec2 a)
+{
     return vec2(s * a.x, s * a.y);
 }
 
 void CSpline::getBezierPoint( double& ox, double& oy, double t )
 {
-   // https://stackoverflow.com/a/21642962/16582
+    // https://stackoverflow.com/a/21642962/16582
 
     std::vector<vec2> tmp;
     for( int k=0; k < m_ControlPointCount; k++ )
         tmp.push_back( vec2( x[k], y[k] ) );
     int i = m_ControlPointCount - 1;
-    while (i > 0) {
+    while (i > 0)
+    {
         for (int k = 0; k < i; k++)
             tmp[k] = tmp[k] + t * ( tmp[k+1] - tmp[k] );
         i--;
     }
     ox = tmp[0].x;
     oy = tmp[0].y;
+}
+
+void CSpline::Adjust( double ax, double ay )
+{
+    int count = m_FitPointCount;
+    if( ! count )
+        count = m_ControlPointCount;
+    for( int k = 0; k < count; k++ )
+    {
+        x[k] += ax;
+        y[k] += ay;
+    }
 }
 
 }

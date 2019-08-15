@@ -2,12 +2,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#if !defined(AFX_CIRCLE_H__B468D98B_7FA1_4A99_B55F_2A56932403A7__INCLUDED_)
-#define AFX_CIRCLE_H__B468D98B_7FA1_4A99_B55F_2A56932403A7__INCLUDED_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
 
 namespace dxfv
 {
@@ -38,7 +33,9 @@ public:
     */
     bool getDraw( cDrawPrimitiveData& draw );
 
-void Draw( CDxf * dxf );
+    void Draw( CDxf * dxf );
+
+    void Adjust( double x, double y );
 };
 }
-#endif // !defined(AFX_CIRCLE_H__B468D98B_7FA1_4A99_B55F_2A56932403A7__INCLUDED_)
+

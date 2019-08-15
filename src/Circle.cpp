@@ -85,4 +85,9 @@ bool CCircle::getDraw( cDrawPrimitiveData& draw )
     draw.r /= draw.rect->myScale;
     return true;
 }
+    void CCircle::Adjust( double ax, double ay )
+    {
+        x += ax;
+        y += ay;
+    }
 }
