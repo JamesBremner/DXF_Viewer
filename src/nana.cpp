@@ -10,11 +10,13 @@
 
 int main()
 {
+    dxfv::CDxf* dxf = new dxfv::CDxf();
+
+    // previous mouse position when dragged with left button pressed
+    nana::point old_pos;
 
     nana::form fm;
     fm.bgcolor( nana::colors::black );
-
-    dxfv::CDxf* dxf = new dxfv::CDxf();
 
     nana::menubar mb( fm );
     nana::menu& mf = mb.push_back("File");
@@ -29,6 +31,10 @@ int main()
         {
             // read the file
             dxf->LoadFile( paths[0].string());
+            // refresh display with contents of opened file
+            nana::API::refresh_window( fm );
+
+            fm.caption( paths[0].string());
         }
         catch( std::runtime_error& e )
         {
@@ -37,8 +43,14 @@ int main()
             mb.show();
             exit(1);
         }
+    });
+    nana::menu& mv = mb.push_back("View");
+    mv.append("Fit",[&](nana::menu::item_proxy& ip)
+    {
+        // rescale and pan so all entities fit in the window
+        dxf->myBoundingRectangle.Fit();
 
-        // refresh display with contents of opened file
+        // refresh
         nana::API::refresh_window( fm );
     });
 
@@ -60,9 +72,6 @@ int main()
             po->Draw( dxf );
         }
     });
-
-    // previous mouse position when dragged with left button pressed
-    nana::point old_pos;
 
     // handle left mouse button down
     fm.events().mouse_down([&old_pos](const nana::arg_mouse&arg)
