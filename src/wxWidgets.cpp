@@ -221,15 +221,9 @@ void dxfv_wxWidgetsFrame::OnPaint(wxPaintEvent& event)
     dc.SetBrush(*wxTRANSPARENT_BRUSH);
     dc.SetTextForeground( *wxYELLOW );
 
-    // scale to window
+    // draw graphical entities
     wxSize sz = GetClientSize();
-    dxf->myBoundingRectangle.CalcScale( sz.GetWidth(), sz.GetHeight() );
-
-    // loop over graphical entities
-    for( auto po : dxf->Objects() )
-    {
-        po->Draw( dxf );
-    }
+    dxf->Draw( sz.GetWidth(), sz.GetHeight() );
 
 //
 //

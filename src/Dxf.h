@@ -307,11 +307,8 @@ public:
         return myfwxwidgets;
     }
 
-    std::vector< cDXFGraphObject* >& Objects()
-    {
-        return myGraphObject;
-    }
-
+    // accessors for graphical device context
+    // which depend on the GUI framework used by the build
     #ifdef wxwbuild
     void DC( wxDC* dc )
     {
@@ -332,6 +329,9 @@ public:
         return myGraph;
     }
     #endif // nanabuild
+
+    /// Draw every entity
+    void Draw( int width, int height );
 
 private:
     bool  myfwxwidgets;          ///< true if using wxwidgets method for control point splines

@@ -26,16 +26,10 @@ int main()
         // store context so entity draw methods can use it
         dxf.graph( &graph );
 
-        // scale to window
-        dxf.myBoundingRectangle.CalcScale(
+        // draw graphical entities
+        dxf.Draw(
             graph.width(),
-            graph.height() );
-
-        // loop over graphical entities
-        for( auto po : dxf.Objects() )
-        {
-            po->Draw( &dxf );
-        }
+            graph.height());
     });
 
 

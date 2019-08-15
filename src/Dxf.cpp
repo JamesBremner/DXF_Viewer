@@ -101,7 +101,7 @@ void cBoundingRectangle::ApplyScale( double& x, double& y )
 }
 void cBoundingRectangle::RemoveScale( double& x, double& y )
 {
-   // std::cout << "RemoveScale " << myScale <<" "<< x <<" " << y << " -> ";
+    // std::cout << "RemoveScale " << myScale <<" "<< x <<" " << y << " -> ";
     x -= xpan;
     y -= ypan;
     x = ( x - x_offset ) * myScale;
@@ -201,13 +201,15 @@ void CDxf::UpdateBoundingRectangle()
         // zoom code doesn't handle -ve y
         // so adjust co-ords so that all y's are +ve
 
-        for( auto po : myGraphObject ) {
+        for( auto po : myGraphObject )
+        {
             po->Adjust( 0, -myBoundingRectangle.y1 );
         }
 
         // recalculate bounding rectangle
         myBoundingRectangle.init = false;
-        for( auto po : myGraphObject ) {
+        for( auto po : myGraphObject )
+        {
             po->Update( myBoundingRectangle );
         }
     }
@@ -219,6 +221,17 @@ void CDxf::Init()
     m_InitialDraw = FALSE;
     myGraphObject.clear();
     m_Nesting = FALSE;
+}
+
+void CDxf::Draw( int width, int height )
+{
+    // scale to window
+    myBoundingRectangle.CalcScale(
+        width,
+        height );
+
+    for( auto po : myGraphObject )
+        po->Draw( this );
 }
 
 cDrawPrimitiveData::cDrawPrimitiveData( CDxf * dxf )
