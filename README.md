@@ -20,3 +20,8 @@ Displaying sample file `dxf/Gear Sample-iss4.DXF`
 not supported:
 - SPLINE with fit AND control points
 
+## View features
+
+- Fit to window ( menu click )
+- Pan ( drag with left mouse button pressed )
+- Zoom in and out around window center ( mouse wheel )
