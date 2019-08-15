@@ -18,6 +18,27 @@ int main()
     nana::form fm;
     fm.bgcolor( nana::colors::black );
 
+    // register drawing function
+    // call update() on this whenever refresh is needed
+    nana::drawing drawing{fm};
+    drawing.draw([&dxf](nana::paint::graphics& graph)
+    {
+        // store context so entity draw methods can use it
+        dxf->graph( &graph );
+
+        // scale to window
+        dxf->myBoundingRectangle.CalcScale(
+            graph.width(),
+            graph.height() );
+
+        // loop over graphical entities
+        for( auto po : dxf->Objects() )
+        {
+            po->Draw( dxf );
+        }
+    });
+
+
     nana::menubar mb( fm );
     nana::menu& mf = mb.push_back("File");
     mf.append("Open",[&](nana::menu::item_proxy& ip)
@@ -31,8 +52,9 @@ int main()
         {
             // read the file
             dxf->LoadFile( paths[0].string());
+
             // refresh display with contents of opened file
-            nana::API::refresh_window( fm );
+            drawing.update();
 
             fm.caption( paths[0].string());
         }
@@ -51,27 +73,9 @@ int main()
         dxf->myBoundingRectangle.Fit();
 
         // refresh
-        nana::API::refresh_window( fm );
+        drawing.update();
     });
 
-    // register drawing function
-    nana::drawing dw{fm};
-    dw.draw([&dxf](nana::paint::graphics& graph)
-    {
-        // store context so entity draw methods can use it
-        dxf->graph( &graph );
-
-        // scale to window
-        dxf->myBoundingRectangle.CalcScale(
-            graph.width(),
-            graph.height() );
-
-        // loop over graphical entities
-        for( auto po : dxf->Objects() )
-        {
-            po->Draw( dxf );
-        }
-    });
 
     // handle left mouse button down
     fm.events().mouse_down([&old_pos](const nana::arg_mouse&arg)
@@ -102,7 +106,7 @@ int main()
         old_pos = now;
 
         // refresh display
-        nana::API::refresh_window( fm );
+        drawing.update();
     });
 
     // handle mouse wheel
@@ -129,7 +133,7 @@ int main()
         dxf->myBoundingRectangle.Pan( x, y, sz.width / 2, sz.height / 2 );
 
         // refresh display
-        nana::API::refresh_window( fm );
+        drawing.update();
     });
 
     fm.show();
@@ -139,6 +143,7 @@ int main()
 
 namespace dxfv
 {
+
 void CLine::Draw( CDxf* dxf )
 {
     cDrawPrimitiveData draw( dxf );
