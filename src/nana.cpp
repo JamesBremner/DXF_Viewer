@@ -90,7 +90,8 @@ int main()
         Without this strange things happen on startup
         */
         auto now = arg.pos;
-        if( old_pos.x < 0 ) {
+        if( old_pos.x < 0 )
+        {
             old_pos = now;
             return;
         }
@@ -99,6 +100,33 @@ int main()
 
         dxf->myBoundingRectangle.Pan( old_pos.x,old_pos.y,now.x,now.y);
         old_pos = now;
+
+        // refresh display
+        nana::API::refresh_window( fm );
+    });
+
+    // handle mouse wheel
+    fm.events().mouse_wheel([&](const nana::arg_wheel& wheel)
+    {
+        // point in model located at center of window
+        nana::size sz = fm.size();
+        double x = sz.width / 2;
+        double y = sz.height / 2;
+        dxf->myBoundingRectangle.RemoveScale( x, y );
+        nana::size modelAtWindowCenter { x, y };
+
+        // zoom
+        if( wheel.upwards )
+            dxf->myBoundingRectangle.ZoomIn();
+        else
+            dxf->myBoundingRectangle.ZoomOut();
+
+        // pan so that the same model point is returned to window center
+        dxf->myBoundingRectangle.CalcScale( sz.width, sz.height );
+        x = modelAtWindowCenter.width;
+        y = modelAtWindowCenter.height;
+        dxf->myBoundingRectangle.ApplyScale( x, y );
+        dxf->myBoundingRectangle.Pan( x, y, sz.width / 2, sz.height / 2 );
 
         // refresh display
         nana::API::refresh_window( fm );
