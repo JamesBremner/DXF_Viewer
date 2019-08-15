@@ -13,7 +13,7 @@ int main()
     dxfv::CDxf* dxf = new dxfv::CDxf();
 
     // previous mouse position when dragged with left button pressed
-    nana::point old_pos;
+    nana::point old_pos {-1, -1 };
 
     nana::form fm;
     fm.bgcolor( nana::colors::black );
@@ -86,8 +86,17 @@ int main()
         if( ! arg.left_button )
             return;
 
-        // left button is down, pan the display so it moves with the mouse
+        /* Ensure that dragging has been properly started
+        Without this strange things happen on startup
+        */
         auto now = arg.pos;
+        if( old_pos.x < 0 ) {
+            old_pos = now;
+            return;
+        }
+
+        // left button is down, pan the display so it moves with the mouse
+
         dxf->myBoundingRectangle.Pan( old_pos.x,old_pos.y,now.x,now.y);
         old_pos = now;
 
