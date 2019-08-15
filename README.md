@@ -19,4 +19,4 @@ Displaying sample file `dxf/Gear Sample-iss4.DXF`
 
 not supported:
 - SPLINE with fit AND control points
-- SPLINE with NURBS
+
