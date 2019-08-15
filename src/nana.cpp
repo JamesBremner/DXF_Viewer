@@ -20,12 +20,14 @@ int main()
     nana::menu& mf = mb.push_back("File");
     mf.append("Open",[&](nana::menu::item_proxy& ip)
     {
+        // prompt for file to open
         nana::filebox fb( fm, true );
         auto paths = fb();
         if( paths.empty() )
             return;
         try
         {
+            // read the file
             dxf->LoadFile( paths[0].string());
         }
         catch( std::runtime_error& e )
@@ -35,12 +37,16 @@ int main()
             mb.show();
             exit(1);
         }
+
+        // refresh display with contents of opened file
         nana::API::refresh_window( fm );
     });
 
+    // register drawing function
     nana::drawing dw{fm};
     dw.draw([&dxf](nana::paint::graphics& graph)
     {
+        // store context so entity draw methods can use it
         dxf->graph( &graph );
 
         // scale to window
@@ -55,20 +61,29 @@ int main()
         }
     });
 
+    // previous mouse position when dragged with left button pressed
     nana::point old_pos;
+
+    // handle left mouse button down
     fm.events().mouse_down([&old_pos](const nana::arg_mouse&arg)
     {
         if( arg.left_button )
-            old_pos = arg.pos;
+            old_pos = arg.pos;  // store mouse position
     });
+
+    // handle mouse movement
     fm.events().mouse_move([&](const nana::arg_mouse&arg)
     {
         if( ! arg.left_button )
             return;
+
+        // left button is down, pan the display so it moves with the mouse
         auto now = arg.pos;
         dxf->myBoundingRectangle.Pan( old_pos.x,old_pos.y,now.x,now.y);
-        nana::API::refresh_window( fm );
         old_pos = now;
+
+        // refresh display
+        nana::API::refresh_window( fm );
     });
 
     fm.show();
