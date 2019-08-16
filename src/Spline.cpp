@@ -241,13 +241,13 @@ bool CSpline::getDraw( cDrawPrimitiveData& draw )
     {
         return getDrawControlPoint( draw );
     }
-    //adjust this factor to adjust the curve smoothness
-    // a smaller value will result in a smoother display
-    const float DIV_FACTOR = 10.0;
 
-    int Ndiv = (int)(max(abs((int)Ax[draw.index]),abs((int)Ay[draw.index]))/DIV_FACTOR);
-    if( ! Ndiv )
-        return false;
+    /* determine number of straight line segments to draw between each pait of fit points
+    For good smooth looking curves ensure that no segment changes the x or y pixel by more than 2
+    */
+
+    int Ndiv = (int)(max(abs(x[draw.index]-x[draw.index+1]),abs(y[draw.index]-y[draw.index+1]))
+                     / ( 2 * draw.rect->myScale ));
 
     if( draw.index_curve == 0 && draw.index == 0 )
     {
@@ -291,10 +291,14 @@ bool CSpline::getDraw( cDrawPrimitiveData& draw )
     f = t*t*(3.0f-2.0f*t);
     g = t*(t-1.0f)*(t-1.0f);
     h = t*t*(t-1.0f);
-    draw.x2 = (int)(x[draw.index] + Ax[draw.index]*f + Bx[draw.index]*g + Cx[draw.index]*h);
-    draw.y2 = (int)(y[draw.index] + Ay[draw.index]*f + By[draw.index]*g + Cy[draw.index]*h);
+    double x2 = (x[draw.index] + Ax[draw.index]*f + Bx[draw.index]*g + Cx[draw.index]*h);
+    double y2 = (y[draw.index] + Ay[draw.index]*f + By[draw.index]*g + Cy[draw.index]*h);
 
-    draw.rect->ApplyScale(draw.x2,draw.y2);
+    draw.rect->ApplyScale(x2,y2);
+    draw.x2 = round(x2);
+    draw.y2 = round(y2);
+
+    //std::cout << t <<" "<< draw.x2 <<" "<< draw.y2 << "\n";
 
     draw.index_curve++;
 
