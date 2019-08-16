@@ -69,35 +69,53 @@ bool CSpline::Append(  cvit_t& cvit )
 
         case 74:
             m_FitPointCount = atoi(cvit->myValue.c_str());
-            if( point_index >= MAXPOINTS )
+            if( m_FitPointCount >= MAXPOINTS )
                 throw std::runtime_error("Too many spline points");
             if( m_ControlPointCount )
-                throw std::runtime_error("Spline has both fit AND control points");
+            {
+                // both control and fit points
+                if( myfControlPointsPreferred ) {
+                    m_FitPointCount = 0;
+                }
+                else
+                {
+                    m_ControlPointCount = 0;
+                }
+            }
             break;
         case 11:
-            x[point_index] = atof(cvit->myValue.c_str());
+            if(m_FitPointCount )
+                x[point_index] = atof(cvit->myValue.c_str());
             break;
         case 21:
-            if( ! m_FitPointCount )
-                throw std::runtime_error("Spline has unexpected fit point");
-            y[point_index++] = atof(cvit->myValue.c_str());
+            if( m_FitPointCount )
+                y[point_index++] = atof(cvit->myValue.c_str());
             break;
 
 
         case 73:
             m_ControlPointCount = atoi(cvit->myValue.c_str());
-            if( point_index >= MAXPOINTS )
+            if( m_ControlPointCount >= MAXPOINTS )
                 throw std::runtime_error("Too many spline points");
             if( m_FitPointCount )
-                throw std::runtime_error("Spline has both fit AND control points");
+            {
+                // both control and fit points
+                if( myfControlPointsPreferred ) {
+                    m_FitPointCount = 0;
+                }
+                else
+                {
+                    m_ControlPointCount = 0;
+                }
+            }
             break;
         case 10:
-            x[point_index] = atof(cvit->myValue.c_str());
+            if( m_ControlPointCount )
+                x[point_index] = atof(cvit->myValue.c_str());
             break;
         case 20:
-            if( ! m_ControlPointCount )
-                throw std::runtime_error("Spline has unexpected control point");
-            y[point_index++] = atof(cvit->myValue.c_str());
+            if( m_ControlPointCount )
+                y[point_index++] = atof(cvit->myValue.c_str());
             break;
 
         }
@@ -108,6 +126,7 @@ bool CSpline::Append(  cvit_t& cvit )
 void CSpline::Options( CDxf * dxf )
 {
     myfwxwidgets = dxf->wxwidgets();
+    myfControlPointsPreferred = dxf->SplineControlPointsPreferred();
 }
 
 void CSpline::Update( cBoundingRectangle& rect )
@@ -323,35 +342,19 @@ bool CSpline::getDrawControlPoint( cDrawPrimitiveData& draw )
 
 }
 
-struct vec2
-{
-    double x, y;
-    vec2() {}
-    vec2(double x, double y) : x(x), y(y) {}
-};
 
-vec2 operator + (vec2 a, vec2 b)
+cP operator * ( double s, cP b)
 {
-    return vec2(a.x + b.x, a.y + b.y);
-}
-
-vec2 operator - (vec2 a, vec2 b)
-{
-    return vec2(a.x - b.x, a.y - b.y);
-}
-
-vec2 operator * (double s, vec2 a)
-{
-    return vec2(s * a.x, s * a.y);
+    return cP(s * b.x, s * b.y);
 }
 
 void CSpline::getBezierPoint( double& ox, double& oy, double t )
 {
     // https://stackoverflow.com/a/21642962/16582
 
-    std::vector<vec2> tmp;
+    std::vector<cP> tmp;
     for( int k=0; k < m_ControlPointCount; k++ )
-        tmp.push_back( vec2( x[k], y[k] ) );
+        tmp.push_back( cP( x[k], y[k] ) );
     int i = m_ControlPointCount - 1;
     while (i > 0)
     {

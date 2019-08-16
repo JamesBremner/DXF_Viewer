@@ -15,6 +15,7 @@ static char THIS_FILE[]=__FILE__;
 namespace dxfv
 {
 
+
 cDXFGraphObject* cDXFGraphObject::Factory( cCodeValue& cv )
 {
     if( cv.Code() )
@@ -124,6 +125,7 @@ CDxf::CDxf()
     , myLoadStatus( none )
     , m_Nesting( false )
     , myfwxwidgets( false ) // do not use wxwidgets for contol point splines
+    , myfSplineControlPointsPreferred( false )  // if true and choice available, splines prefer control points
 {
 }
 
@@ -178,8 +180,8 @@ void CDxf::LoadFile(const std::string& filepath)
         cDXFGraphObject * po = cDXFGraphObject::Factory( *cvit );
         if( po )
         {
-            po->Append( cvit );
             po->Options( this );
+            po->Append( cvit );
             myGraphObject.push_back( po );
         }
 

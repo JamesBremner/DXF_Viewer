@@ -42,12 +42,18 @@ public:
         myfwxwidgets = f;
     }
 
+    // Set configuration options
     void Options( CDxf * dxf );
 
+    /** Translate co-ords
+        @param[in] ax addition to x
+        @param[in] ay addition to y
+    */
     void Adjust( double ax, double ay );
 
 private:
     bool myfwxwidgets;          ///< true if using wxwidgets method for control points
+    bool myfControlPointsPreferred;
     std::vector<float> Ax;
     std::vector<float> Ay;
     std::vector<float> Bx;

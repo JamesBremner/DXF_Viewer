@@ -13,16 +13,39 @@
 class wxDC;
 #endif // wxwbuild
 #ifdef nanabuild
-namespace nana {
-    namespace paint {
-    class graphics;
-    }
+namespace nana
+{
+namespace paint
+{
+class graphics;
+}
 }
 #endif // nanabuild
 namespace dxfv
 {
 
 class CDxf;
+
+struct cP
+{
+    double x, y;
+    cP() {}
+    cP(double x, double y) : x(x), y(y) {}
+    cP operator + ( cP b )
+    {
+        return cP(x + b.x, y + b.y);
+    }
+
+cP operator - (cP b)
+{
+    return cP( x - b.x, y - b.y);
+}
+
+
+};
+
+
+
 
 /// DXF code value pair
 class cCodeValue
@@ -306,10 +329,14 @@ public:
     {
         return myfwxwidgets;
     }
+    bool SplineControlPointsPreferred() const
+    {
+        return myfSplineControlPointsPreferred;
+    }
 
     // accessors for graphical device context
     // which depend on the GUI framework used by the build
-    #ifdef wxwbuild
+#ifdef wxwbuild
     void DC( wxDC* dc )
     {
         myDC = dc;
@@ -318,8 +345,8 @@ public:
     {
         return myDC;
     }
-    #endif // wxwbuild
-    #ifdef nanabuild
+#endif // wxwbuild
+#ifdef nanabuild
     void graph( nana::paint::graphics * g )
     {
         myGraph = g;
@@ -328,21 +355,22 @@ public:
     {
         return myGraph;
     }
-    #endif // nanabuild
+#endif // nanabuild
 
     /// Draw every entity
     void Draw( int width, int height );
 
 private:
-    bool  myfwxwidgets;          ///< true if using wxwidgets method for control point splines
+    bool myfwxwidgets;          ///< true if using wxwidgets method for control point splines
+    bool myfSplineControlPointsPreferred;   ///< true if, given choice, splines use control rather than fit points
     std::vector< cCodeValue > myCodeValue;
     std::vector< cDXFGraphObject* > myGraphObject;
-    #ifdef wxwbuild
+#ifdef wxwbuild
     wxDC* myDC;
-    #endif // wxwbuild
-    #ifdef nanabuild
+#endif // wxwbuild
+#ifdef nanabuild
     nana::paint::graphics * myGraph;
-    #endif // nanabuild
+#endif // nanabuild
 
     void UpdateBoundingRectangle();
 };
