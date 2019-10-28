@@ -21,6 +21,11 @@ class graphics;
 }
 }
 #endif // nanabuild
+
+#ifdef windexbuild
+#include "wex.h"
+#endif // windexbuild
+
 namespace dxfv
 {
 
@@ -36,10 +41,10 @@ struct cP
         return cP(x + b.x, y + b.y);
     }
 
-cP operator - (cP b)
-{
-    return cP( x - b.x, y - b.y);
-}
+    cP operator - (cP b)
+    {
+        return cP( x - b.x, y - b.y);
+    }
 
 
 };
@@ -355,7 +360,19 @@ public:
     {
         return myGraph;
     }
+
 #endif // nanabuild
+#ifdef windexbuild
+    void set( wex::shapes& s )
+    {
+        myS = &s;
+    }
+    wex::shapes* shapes()
+    {
+        return myS;
+    }
+#endif // windexbuild
+
 
     /// Draw every entity
     void Draw( int width, int height );
@@ -365,12 +382,19 @@ private:
     bool myfSplineControlPointsPreferred;   ///< true if, given choice, splines use control rather than fit points
     std::vector< cCodeValue > myCodeValue;
     std::vector< cDXFGraphObject* > myGraphObject;
+
 #ifdef wxwbuild
     wxDC* myDC;
 #endif // wxwbuild
+
 #ifdef nanabuild
     nana::paint::graphics * myGraph;
 #endif // nanabuild
+
+#ifdef windexbuild
+    wex::shapes* myS;
+#endif // windexbuild
+
 
     void UpdateBoundingRectangle();
 };
