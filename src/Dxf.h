@@ -19,6 +19,11 @@ namespace nana {
     }
 }
 #endif // nanabuild
+
+#ifdef windexbuild
+#include "wex.h"
+#endif // windexbuild
+
 namespace dxfv
 {
 
@@ -329,6 +334,16 @@ public:
         return myGraph;
     }
     #endif // nanabuild
+    #ifdef windexbuild
+    void set( wex::shapes& s )
+    {
+        myS = &s;
+    }
+    wex::shapes* shapes()
+    {
+        return myS;
+    }
+    #endif // windexbuild
 
     /// Draw every entity
     void Draw( int width, int height );
@@ -343,6 +358,9 @@ private:
     #ifdef nanabuild
     nana::paint::graphics * myGraph;
     #endif // nanabuild
+    #ifdef windexbuild
+    wex::shapes* myS;
+    #endif // windexbuild
 
     void UpdateBoundingRectangle();
 };
