@@ -60,7 +60,7 @@ int main()
         dxf.myBoundingRectangle.Fit();
 
         // refresh
-        //drawing.update();
+        fm.update();
     });
     mb.append("View", mv );
 
@@ -127,6 +127,11 @@ int main()
         dxf.myBoundingRectangle.Pan( x, y, ww / 2, wh / 2 );
 
         // refresh display
+        fm.update();
+    });
+
+    fm.events().resize([&]( int w, int h )
+    {
         fm.update();
     });
 
