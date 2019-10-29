@@ -114,10 +114,8 @@ int main()
         double x = ww / 2;
         double y = wh / 2;
         dxf.myBoundingRectangle.RemoveScale( x, y );
- //       nana::size modelAtWindowCenter { x, y };
 
         // zoom
-        std::cout << "dist " << dist << "\n";
         if( dist > 0 )
             dxf.myBoundingRectangle.ZoomIn();
         else
@@ -125,8 +123,6 @@ int main()
 
         // pan so that the same model point is returned to window center
         dxf.myBoundingRectangle.CalcScale( ww, wh );
-        //x = modelAtWindowCenter.width;
-        //y = modelAtWindowCenter.height;
         dxf.myBoundingRectangle.ApplyScale( x, y );
         dxf.myBoundingRectangle.Pan( x, y, ww / 2, wh / 2 );
 
