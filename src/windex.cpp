@@ -9,30 +9,20 @@ int main()
     dxfv::CDxf dxf;
 
     // previous mouse position when dragged with left button pressed
-//    nana::point old_pos {-1, -1 };
+    wex::sMouse old_pos;
+    old_pos.x = -1;
 
-    wex::gui& fm = wex::topWindow();
+    wex::gui& fm = wex::windex::topWindow();
     fm.bgcolor( 0 );
 
     // register drawing function
-    // call update() on this whenever refresh is needed
-//    nana::drawing drawing{fm};
-//    drawing.draw([&dxf](nana::paint::graphics& graph)
-//    {
-//        // store context so entity draw methods can use it
-//        dxf.graph( &graph );
-//
-//        // draw graphical entities
-//        dxf.Draw(
-//            graph.width(),
-//            graph.height());
-//    });
-
-
     fm.events().draw([&dxf]( PAINTSTRUCT& ps )
     {
-         wex::shapes S( ps );
-         dxf.set( S );
+        wex::shapes S( ps );
+        dxf.set( S );
+        dxf.Draw(
+            ps.rcPaint.right,
+            ps.rcPaint.bottom);
     });
 
     wex::menubar mb( fm );
@@ -51,7 +41,7 @@ int main()
             dxf.LoadFile( paths);
 
             // refresh display with contents of opened file
-//            drawing.update();
+            fm.update();
 
             fm.text( paths);
         }
@@ -76,6 +66,12 @@ int main()
 
 
 //    // handle left mouse button down
+    fm.events().click([&]
+    {
+        auto p = fm.getMousePosition();
+        old_pos.x = p.first;
+        old_pos.y = p.second;
+    });
 //    fm.events().mouse_down([&old_pos](const nana::arg_mouse&arg)
 //    {
 //        if( arg.left_button )
@@ -83,61 +79,64 @@ int main()
 //    });
 //
 //    // handle mouse movement
-//    fm.events().mouse_move([&](const nana::arg_mouse&arg)
-//    {
-//        if( ! arg.left_button )
-//            return;
-//
-//        /* Ensure that dragging has been properly started
-//        Without this strange things happen on startup
-//        */
-//        auto now = arg.pos;
-//        if( old_pos.x < 0 )
-//        {
-//            old_pos = now;
-//            return;
-//        }
-//
-//        // left button is down, pan the display so it moves with the mouse
-//
-//        dxf.myBoundingRectangle.Pan( old_pos.x,old_pos.y,now.x,now.y);
-//        old_pos = now;
-//
+    fm.events().mouseMove([&](wex::sMouse& m)
+    {
+        if( ! m.left )
+            return;
+
+        /* Ensure that dragging has been properly started
+        Without this strange things happen on startup
+        */
+        if( old_pos.x < 0 )
+        {
+            old_pos = m;
+            return;
+        }
+
+        // left button is down, pan the display so it moves with the mouse
+
+        dxf.myBoundingRectangle.Pan( old_pos.x,old_pos.y,m.x,m.y);
+        old_pos = m;
+
 //        // refresh display
-//        drawing.update();
-//    });
-//
-//    // handle mouse wheel
-//    fm.events().mouse_wheel([&](const nana::arg_wheel& wheel)
-//    {
-//        // point in model located at center of window
-//        nana::size sz = fm.size();
-//        dxf.myBoundingRectangle.CalcScale( sz.width, sz.height );
-//        double x = sz.width / 2;
-//        double y = sz.height / 2;
-//        dxf.myBoundingRectangle.RemoveScale( x, y );
-//        nana::size modelAtWindowCenter { x, y };
-//
-//        // zoom
-//        if( wheel.upwards )
-//            dxf.myBoundingRectangle.ZoomIn();
-//        else
-//            dxf.myBoundingRectangle.ZoomOut();
-//
-//        // pan so that the same model point is returned to window center
-//        dxf.myBoundingRectangle.CalcScale( sz.width, sz.height );
-//        x = modelAtWindowCenter.width;
-//        y = modelAtWindowCenter.height;
-//        dxf.myBoundingRectangle.ApplyScale( x, y );
-//        dxf.myBoundingRectangle.Pan( x, y, sz.width / 2, sz.height / 2 );
-//
-//        // refresh display
-//        drawing.update();
-//    });
+        fm.update();
+    });
+
+    // handle mouse wheel
+    fm.events().mouseWheel([&](int dist)
+    {
+        // point in model located at center of window
+        RECT r;
+        GetClientRect( fm.handle(), &r );
+        int ww = r.right - r.left;
+        int wh = r.bottom - r.top;
+        dxf.myBoundingRectangle.CalcScale( ww, wh );
+        double x = ww / 2;
+        double y = wh / 2;
+        dxf.myBoundingRectangle.RemoveScale( x, y );
+ //       nana::size modelAtWindowCenter { x, y };
+
+        // zoom
+        std::cout << "dist " << dist << "\n";
+        if( dist > 0 )
+            dxf.myBoundingRectangle.ZoomIn();
+        else
+            dxf.myBoundingRectangle.ZoomOut();
+
+        // pan so that the same model point is returned to window center
+        dxf.myBoundingRectangle.CalcScale( ww, wh );
+        //x = modelAtWindowCenter.width;
+        //y = modelAtWindowCenter.height;
+        dxf.myBoundingRectangle.ApplyScale( x, y );
+        dxf.myBoundingRectangle.Pan( x, y, ww / 2, wh / 2 );
+
+        // refresh display
+        fm.update();
+    });
 
     fm.show();
 
-    wex::run();
+    fm.run();
 }
 
 namespace dxfv
@@ -181,8 +180,10 @@ void cLWPolyLine::Draw( CDxf* dxf )
     while( getDraw( draw ) )
     {
         dxf->shapes()->line(
-        {draw.x1, draw.y1,
-        draw.x2, draw.y2});
+        {
+            draw.x1, draw.y1,
+            draw.x2, draw.y2
+        });
     }
 }
 void CText::Draw( CDxf* dxf )
@@ -194,9 +195,8 @@ void CText::Draw( CDxf* dxf )
     // loop over drawing primitives
     while( getDraw( draw ) )
     {
-        RECT r( (int)draw.x1, (int)draw.y1,(int)draw.x1+100, (int)draw.y1+2 );
         dxf->shapes()->text( draw.text,
-                             { (int)draw.x1, (int)draw.y1,(int)draw.x1+100, (int)draw.y1+25 } );
+        { (int)draw.x1, (int)draw.y1,(int)draw.x1+100, (int)draw.y1+25 } );
     }
 }
 void CSpline::Draw( CDxf* dxf )
@@ -206,10 +206,11 @@ void CSpline::Draw( CDxf* dxf )
     // loop over drawing primitives
     while( getDraw( draw ) )
     {
-        dxf->graph()->line(
-        {draw.x1, draw.y1},
-        {draw.x2, draw.y2},
-        nana::colors::white);
+        dxf->shapes()->line(
+        {
+            draw.x1, draw.y1,
+            draw.x2, draw.y2
+        });
     }
 }
 }
