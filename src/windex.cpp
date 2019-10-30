@@ -153,23 +153,18 @@ void CLine::Draw( CDxf* dxf )
 }
 void CArc::Draw( CDxf* dxf )
 {
-//    int xl, yt, xr, yb, sx, sy, ex, ey;
-//    WAPData( xl, yt, xr, yb, sx, sy, ex, ey, dxf );
-//    HDC hdc = reinterpret_cast<HDC>(const_cast<void*>(dxf->graph()->context()));
-//    SelectObject(hdc, GetStockObject(DC_PEN));
-//    SetDCPenColor(hdc, RGB(255,255,255));
-//    ::Arc(
-//        hdc,
-//        xl, yt, xr, yb, sx, sy, ex, ey );
+    cDrawPrimitiveData draw( dxf );
+    getDraw( draw );
+    dxf->shapes()->arc(
+        draw.x1, draw.y1, draw.r,
+        draw.sa, draw.ea );
 }
 void CCircle::Draw( CDxf* dxf )
 {
-//    cDrawPrimitiveData draw( dxf );
-//    getDraw( draw );
-//    ::Ellipse(
-//        reinterpret_cast<HDC>(const_cast<void*>(dxf->graph()->context())),
-//        draw.x1-draw.r, draw.y1-draw.r,
-//        draw.x1+draw.r, draw.y1+draw.r );
+    cDrawPrimitiveData draw( dxf );
+    getDraw( draw );
+    dxf->shapes()->circle(
+        draw.x1, draw.y1, draw.r );
 }
 void cLWPolyLine::Draw( CDxf* dxf )
 {

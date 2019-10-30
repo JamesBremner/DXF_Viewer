@@ -47,12 +47,6 @@ bool CArc::getDraw( cDrawPrimitiveData& draw )
     draw.r =  2 * r / draw.rect->myScale;
     draw.sa = sa;
     draw.ea = ea;
-    if( ea < sa )
-    {
-        // required to draw in clockwise direction
-        // work arround for wxWidgets bug http://trac.wxwidgets.org/ticket/4437
-        draw.ea += 360;
-    }
     return true;
 }
 

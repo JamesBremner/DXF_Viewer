@@ -7,7 +7,7 @@
 		<Option compiler="gcc_v83" />
 		<Build>
 			<Target title="Debug">
-				<Option output="../../../bin/DXF_ViewerForNana" prefix_auto="1" extension_auto="1" />
+				<Option output="../../../bin/DXF_ViewerForWindex" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc_v83" />
@@ -16,7 +16,7 @@
 				</Compiler>
 			</Target>
 			<Target title="Release">
-				<Option output="../../../bin/DXF_ViewerForNana" prefix_auto="1" extension_auto="1" />
+				<Option output="../../../bin/DXF_ViewerForWindex" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="gcc_v83" />
@@ -42,8 +42,6 @@
 			<Add library="nana" />
 			<Add library="gdi32" />
 			<Add library="comdlg32" />
-			<Add library="ws2_32" />
-			<Add library="wsock32" />
 			<Add library="stdc++fs" />
 			<Add directory="$(#nana.lib)" />
 		</Linker>
