@@ -68,9 +68,9 @@ int main()
 //    // handle left mouse button down
     fm.events().click([&]
     {
-        auto p = fm.getMousePosition();
-        old_pos.x = p.first;
-        old_pos.y = p.second;
+        auto p = fm.getMouseStatus();
+        old_pos.x = p.x;
+        old_pos.y = p.y;
     });
 //    fm.events().mouse_down([&old_pos](const nana::arg_mouse&arg)
 //    {
