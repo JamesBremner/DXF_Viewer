@@ -12,7 +12,7 @@ int main()
     wex::sMouse old_pos;
     old_pos.x = -1;
 
-    wex::gui& fm = wex::windex::topWindow();
+    wex::gui& fm = wex::maker::make();
     fm.bgcolor( 0 );
 
     // register drawing function
@@ -32,7 +32,7 @@ int main()
     {
         // prompt for file to open
         wex::filebox fb( fm );
-        auto paths = fb.path();
+        auto paths = fb.open();
         if( paths.empty() )
             return;
         try
