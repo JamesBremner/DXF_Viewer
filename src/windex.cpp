@@ -5,6 +5,7 @@
 
 #include "dxf.h"
 
+#ifndef UNIT_TEST
 int main()
 {
     dxfv::CDxf dxf;
@@ -152,6 +153,8 @@ int main()
 
     fm.run();
 }
+
+#endif // UNIT_TEST
 
 namespace dxfv
 {
