@@ -59,6 +59,7 @@
 		<Unit filename="../../../src/Line.h" />
 		<Unit filename="../../../src/PolyLine.cpp" />
 		<Unit filename="../../../src/PolyLine.h" />
+		<Unit filename="../../../src/Solid.cpp" />
 		<Unit filename="../../../src/Spline.cpp" />
 		<Unit filename="../../../src/Spline.h" />
 		<Unit filename="../../../src/StdAfx.h" />
