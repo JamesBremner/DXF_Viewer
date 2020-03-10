@@ -31,10 +31,45 @@ CArc::~CArc()
 }
 void CArc::Update( cBoundingRectangle& rect )
 {
-    rect.Update( x, y+r );
-    rect.Update( x, y-r );
-    rect.Update( x+r, y );
-    rect.Update( x-r, y );
+    uint8_t start_quadrant = (int)sa % 360 / 90 + 1;// the quadrant of sa
+    uint8_t end_quadrant = (int)ea % 360 / 90 + 1;// the quadrant of ea
+
+    // A little transform so we could calculate how many axes an arc have passed through correctly.
+    // If the start_quadrant is 3 and the end_quadrant is 1, add 4 to end_quadrant.
+    // So we know how many axes the arc pass through simply by substracting start_quadrant from end_quadrant( 5 - 3 = 2 )
+    // If sa and ea are in the same quadrant, but start angle is larger than end angle.
+    // It implies the arc pass through 4 axes, add 4 to end_quadrant as well.
+    if(end_quadrant < start_quadrant || (end_quadrant == start_quadrant && (int)sa % 360 >(int)ea % 360 ))
+    {
+        end_quadrant += 4;
+    }
+    // Loop to determine which axis we should add to our consideration.
+    // The first example above will go though j for 3 and 4 that means we take -y & +x into calculation
+    for(int i = 0; i < end_quadrant - start_quadrant; i ++)
+    {
+        int axis = start_quadrant + i;
+        if(axis > 4)
+        {
+            axis %= 4;
+        }
+        switch(axis)
+        {
+            case 1:
+                rect.Update(x, y + r);// +y axis
+                break;
+            case 2:
+                rect.Update(x - r, y);// -x axis
+                break;
+            case 3:
+                rect.Update(x, y - r);// -y axis
+                break;
+            case 4:
+                rect.Update(x + r, y);// +x axis
+                break;
+        }
+    }
+    rect.Update( x + r * cos(sa * M_PI / 180), y + r * sin(sa * M_PI / 180) );// start point of an arc
+    rect.Update( x + r * cos(ea * M_PI / 180), y + r * sin(ea * M_PI / 180) );// end point of an arc
 }
 bool CArc::getDraw( cDrawPrimitiveData& draw )
 {
