@@ -3,14 +3,7 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
-//#include "DXFNester.h"
 #include "Dxf.h"
-
-#ifdef _DEBUG
-#undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
-#define new DEBUG_NEW
-#endif
 
 namespace dxfv
 {
@@ -46,6 +39,10 @@ cDXFGraphObject* cDXFGraphObject::Factory( cCodeValue& cv )
         return po;
     delete po;
     po = (cDXFGraphObject*)new CText( cv );
+    if( po->myfValid )
+        return po;
+    delete po;
+    po = (cDXFGraphObject*)new CSolid( cv );
     if( po->myfValid )
         return po;
     delete po;

@@ -43,6 +43,7 @@
 			<Add library="gdi32" />
 			<Add library="comdlg32" />
 			<Add library="stdc++fs" />
+			<Add library="gdiplus" />
 			<Add directory="$(#nana.lib)" />
 		</Linker>
 		<Unit filename="../../../../windex/include/wex.h" />
@@ -58,6 +59,8 @@
 		<Unit filename="../../../src/Line.h" />
 		<Unit filename="../../../src/PolyLine.cpp" />
 		<Unit filename="../../../src/PolyLine.h" />
+		<Unit filename="../../../src/Solid.cpp" />
+		<Unit filename="../../../src/Solid.h" />
 		<Unit filename="../../../src/Spline.cpp" />
 		<Unit filename="../../../src/Spline.h" />
 		<Unit filename="../../../src/StdAfx.h" />

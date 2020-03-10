@@ -1,6 +1,7 @@
 #include <cmath>
 
 #include "wex.h"
+#include "window2file.h"
 
 #include "dxf.h"
 
@@ -13,7 +14,7 @@ int main()
     old_pos.x = -1;
 
     wex::gui& fm = wex::windex::topWindow();
-    fm.bgcolor( 0 );
+    fm.bgcolor( 0xFFFFFF );
 
     // register drawing function
     fm.events().draw([&dxf]( PAINTSTRUCT& ps )
@@ -28,22 +29,23 @@ int main()
     wex::menubar mb( fm );
 
     wex::menu mf( fm );
-    mf.append("Open",[&]
+    mf.append("Open DXF file",[&]
     {
         // prompt for file to open
         wex::filebox fb( fm );
-        auto paths = fb.path();
-        if( paths.empty() )
+        fb.open();
+        auto path = fb.path();
+        if( path.empty() )
             return;
         try
         {
             // read the file
-            dxf.LoadFile( paths);
+            dxf.LoadFile( path);
 
             // refresh display with contents of opened file
             fm.update();
 
-            fm.text( paths);
+            fm.text( path);
         }
         catch( std::runtime_error& e )
         {
@@ -51,7 +53,17 @@ int main()
             exit(1);
         }
     });
-    mb.append( "Open", mf );
+    mf.append("Save to PNG", [&]
+    {
+        wex::filebox fb( fm );
+        auto path = fb.save();
+        if( path.empty() )
+            return;
+        wex::window2file w2f;
+        w2f.save( fm, path );
+    });
+    mb.append( "File", mf );
+
 
     wex::menu mv( fm );
     mv.append("Fit",[&]
@@ -170,7 +182,7 @@ void cLWPolyLine::Draw( CDxf* dxf )
 {
     cDrawPrimitiveData draw( dxf );
 
-    dxf->shapes()->color( 255,255,255 );
+    dxf->shapes()->color( 0 );
 
     // loop over drawing primitives
     while( getDraw( draw ) )
@@ -186,7 +198,7 @@ void CText::Draw( CDxf* dxf )
 {
     cDrawPrimitiveData draw( dxf );
 
-    dxf->shapes()->color( 255,255,0 );
+    dxf->shapes()->color( 0 );
 
     // loop over drawing primitives
     while( getDraw( draw ) )
@@ -207,6 +219,25 @@ void CSpline::Draw( CDxf* dxf )
             draw.x1, draw.y1,
             draw.x2, draw.y2
         });
+    }
+}
+void CSolid::Draw( CDxf* dxf )
+{
+    cDrawPrimitiveData draw( dxf );
+
+    // loop over drawing primitives
+    while( getDraw( draw ) )
+    {
+        std::cout << "CSolid::Draw " << draw.color << "\n";
+        std::cout << draw.x1 <<" "<< draw.y1 <<" "<< draw.x2 <<" "<< draw.y2 <<"\n";
+        dxf->shapes()->color( draw.color );
+        dxf->shapes()->fill();
+        dxf->shapes()->rectangle(
+        {
+            draw.x1, draw.y1,
+            draw.x2, draw.y2
+        });
+
     }
 }
 }
