@@ -44,7 +44,7 @@ void CArc::Update( cBoundingRectangle& rect )
         end_quadrant += 4;
     }
     // Loop to determine which axis we should add to our consideration.
-    // The first example above will go though j for 3 and 4 that means we take -y & +x into calculation
+    // The first example above will go though 'axis' for 3 and 4 that means we take -y & +x into calculation
     for(int i = 0; i < end_quadrant - start_quadrant; i ++)
     {
         int axis = start_quadrant + i;
