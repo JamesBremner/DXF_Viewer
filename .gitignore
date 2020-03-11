@@ -8,6 +8,7 @@ bin/*
 
 *.depend
 *.layout
+*.exe
 
 # Folder config file
 Desktop.ini
