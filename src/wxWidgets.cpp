@@ -446,4 +446,8 @@ void CSpline::Draw( CDxf* dxf )
         }
     }
 }
+void CSolid::Draw( CDxf* dxf )
+{
+    // stubbed out, to satisfy linker.  SOLID not supported for wxWidgets.
+}
 }
