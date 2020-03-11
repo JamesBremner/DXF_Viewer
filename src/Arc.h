@@ -11,7 +11,7 @@ class CArc  : public cDXFGraphObject
 {
 public:
     double x;   ///< center, +ve to left of window
-    double y;   ///< venter, +ve to bottom of window
+    double y;   ///< center, +ve to bottom of window
     double r;   ///< radius
     double sa;  ///< start angle degrees anti-clockwise from 3 o'clock
     double ea;  ///< start angle degrees anti-clockwise from 3 o'clock
