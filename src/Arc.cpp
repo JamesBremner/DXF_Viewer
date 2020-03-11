@@ -31,12 +31,12 @@ CArc::~CArc()
 }
 void CArc::Update( cBoundingRectangle& rect )
 {
-    int8_t start_quadrant = (int)sa % 360 / 90 + 1;// the quadrant of sa
+    int start_quadrant = (int)sa % 360 / 90 + 1;// the quadrant of sa
     if(sa < 0)
     {
         start_quadrant += 3;
     }
-    int8_t end_quadrant = (int)ea % 360 / 90 + 1;// the quadrant of ea
+    int end_quadrant = (int)ea % 360 / 90 + 1;// the quadrant of ea
     if(ea < 0)
     {
         end_quadrant += 3;
@@ -162,5 +162,3 @@ void CArc::Adjust( double ax, double ay )
 }
 
 }
-
-
