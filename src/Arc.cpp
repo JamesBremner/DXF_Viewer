@@ -31,8 +31,16 @@ CArc::~CArc()
 }
 void CArc::Update( cBoundingRectangle& rect )
 {
-    uint8_t start_quadrant = (int)sa % 360 / 90 + 1;// the quadrant of sa
-    uint8_t end_quadrant = (int)ea % 360 / 90 + 1;// the quadrant of ea
+    int8_t start_quadrant = (int)sa % 360 / 90 + 1;// the quadrant of sa
+    if(sa < 0)
+    {
+        start_quadrant += 3;
+    }
+    int8_t end_quadrant = (int)ea % 360 / 90 + 1;// the quadrant of ea
+    if(ea < 0)
+    {
+        end_quadrant += 3;
+    }
 
     // A little transform so we could calculate how many axes an arc have passed through correctly.
     // If the start_quadrant is 3 and the end_quadrant is 1, add 4 to end_quadrant.
