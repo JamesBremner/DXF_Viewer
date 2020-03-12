@@ -375,6 +375,11 @@ void CArc::Draw( CDxf* dxf )
     // loop over drawing primitives
     while( getDraw( draw ) )
     {
+        if(!wxCHECK_VERSION(3, 1, 0))
+        {
+            if(draw.ea < draw.sa)
+                draw.ea += 360;
+        }
         dxf->DC()->DrawEllipticArc (
             draw.x1, draw.y1,
             draw.r, draw.r,
