@@ -172,7 +172,7 @@ void CArc::Draw( CDxf* dxf )
     cDrawPrimitiveData draw( dxf );
     getDraw( draw );
     dxf->shapes()->arc(
-        draw.x1, draw.y1, draw.r,
+        draw.x1 + r, draw.y1 - r, draw.r,
         draw.sa, draw.ea );
 }
 void CCircle::Draw( CDxf* dxf )
