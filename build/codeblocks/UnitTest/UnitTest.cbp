@@ -37,14 +37,14 @@
 			<Add directory="../../../src" />
 			<Add directory="../../../../windex/include" />
 		</Compiler>
-				<Linker>
-					<Add option="-static-libstdc++" />
-					<Add option="-static-libgcc" />
-					<Add option="-static" />
-					<Add library="gdi32" />
-					<Add library="comdlg32" />
-					<Add library="stdc++fs" />
-					<Add library="gdiplus" />
+		<Linker>
+			<Add option="-static-libstdc++" />
+			<Add option="-static-libgcc" />
+			<Add option="-static" />
+			<Add library="gdi32" />
+			<Add library="comdlg32" />
+			<Add library="stdc++fs" />
+			<Add library="gdiplus" />
 		</Linker>
 		<Unit filename="../../../src/Arc.cpp" />
 		<Unit filename="../../../src/Circle.cpp" />
@@ -54,8 +54,8 @@
 		<Unit filename="../../../src/Solid.cpp" />
 		<Unit filename="../../../src/Spline.cpp" />
 		<Unit filename="../../../src/Text.cpp" />
+		<Unit filename="../../../src/unitTest.cpp" />
 		<Unit filename="../../../src/windex.cpp" />
-		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />
