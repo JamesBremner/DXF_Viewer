@@ -84,10 +84,10 @@ bool CArc::getDraw( cDrawPrimitiveData& draw )
     if( draw.index )
         return false;
     draw.index++;
-    draw.x1 = x;
-    draw.y1 = y;
+    draw.x1 = x - r;
+    draw.y1 = y + r;
     draw.rect->ApplyScale( draw.x1, draw.y1);
-    draw.r =  r / draw.rect->myScale;
+    draw.r =  2 * r / draw.rect->myScale;
     draw.sa = sa;
     draw.ea = ea;
     return true;
