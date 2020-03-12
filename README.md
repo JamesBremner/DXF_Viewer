@@ -16,6 +16,7 @@ Displaying sample file `dxf/Gear Sample-iss4.DXF`
 - CIRCLE
 - SPLINE with fit points
 - SPLINE with control points OR fit points
+- SOLID
 
 not supported:
 - SPLINE with fit AND control points

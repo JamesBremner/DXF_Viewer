@@ -212,6 +212,7 @@ public:
     int index;
     int index_curve;
     std::string text;
+    int color;
     cBoundingRectangle* rect;   // bounding rectange scaled to window
 
     cDrawPrimitiveData( CDxf * dxf );
@@ -233,6 +234,7 @@ public:
         text,
         circle,
         spline,
+        solid,
     } myType;
 
     /// true if valid construction
@@ -297,6 +299,7 @@ protected:
 #include "Circle.h"
 #include "PolyLine.h"
 #include "Spline.h"
+#include "Solid.h"
 #include "text.h"
 #include "Dimension.h"
 

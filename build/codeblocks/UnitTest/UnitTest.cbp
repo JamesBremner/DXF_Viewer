@@ -2,21 +2,22 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-		<Option title="DXF_ViewerForNana" />
+		<Option title="UnitTest" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc_v83" />
 		<Build>
 			<Target title="Debug">
-				<Option output="../../../bin/DXF_ViewerForNana" prefix_auto="1" extension_auto="1" />
+				<Option output="../../bin/UnitTest" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc_v83" />
 				<Compiler>
 					<Add option="-g" />
+					<Add option="-D__GNUWIN32__" />
 				</Compiler>
 			</Target>
 			<Target title="Release">
-				<Option output="../../../bin/DXF_ViewerForNana" prefix_auto="1" extension_auto="1" />
+				<Option output="../../bin/UnitTest" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="gcc_v83" />
@@ -31,41 +32,30 @@
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
-			<Add option="-D__GNUWIN32__" />
-			<Add option="-Dnanabuild" />
-			<Add directory="$(#nana.include)" />
+			<Add option="-Dwindexbuild" />
+			<Add option="-DUNIT_TEST" />
+			<Add directory="../../../src" />
+			<Add directory="../../../../windex/include" />
 		</Compiler>
 		<Linker>
 			<Add option="-static-libstdc++" />
 			<Add option="-static-libgcc" />
 			<Add option="-static" />
-			<Add library="nana" />
 			<Add library="gdi32" />
 			<Add library="comdlg32" />
-			<Add library="ws2_32" />
-			<Add library="wsock32" />
 			<Add library="stdc++fs" />
-			<Add directory="$(#nana.lib)" />
+			<Add library="gdiplus" />
 		</Linker>
 		<Unit filename="../../../src/Arc.cpp" />
-		<Unit filename="../../../src/Arc.h" />
 		<Unit filename="../../../src/Circle.cpp" />
-		<Unit filename="../../../src/Circle.h" />
-		<Unit filename="../../../src/Dimension.cpp" />
-		<Unit filename="../../../src/Dimension.h" />
 		<Unit filename="../../../src/Dxf.cpp" />
-		<Unit filename="../../../src/Dxf.h" />
 		<Unit filename="../../../src/Line.cpp" />
-		<Unit filename="../../../src/Line.h" />
 		<Unit filename="../../../src/PolyLine.cpp" />
-		<Unit filename="../../../src/PolyLine.h" />
 		<Unit filename="../../../src/Solid.cpp" />
 		<Unit filename="../../../src/Spline.cpp" />
-		<Unit filename="../../../src/Spline.h" />
-		<Unit filename="../../../src/StdAfx.h" />
 		<Unit filename="../../../src/Text.cpp" />
-		<Unit filename="../../../src/Text.h" />
-		<Unit filename="../../../src/nana.cpp" />
+		<Unit filename="../../../src/unitTest.cpp" />
+		<Unit filename="../../../src/windex.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

@@ -65,6 +65,7 @@ bool CCircle::Append( cvit_t& cvit )
             break;
         case 20:
             y = atof(cvit->myValue.c_str());
+            break;
         case 40:
             r = atof(cvit->myValue.c_str());
             break;
