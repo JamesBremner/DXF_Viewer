@@ -18,5 +18,12 @@ int main()
     A.Update( BR );
     std::cout << BR.x1<<" "<<BR.y1<<", "<<BR.x2<<" "<<BR.y2<<"\n";
 
+    // bottom right quadrant
+    A.sa = 5;
+    A.ea = 85;
+    BR.init = false;
+    A.Update( BR );
+    std::cout << BR.x1<<" "<<BR.y1<<", "<<BR.x2<<" "<<BR.y2<<"\n";
+
     return 0;
 }
