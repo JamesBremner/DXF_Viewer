@@ -1,0 +1,30 @@
+0
+ENTITIES
+  0
+ARC
+  5
+7D
+330
+1F
+100
+AcDbEntity
+  8
+freze2
+100
+AcDbCircle
+ 10
+100
+20
+100
+ 30
+0.0
+ 40
+50
+100
+AcDbArc
+ 50
+5
+ 51
+90
+0
+EOF

@@ -39,13 +39,10 @@ public:
 
     @param[in/out] draw  structure holding parameters
 
-    draw.x1, draw.y1  Upper left corner of bounding rectangle of entire circle
-    draw.r            Diameter of circle
+    draw.x1, draw.y1  Center of entire circle
+    draw.r            radius of circle
     draw.sa           Starting angle
     draw.ea           Ending angle
-
-    The starting/ending angles are adjusted to the peculiarities of wxWidgets on windows v3.0.0
-    To run on other platforms or frameworks this code will need to be adjusted
 
     */
     bool getDraw( cDrawPrimitiveData& draw );
