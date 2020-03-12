@@ -375,9 +375,12 @@ void CArc::Draw( CDxf* dxf )
     // loop over drawing primitives
     while( getDraw( draw ) )
     {
+        double xTopLeft = draw.x1 - draw.r;
+        double yTopLeft = draw.y1 - draw.r;
+        double diameter = 2 * draw.r;
         dxf->DC()->DrawEllipticArc (
-            draw.x1, draw.y1,
-            draw.r, draw.r,
+            xTopLeft, yTopLeft,
+            diameter, diameter,
             draw.sa, draw.ea );
     }
 }
