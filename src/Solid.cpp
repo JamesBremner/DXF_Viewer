@@ -33,6 +33,11 @@ CSolid::~CSolid()
 
 }
 
+void CSolid::Options( CDxf * dxf )
+{
+    myParser = dxf->SolidParser();
+}
+
 
 void CSolid::Update( cBoundingRectangle& rect )
 {
@@ -44,31 +49,40 @@ bool CSolid::Append( cvit_t& cvit )
 {
     while( true )
     {
-        cvit++;
-        switch( cvit->Code() )
+        switch ( myParser )
         {
-        case 0:
-            // a new object
-            cvit--;
-            return false;
-        case 8:
-            m_Layer = cvit->myValue;
+
+        case eParser::solid_2point:
+            cvit++;
+            switch( cvit->Code() )
+            {
+            case 0:
+                // a new object
+                cvit--;
+                return false;
+            case 8:
+                m_Layer = cvit->myValue;
+                break;
+            case 10:
+                x = atof(cvit->myValue.c_str());
+                break;
+            case 20:
+                y = atof(cvit->myValue.c_str());
+                break;
+            case 12:
+                x2 = atof(cvit->myValue.c_str());
+                break;
+            case 22:
+                y2 = atof(cvit->myValue.c_str());
+                break;
+            case 62:
+                myColor = AutocadColor2RGB( atoi( cvit->myValue.c_str() ) );
+                break;
+            }
             break;
-        case 10:
-            x = atof(cvit->myValue.c_str());
-            break;
-        case 20:
-            y = atof(cvit->myValue.c_str());
-            break;
-        case 12:
-            x2 = atof(cvit->myValue.c_str());
-            break;
-        case 22:
-            y2 = atof(cvit->myValue.c_str());
-            break;
-        case 62:
-            myColor = AutocadColor2RGB( atoi( cvit->myValue.c_str() ) );
-            break;
+
+        default:
+            throw std::runtime_error("SOLID parser not implemented");
         }
     }
     return true;
@@ -79,18 +93,26 @@ bool CSolid::getDraw( cDrawPrimitiveData& draw )
     if( draw.index )
         return false;
     draw.index++;
-    draw.color = myColor;
-    draw.x1 = x;
-    draw.y1 = y;
-    draw.x2  = x2;
-    draw.y2  = y2;
 
-    draw.rect->ApplyScale( draw.x1, draw.y1 );
-    draw.rect->ApplyScale( draw.x2, draw.y2 );
+    switch ( myParser )
+    {
+    case eParser::solid_2point:
+        draw.color = myColor;
+        draw.x1 = x;
+        draw.y1 = y;
+        draw.x2  = x2;
+        draw.y2  = y2;
 
-    // convert right, bottom to width, height
-    draw.x2 -= draw.x1;
-    draw.y2 -= draw.y1;
+        draw.rect->ApplyScale( draw.x1, draw.y1 );
+        draw.rect->ApplyScale( draw.x2, draw.y2 );
+
+        // convert right, bottom to width, height
+        draw.x2 -= draw.x1;
+        draw.y2 -= draw.y1;
+        break;
+    default:
+        throw std::runtime_error("SOLID parser not implemented");
+    }
 
     return true;
 }

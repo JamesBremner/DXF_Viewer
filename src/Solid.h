@@ -21,6 +21,8 @@ public:
     CSolid( cCodeValue& cv );
     virtual ~CSolid();
 
+    void Options( CDxf * dxf );
+
     /** Append DXF code-value pair to object specification
         @param[in] cvit iterator pointing to code value pair
 
@@ -32,7 +34,7 @@ public:
         22      y location of bottom right of 2D rectangle
         </pre>
     */
-    bool Append( std::vector<cCodeValue>::iterator& cvit );
+    bool Append( cvit_t& cvit );
 
     bool Read( FILE * fp, int& code, char* value );
 

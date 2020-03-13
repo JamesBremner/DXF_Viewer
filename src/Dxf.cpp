@@ -123,6 +123,7 @@ CDxf::CDxf()
     , m_Nesting( false )
     , myfwxwidgets( false ) // do not use wxwidgets for contol point splines
     , myfSplineControlPointsPreferred( false )  // if true and choice available, splines prefer control points
+    , mySolidParser( eParser::solid_2point )
 {
 }
 
@@ -220,6 +221,21 @@ void CDxf::Init()
     m_InitialDraw = FALSE;
     myGraphObject.clear();
     m_Nesting = FALSE;
+}
+
+void CDxf::SolidParser( eParser ep )
+{
+    switch( ep )
+    {
+    case eParser::solid_2point:
+    case eParser::solid_3point:
+    case eParser::solid_4point:
+        mySolidParser = ep;
+        break;
+    default:
+        mySolidParser = eParser::solid_2point;
+        break;
+    }
 }
 
 void CDxf::Draw( int width, int height )

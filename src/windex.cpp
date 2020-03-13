@@ -16,6 +16,7 @@ int main()
 
     // construct application window
     wex::gui& fm = wex::maker::make();
+    fm.text("DXF Viewer");
     fm.bgcolor( 0 );
 
     // register drawing function
@@ -51,7 +52,8 @@ int main()
         }
         catch( std::runtime_error& e )
         {
-            wex::msgbox mb(fm,"Error reading file");
+            wex::msgbox mb(fm,
+                           std::string("Error reading file\n")+e.what());
             exit(1);
         }
     });
@@ -77,6 +79,31 @@ int main()
         fm.update();
     });
     mb.append("View", mv );
+
+    wex::menu mp( fm );
+    mp.append("SOLID 2 point parser",[&]
+    {
+        mp.check(0,true);
+        mp.check(1,false);
+        mp.check(2,false);
+        dxf.SolidParser( dxfv::eParser::solid_2point );
+    });
+    mp.append("SOLID 3 point parser",[&]
+    {
+        mp.check(0,false);
+        mp.check(1,true);
+        mp.check(2,false);
+        dxf.SolidParser( dxfv::eParser::solid_3point );
+    });
+    mp.append("SOLID 4 point parser",[&]
+    {
+        mp.check(0,false);
+        mp.check(1,false);
+        mp.check(2,true);
+        dxf.SolidParser( dxfv::eParser::solid_4point );
+    });
+    mp.check(0);
+    mb.append("Parsers", mp );
 
 
 //    // handle left mouse button down

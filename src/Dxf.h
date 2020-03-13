@@ -31,6 +31,14 @@ namespace dxfv
 
 class CDxf;
 
+
+    enum eParser
+    {
+        solid_2point,           // default
+        solid_3point,
+        solid_4point,
+    };
+
 struct cP
 {
     double x, y;
@@ -288,7 +296,7 @@ public:
 
 protected:
     std::string myCode;
-
+    eParser myParser;
 };
 
 
@@ -308,6 +316,7 @@ namespace dxfv
 {
 
 
+
 /** A container for the graphical objects in a .DXF file
 */
 class CDxf
@@ -322,6 +331,9 @@ public:
         OK,
         demo,
     } myLoadStatus;
+
+    eParser mySolidParser;      /// SOLID parser to be enabled TID23
+
     unsigned char m_Nesting;
 
     cBoundingRectangle myBoundingRectangle;
@@ -379,6 +391,13 @@ public:
 
     /// Draw every entity
     void Draw( int width, int height );
+
+    /// Enable a SOLID parser TID23
+    void SolidParser( eParser ep );
+    eParser SolidParser() const
+    {
+        return mySolidParser;
+    }
 
 private:
     bool myfwxwidgets;          ///< true if using wxwidgets method for control point splines
