@@ -1,6 +1,8 @@
-// Circle.h: interface for the CCircle class.
-//
-//////////////////////////////////////////////////////////////////////
+/** Solid.h: interface for the CSolid class.
+
+    SOLID objects are 2D rectangles
+    specified by their top-right and bottm-left corners
+*/
 
 #pragma once
 
@@ -9,7 +11,7 @@ namespace dxfv
 class CSolid  : public cDXFGraphObject
 {
 public:
-    double x,y,x2,y2;
+    double x,y,x2,y2;       ///< locations of top-right and bottm-left corners
     std::string m_Layer;
     unsigned char m_Select;
     unsigned char m_Nest;
@@ -18,7 +20,20 @@ public:
     CSolid();
     CSolid( cCodeValue& cv );
     virtual ~CSolid();
+
+    /** Append DXF code-value pair to object specification
+        @param[in] cvit iterator pointing to code value pair
+
+        <pre>
+        code    interpretation
+        10      x location of top left of 2D rectangle
+        12      x location of bottom right of 2D rectangle
+        20      y location of top left of 2D rectangle
+        22      y location of bottom right of 2D rectangle
+        </pre>
+    */
     bool Append( std::vector<cCodeValue>::iterator& cvit );
+
     bool Read( FILE * fp, int& code, char* value );
 
     void Update( cBoundingRectangle& rect );

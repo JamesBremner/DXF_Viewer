@@ -1,4 +1,4 @@
-// Circle.cpp: implementation of the CSolid class.
+// Solid.cpp: implementation of the CSolid class.
 //
 //////////////////////////////////////////////////////////////////////
 
