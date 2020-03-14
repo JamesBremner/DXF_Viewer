@@ -256,19 +256,51 @@ void CSolid::Draw( CDxf* dxf )
 {
     cDrawPrimitiveData draw( dxf );
 
-    // loop over drawing primitives
-    while( getDraw( draw ) )
-    {
-        std::cout << "CSolid::Draw " << draw.color << "\n";
-        std::cout << draw.x1 <<" "<< draw.y1 <<" "<< draw.x2 <<" "<< draw.y2 <<"\n";
-        dxf->shapes()->color( draw.color );
-        dxf->shapes()->fill();
-        dxf->shapes()->rectangle(
-        {
-            draw.x1, draw.y1,
-            draw.x2, draw.y2
-        });
+    std::vector<int> v;
 
+    switch ( myParser )
+    {
+    case eParser::solid_2point:
+
+        // loop over drawing primitives
+        while( getDraw( draw ) )
+        {
+            std::cout << "CSolid::Draw " << draw.color << "\n";
+            std::cout << draw.x1 <<" "<< draw.y1 <<" "<< draw.x2 <<" "<< draw.y2 <<"\n";
+            dxf->shapes()->color( draw.color );
+            dxf->shapes()->fill();
+            dxf->shapes()->rectangle(
+            {
+                draw.x1, draw.y1,
+                draw.x2, draw.y2
+            });
+        }
+        break;
+    case eParser::solid_4point:
+
+        // loop over drawing primitives
+        while( getDraw( draw ) )
+        {
+            std::cout << "CSolid::Draw " << draw.color << "\n";
+            std::cout << draw.x1 << " " << draw.y1 <<"\n";
+            int px, py;
+            px = draw.x1;
+            py = draw.y1;
+            v.push_back(px);
+            v.push_back(py);
+        }
+
+        if (v.size()>0)
+        {
+            for(int i=0;i<v.size()/2;i++)
+            {
+                std::cout << v[2*i] << " " << v[2*i+1] << "\n";
+            }
+            dxf->shapes()->color( draw.color );
+            dxf->shapes()->fill();
+            dxf->shapes()->polygen( v );
+        }
+        break;
     }
 }
 }

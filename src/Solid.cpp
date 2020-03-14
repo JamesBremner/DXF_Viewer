@@ -42,9 +42,21 @@ void CSolid::Options( CDxf * dxf )
 
 void CSolid::Update( cBoundingRectangle& rect )
 {
-    std::cout << "CSolid::Update " << x <<" "<< y <<" "<< x2 <<" "<< y2 <<"\n";
-    rect.Update( x, y );
-    rect.Update( x2, y2 );
+    std::cout << "CSolid::Update " << x[0] <<" "<< y[0] <<" "<< x[2] <<" "<< y[2] <<"\n";
+
+    switch (myParser)
+    {
+    case eParser::solid_2point:
+        rect.Update( x[0], y[0] );
+        rect.Update( x[2], y[2] );
+        break;
+    case eParser::solid_4point:
+        for(int i=0; i<4; i++)
+        {
+            rect.Update( x[i], y[i] );
+        }
+        break;
+    }
 }
 bool CSolid::Append( cvit_t& cvit )
 {
@@ -65,16 +77,61 @@ bool CSolid::Append( cvit_t& cvit )
                 m_Layer = cvit->myValue;
                 break;
             case 10:
-                x = atof(cvit->myValue.c_str());
+                x[0] = atof(cvit->myValue.c_str());
                 break;
             case 20:
-                y = atof(cvit->myValue.c_str());
+                y[0] = atof(cvit->myValue.c_str());
                 break;
             case 12:
-                x2 = atof(cvit->myValue.c_str());
+                x[2] = atof(cvit->myValue.c_str());
                 break;
             case 22:
-                y2 = atof(cvit->myValue.c_str());
+                y[2] = atof(cvit->myValue.c_str());
+                break;
+            case 62:
+                myColor = AutocadColor2RGB( atoi( cvit->myValue.c_str() ) );
+                break;
+            }
+            break;
+
+        case eParser::solid_4point:
+            cvit++;
+            switch( cvit->Code() )
+            {
+            case 0:
+                // a new object
+                cvit--;
+                return false;
+            case 8:
+                m_Layer = cvit->myValue;
+                break;
+            // 10 20
+            case 10:
+                x[0] = atof(cvit->myValue.c_str());
+                break;
+            case 20:
+                y[0] = atof(cvit->myValue.c_str());
+                break;
+            // 11 21
+            case 11:
+                x[1] = atof(cvit->myValue.c_str());
+                break;
+            case 21:
+                y[1] = atof(cvit->myValue.c_str());
+                break;
+            // 12 22
+            case 12:
+                x[2] = atof(cvit->myValue.c_str());
+                break;
+            case 22:
+                y[2] = atof(cvit->myValue.c_str());
+                break;
+            // 13 23
+            case 13:
+                x[3] = atof(cvit->myValue.c_str());
+                break;
+            case 23:
+                y[3] = atof(cvit->myValue.c_str());
                 break;
             case 62:
                 myColor = AutocadColor2RGB( atoi( cvit->myValue.c_str() ) );
@@ -91,18 +148,20 @@ bool CSolid::Append( cvit_t& cvit )
 
 bool CSolid::getDraw( cDrawPrimitiveData& draw )
 {
-    if( draw.index )
-        return false;
-    draw.index++;
+    int index = draw.index;
 
     switch ( myParser )
     {
     case eParser::solid_2point:
+        if( draw.index > 0 ) // we only loop one element
+            return false;
+        draw.index++;
+
         draw.color = myColor;
-        draw.x1 = x;
-        draw.y1 = y;
-        draw.x2  = x2;
-        draw.y2  = y2;
+        draw.x1 = x[0];
+        draw.y1 = y[0];
+        draw.x2  = x[2];
+        draw.y2  = y[2];
 
         draw.rect->ApplyScale( draw.x1, draw.y1 );
         draw.rect->ApplyScale( draw.x2, draw.y2 );
@@ -111,6 +170,26 @@ bool CSolid::getDraw( cDrawPrimitiveData& draw )
         draw.x2 -= draw.x1;
         draw.y2 -= draw.y1;
         break;
+
+    case eParser::solid_4point:
+        if( draw.index > 3 )   // we have to loop 4 elements
+            return false;
+
+        draw.color = myColor;
+
+        // change the last point's position
+        if (index == 2)
+            index = 3;
+        else if(index==3)
+            index = 2;
+        draw.x1 = x[index];
+        draw.y1 = y[index];
+
+        draw.rect->ApplyScale( draw.x1, draw.y1 );
+
+        draw.index++;          // increase the index
+        break;
+
     default:
         throw std::runtime_error("SOLID parser not implemented");
     }
@@ -119,8 +198,8 @@ bool CSolid::getDraw( cDrawPrimitiveData& draw )
 }
 void CSolid::Adjust( double ax, double ay )
 {
-    x += ax;
-    y += ay;
+    x[0] += ax;
+    y[0] += ay;
 }
 
 int CSolid::AutocadColor2RGB( int ai )

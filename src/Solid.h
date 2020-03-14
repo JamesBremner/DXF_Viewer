@@ -11,11 +11,15 @@ namespace dxfv
 class CSolid  : public cDXFGraphObject
 {
 public:
-    double x,y,x2,y2;       ///< locations of top-right and bottm-left corners
+    /// locations of top-right(x[0]) and bottm-left corners(x[2])
+    /// for other cases, we have to use the 4 points to define
+    /// a quadrilateral or a triangle
+    double x[4],y[4];
     std::string m_Layer;
     unsigned char m_Select;
     unsigned char m_Nest;
     int myColor;
+
 
     CSolid();
     CSolid( cCodeValue& cv );
