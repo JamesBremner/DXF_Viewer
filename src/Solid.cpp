@@ -15,7 +15,7 @@ namespace dxfv
 {
 
 CSolid::CSolid()
-    : cDXFGraphObject("SOLID",cDXFGraphObject::eType::circle)
+    : cDXFGraphObject("SOLID",cDXFGraphObject::eType::solid)
 {
     m_Layer = "0";
     m_Select = FALSE;
