@@ -20,6 +20,7 @@ CSolid::CSolid()
     m_Layer = "0";
     m_Select = FALSE;
     m_Nest = FALSE;
+    myColor = 0x00ffffff; // white color, default value
 }
 
 CSolid::CSolid( cCodeValue& cv )
