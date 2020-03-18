@@ -214,6 +214,8 @@ public:
     double y1;
     double x2;
     double y2;
+    double x3;
+    double y3;
     double r;
     double sa;
     double ea;

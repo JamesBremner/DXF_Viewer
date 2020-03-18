@@ -260,15 +260,17 @@ void CSolid::Draw( CDxf* dxf )
     while( getDraw( draw ) )
     {
         std::cout << "CSolid::Draw " << draw.color << "\n";
-        std::cout << draw.x1 <<" "<< draw.y1 <<" "<< draw.x2 <<" "<< draw.y2 <<"\n";
-        dxf->shapes()->color( draw.color );
+        std::cout << draw.x1 <<" "<< draw.y1 <<" "
+                  << draw.x2 <<" "<< draw.y2 <<" "
+                  << draw.x3 <<" "<< draw.y3 <<"\n";
+
         dxf->shapes()->fill();
-        dxf->shapes()->rectangle(
+        dxf->shapes()->polygon(
         {
             draw.x1, draw.y1,
-            draw.x2, draw.y2
+            draw.x2, draw.y2,
+            draw.x3, draw.y3,
         });
-
     }
 }
 }

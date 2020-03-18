@@ -12,6 +12,7 @@ class CSolid  : public cDXFGraphObject
 {
 public:
     double x,y,x2,y2;       ///< locations of top-right and bottm-left corners
+    std::vector< std::vector< std::vector< double > > > myTriangMesh;
     std::string m_Layer;
     unsigned char m_Select;
     unsigned char m_Nest;
@@ -36,8 +37,6 @@ public:
     */
     bool Append( cvit_t& cvit );
 
-    bool Read( FILE * fp, int& code, char* value );
-
     void Update( cBoundingRectangle& rect );
 
     /**  get drawing parameters, scaled to display window
@@ -53,6 +52,9 @@ public:
     void Adjust( double x, double y );
 
     int AutocadColor2RGB( int ai );
+
+private:
+    void convert_2point();
 };
 }
 
