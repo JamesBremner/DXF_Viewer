@@ -42,9 +42,20 @@ void CSolid::Options( CDxf * dxf )
 
 void CSolid::Update( cBoundingRectangle& rect )
 {
-    std::cout << "CSolid::Update " << x <<" "<< y <<" "<< x2 <<" "<< y2 <<"\n";
-    rect.Update( x, y );
-    rect.Update( x2, y2 );
+    switch (myParser)
+    {
+    case eParser::solid_2point:
+        std::cout << "CSolid::Update " << x <<" "<< y <<" "<< x2 <<" "<< y2 <<"\n";
+        rect.Update( x, y );
+        rect.Update( x2, y2 );
+        break;
+    case eParser::solid_4point:
+        rect.Update( x, y );
+        rect.Update( x1, y1 );
+        rect.Update( x2, y2 );
+        rect.Update( x3, y3 );
+        break;
+    }
 }
 bool CSolid::Append( cvit_t& cvit )
 {
@@ -88,6 +99,56 @@ bool CSolid::Append( cvit_t& cvit )
             }
             break;
 
+        case eParser::solid_4point:
+            cvit++;
+            switch( cvit->Code() )
+            {
+            case 0:
+                // a new object
+
+                // convert 4 points to triangular mesh
+                convert_4point();
+
+                cvit--;
+                return false;
+            case 8:
+                m_Layer = cvit->myValue;
+                break;
+            // 10 20
+            case 10:
+                x = atof(cvit->myValue.c_str());
+                break;
+            case 20:
+                y = atof(cvit->myValue.c_str());
+                break;
+            // 11 21
+            case 11:
+                x1 = atof(cvit->myValue.c_str());
+                break;
+            case 21:
+                y1 = atof(cvit->myValue.c_str());
+                break;
+            // 12 22
+            case 12:
+                x2 = atof(cvit->myValue.c_str());
+                break;
+            case 22:
+                y2 = atof(cvit->myValue.c_str());
+                break;
+            // 13 23
+            case 13:
+                x3 = atof(cvit->myValue.c_str());
+                break;
+            case 23:
+                y3 = atof(cvit->myValue.c_str());
+                break;
+            case 62:
+                myColor = AutocadColor2RGB( atoi( cvit->myValue.c_str() ) );
+                break;
+            }
+            break;
+
+
         default:
             throw std::runtime_error("SOLID parser not implemented");
         }
@@ -119,6 +180,38 @@ void CSolid::convert_2point()
             },
             {
                 x2,y2
+            }
+        }
+    };
+    myTriangMesh = mesh;
+
+}
+
+
+void CSolid::convert_4point()
+{
+    std::vector< std::vector< std::vector< double > > > mesh
+    {
+        {
+            {
+                x, y
+            },
+            {
+                x1, y1
+            },
+            {
+                x2, y2
+            }
+        },
+        {
+            {
+                x1, y1
+            },
+            {
+                x2, y2
+            },
+            {
+                x3, y3
             }
         }
     };
