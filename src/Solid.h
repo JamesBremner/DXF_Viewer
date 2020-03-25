@@ -13,8 +13,6 @@ class CSolid  : public cDXFGraphObject
 public:
     double x,y,x2,y2;       ///< locations of top-right and bottm-left corners
 
-    double x1,y1,x3,y3;  ///< 4 points for the eParser::solid_4point
-
     std::vector< std::vector< std::vector< double > > > myTriangMesh;
     std::string m_Layer;
     unsigned char m_Select;
@@ -58,11 +56,11 @@ public:
 
 private:
 
-    // create two triangle from the two point, which makes two rectangle
+    // create two triangle from the two point, which makes one rectangle
     void convert_2point();
 
-    // create two triangle from the four point, which makes two rectangle
-    void convert_4point();
+    // append a triangle(3 points) to the internal triangle mesh
+    void append_triangle(double x[], double y[]);
 };
 }
 

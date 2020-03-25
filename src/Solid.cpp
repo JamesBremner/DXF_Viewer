@@ -42,23 +42,15 @@ void CSolid::Options( CDxf * dxf )
 
 void CSolid::Update( cBoundingRectangle& rect )
 {
-    switch (myParser)
-    {
-    case eParser::solid_2point:
-        std::cout << "CSolid::Update " << x <<" "<< y <<" "<< x2 <<" "<< y2 <<"\n";
-        rect.Update( x, y );
-        rect.Update( x2, y2 );
-        break;
-    case eParser::solid_4point:
-        rect.Update( x, y );
-        rect.Update( x1, y1 );
-        rect.Update( x2, y2 );
-        rect.Update( x3, y3 );
-        break;
-    }
+    std::cout << "CSolid::Update " << x <<" "<< y <<" "<< x2 <<" "<< y2 <<"\n";
+    rect.Update( x, y );
+    rect.Update( x2, y2 );
 }
+
 bool CSolid::Append( cvit_t& cvit )
 {
+    double xa[4], ya[4];  // x array, y array, which are used for eParser::solid_4point
+
     while( true )
     {
         switch ( myParser )
@@ -106,8 +98,18 @@ bool CSolid::Append( cvit_t& cvit )
             case 0:
                 // a new object
 
-                // convert 4 points to triangular mesh
-                convert_4point();
+                // convert 4 points to 2 triangular and add them to the mesh
+                append_triangle(&xa[0],&ya[0]);
+                append_triangle(&xa[1],&ya[1]);
+                // calculate the bounding rectangle
+                x = xa[0], y = ya[0], x2 = xa[0], y2 = ya[0];
+                for(int i=1; i<4; i++) // index start from 1
+                {
+                    if(xa[i]<x) x=xa[i];   // left
+                    if(ya[i]>y) y=ya[i];   // top
+                    if(xa[i]>x2) x2=xa[i]; // right
+                    if(ya[i]<y2) y2=xa[i]; // bottom
+                }
 
                 cvit--;
                 return false;
@@ -116,31 +118,31 @@ bool CSolid::Append( cvit_t& cvit )
                 break;
             // 10 20
             case 10:
-                x = atof(cvit->myValue.c_str());
+                xa[0] = atof(cvit->myValue.c_str());
                 break;
             case 20:
-                y = atof(cvit->myValue.c_str());
+                ya[0] = atof(cvit->myValue.c_str());
                 break;
             // 11 21
             case 11:
-                x1 = atof(cvit->myValue.c_str());
+                xa[1] = atof(cvit->myValue.c_str());
                 break;
             case 21:
-                y1 = atof(cvit->myValue.c_str());
+                ya[1] = atof(cvit->myValue.c_str());
                 break;
             // 12 22
             case 12:
-                x2 = atof(cvit->myValue.c_str());
+                xa[2] = atof(cvit->myValue.c_str());
                 break;
             case 22:
-                y2 = atof(cvit->myValue.c_str());
+                ya[2] = atof(cvit->myValue.c_str());
                 break;
             // 13 23
             case 13:
-                x3 = atof(cvit->myValue.c_str());
+                xa[3] = atof(cvit->myValue.c_str());
                 break;
             case 23:
-                y3 = atof(cvit->myValue.c_str());
+                ya[3] = atof(cvit->myValue.c_str());
                 break;
             case 62:
                 myColor = AutocadColor2RGB( atoi( cvit->myValue.c_str() ) );
@@ -188,35 +190,21 @@ void CSolid::convert_2point()
 }
 
 
-void CSolid::convert_4point()
+void CSolid::append_triangle(double x[], double y[])
 {
-    std::vector< std::vector< std::vector< double > > > mesh
+    std::vector< std::vector< double > >  triangle =
     {
         {
-            {
-                x, y
-            },
-            {
-                x1, y1
-            },
-            {
-                x2, y2
-            }
+            x[0], y[0]
         },
         {
-            {
-                x1, y1
-            },
-            {
-                x2, y2
-            },
-            {
-                x3, y3
-            }
+            x[1], y[1]
+        },
+        {
+            x[2], y[2]
         }
     };
-    myTriangMesh = mesh;
-
+    myTriangMesh.push_back(triangle);
 }
 
 bool CSolid::getDraw( cDrawPrimitiveData& draw )
