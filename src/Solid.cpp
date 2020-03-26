@@ -15,11 +15,12 @@ namespace dxfv
 {
 
 CSolid::CSolid()
-    : cDXFGraphObject("SOLID",cDXFGraphObject::eType::circle)
+    : cDXFGraphObject("SOLID",cDXFGraphObject::eType::solid)
 {
     m_Layer = "0";
     m_Select = FALSE;
     m_Nest = FALSE;
+    myColor = 0x00ffffff; // white color, default value
 }
 
 CSolid::CSolid( cCodeValue& cv )
@@ -45,8 +46,11 @@ void CSolid::Update( cBoundingRectangle& rect )
     rect.Update( x, y );
     rect.Update( x2, y2 );
 }
+
 bool CSolid::Append( cvit_t& cvit )
 {
+    double xa[4], ya[4];  // x array, y array, which are used for eParser::solid_4point
+
     while( true )
     {
         switch ( myParser )
@@ -87,6 +91,66 @@ bool CSolid::Append( cvit_t& cvit )
             }
             break;
 
+        case eParser::solid_4point:
+            cvit++;
+            switch( cvit->Code() )
+            {
+            case 0:
+                // a new object
+
+                // convert 4 points to 2 triangular and add them to the mesh
+                append_triangle(&xa[0],&ya[0]);
+                append_triangle(&xa[1],&ya[1]);
+                // calculate the bounding rectangle
+                x = xa[0], y = ya[0], x2 = xa[0], y2 = ya[0];
+                for(int i=1; i<4; i++) // index start from 1
+                {
+                    if(xa[i]<x) x=xa[i];   // left
+                    if(ya[i]>y) y=ya[i];   // top
+                    if(xa[i]>x2) x2=xa[i]; // right
+                    if(ya[i]<y2) y2=xa[i]; // bottom
+                }
+
+                cvit--;
+                return false;
+            case 8:
+                m_Layer = cvit->myValue;
+                break;
+            // 10 20
+            case 10:
+                xa[0] = atof(cvit->myValue.c_str());
+                break;
+            case 20:
+                ya[0] = atof(cvit->myValue.c_str());
+                break;
+            // 11 21
+            case 11:
+                xa[1] = atof(cvit->myValue.c_str());
+                break;
+            case 21:
+                ya[1] = atof(cvit->myValue.c_str());
+                break;
+            // 12 22
+            case 12:
+                xa[2] = atof(cvit->myValue.c_str());
+                break;
+            case 22:
+                ya[2] = atof(cvit->myValue.c_str());
+                break;
+            // 13 23
+            case 13:
+                xa[3] = atof(cvit->myValue.c_str());
+                break;
+            case 23:
+                ya[3] = atof(cvit->myValue.c_str());
+                break;
+            case 62:
+                myColor = AutocadColor2RGB( atoi( cvit->myValue.c_str() ) );
+                break;
+            }
+            break;
+
+
         default:
             throw std::runtime_error("SOLID parser not implemented");
         }
@@ -123,6 +187,24 @@ void CSolid::convert_2point()
     };
     myTriangMesh = mesh;
 
+}
+
+
+void CSolid::append_triangle(double x[], double y[])
+{
+    std::vector< std::vector< double > >  triangle =
+    {
+        {
+            x[0], y[0]
+        },
+        {
+            x[1], y[1]
+        },
+        {
+            x[2], y[2]
+        }
+    };
+    myTriangMesh.push_back(triangle);
 }
 
 bool CSolid::getDraw( cDrawPrimitiveData& draw )

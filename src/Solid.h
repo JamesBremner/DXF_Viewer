@@ -12,6 +12,7 @@ class CSolid  : public cDXFGraphObject
 {
 public:
     double x,y,x2,y2;       ///< locations of top-right and bottm-left corners
+
     std::vector< std::vector< std::vector< double > > > myTriangMesh;
     std::string m_Layer;
     unsigned char m_Select;
@@ -54,7 +55,12 @@ public:
     int AutocadColor2RGB( int ai );
 
 private:
+
+    // create two triangle from the two point, which makes one rectangle
     void convert_2point();
+
+    // append a triangle(3 points) to the internal triangle mesh
+    void append_triangle(double x[], double y[]);
 };
 }
 
