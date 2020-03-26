@@ -26,3 +26,9 @@ not supported:
 - Fit to window ( menu click )
 - Pan ( drag with left mouse button pressed )
 - Zoom in and out around window center ( mouse wheel )
+
+## Contributors
+
+ - [JamesBremner](https://github.com/JamesBremner)
+ - [asmwarrior](https://github.com/asmwarrior)
+ - [xubury](https://github.com/xubury)
