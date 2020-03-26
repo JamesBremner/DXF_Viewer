@@ -51,13 +51,18 @@ bool CSolid::Append( cvit_t& cvit )
 {
     double xa[4], ya[4];  // x array, y array, which are used for eParser::solid_4point
 
+    // loop over code-value pairs until 0 code encountered,
+    // indicating new object or section
     while( true )
     {
+        // advance to next code-value pair
+        cvit++;
+
         switch ( myParser )
         {
 
         case eParser::solid_2point:
-            cvit++;
+
             switch( cvit->Code() )
             {
             case 0:
@@ -92,7 +97,7 @@ bool CSolid::Append( cvit_t& cvit )
             break;
 
         case eParser::solid_4point:
-            cvit++;
+
             switch( cvit->Code() )
             {
             case 0:
@@ -155,7 +160,7 @@ bool CSolid::Append( cvit_t& cvit )
             throw std::runtime_error("SOLID parser not implemented");
         }
     }
-    return true;
+    throw std::runtime_error("DXF error, unterminated SOLID");
 }
 
 void CSolid::convert_2point()

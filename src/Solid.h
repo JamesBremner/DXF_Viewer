@@ -26,15 +26,23 @@ public:
     void Options( CDxf * dxf );
 
     /** Append DXF code-value pair to object specification
+
         @param[in] cvit iterator pointing to code value pair
 
+        The interpretation of the codes, depends on which parser has been selected
+        The 2-point parser uses:
         <pre>
         code    interpretation
+        0       end of SOLID specification
         10      x location of top left of 2D rectangle
         12      x location of bottom right of 2D rectangle
         20      y location of top left of 2D rectangle
         22      y location of bottom right of 2D rectangle
         </pre>
+
+        All other codes are ignored.
+        A runtime_error exception is thrown if code 0 is not encountered
+
     */
     bool Append( cvit_t& cvit );
 
