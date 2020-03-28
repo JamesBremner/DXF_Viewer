@@ -27,7 +27,10 @@ private:
         idMenuQuit = 1000,
         idMenuAbout,
         idMenuOpen,
-        idMenuFit
+        idMenuFit,
+        idMenuSOLID2pointParser,
+        idMenuSOLID3pointParser,
+        idMenuSOLID4pointParser
     };
     wxPoint old_pos;
 
@@ -36,12 +39,16 @@ private:
     void OnAbout(wxCommandEvent& event);
     void OnOpen(wxCommandEvent& event);
     void OnFit(wxCommandEvent& event);
+    void OnSelectSolidParser(wxCommandEvent& event);
     void OnPaint(wxPaintEvent& event);
     void OnSize(wxSizeEvent& event);
     void OnWheel(wxMouseEvent& event);
     void OnMouseMove(wxMouseEvent& event);
     void OnLeftDown(wxMouseEvent& event);
     void OnKeyDown(wxKeyEvent& event);
+
+
+
     DECLARE_EVENT_TABLE()
 
 
@@ -101,6 +108,7 @@ BEGIN_EVENT_TABLE(dxfv_wxWidgetsFrame, wxFrame)
     EVT_MENU(idMenuAbout, dxfv_wxWidgetsFrame::OnAbout)
     EVT_MENU(idMenuOpen, dxfv_wxWidgetsFrame::OnOpen)
     EVT_MENU(idMenuFit, dxfv_wxWidgetsFrame::OnFit)
+    EVT_MENU_RANGE(idMenuSOLID2pointParser, idMenuSOLID4pointParser, dxfv_wxWidgetsFrame::OnSelectSolidParser)
     EVT_PAINT(dxfv_wxWidgetsFrame::OnPaint )
     EVT_SIZE(dxfv_wxWidgetsFrame::OnSize )
     EVT_MOUSEWHEEL( dxfv_wxWidgetsFrame::OnWheel)
@@ -127,6 +135,12 @@ dxfv_wxWidgetsFrame::dxfv_wxWidgetsFrame(wxFrame *frame, const wxString& title)
 
     mbar->Append(viewMenu, _("&View"));
 
+    wxMenu* parserMenu = new wxMenu(_T(""));
+    parserMenu->AppendRadioItem(idMenuSOLID2pointParser,"SOLID 2 point parser");
+    parserMenu->AppendRadioItem(idMenuSOLID3pointParser,"SOLID 3 point parser");
+    parserMenu->AppendRadioItem(idMenuSOLID4pointParser,"SOLID 4 point parser");
+
+    mbar->Append(parserMenu, _("&Parser"));
 
     wxMenu* helpMenu = new wxMenu(_T(""));
     helpMenu->Append(idMenuAbout, _("&About\tF1"), _("Show info about this application"));
@@ -213,6 +227,18 @@ void dxfv_wxWidgetsFrame::OnFit(wxCommandEvent& event)
 
     Refresh();
 }
+
+void dxfv_wxWidgetsFrame::OnSelectSolidParser(wxCommandEvent& event)
+{
+    int id = event.GetId();
+    if (id == idMenuSOLID2pointParser)
+        dxf->SolidParser( dxfv::eParser::solid_2point );
+    else if (id == idMenuSOLID3pointParser)
+        dxf->SolidParser( dxfv::eParser::solid_3point );
+    else if (id == idMenuSOLID4pointParser)
+        dxf->SolidParser( dxfv::eParser::solid_4point );
+}
+
 void dxfv_wxWidgetsFrame::OnPaint(wxPaintEvent& event)
 {
     wxPaintDC dc(this);
@@ -451,6 +477,27 @@ void CSpline::Draw( CDxf* dxf )
 }
 void CSolid::Draw( CDxf* dxf )
 {
-    // stubbed out, to satisfy linker.  SOLID not supported for wxWidgets.
+    cDrawPrimitiveData draw( dxf );
+
+    // loop over drawing primitives
+    while( getDraw( draw ) )
+    {
+        std::cout << "CSolid::Draw " << draw.color << "\n";
+        std::cout << draw.x1 <<" "<< draw.y1 <<" "
+                  << draw.x2 <<" "<< draw.y2 <<" "
+                  << draw.x3 <<" "<< draw.y3 <<"\n";
+
+        const wxPoint points[] = {
+            {draw.x1,  draw.y1},
+            {draw.x2,  draw.y2},
+            {draw.x3,  draw.y3},
+        };
+
+        wxColour c(draw.color);
+        dxf->DC()->SetBrush(wxBrush(c));
+        dxf->DC()->SetPen(wxPen(c));
+
+        dxf->DC()->DrawPolygon(3, points);
+    }
 }
 }
