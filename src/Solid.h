@@ -39,6 +39,22 @@ public:
         20      y location of top left of 2D rectangle
         22      y location of bottom right of 2D rectangle
         </pre>
+        The 4-point parser uses:
+        <pre>
+        code    interpretation
+        0       end of SOLID specification
+        10      x location of first vertex of 2D quadrilateral
+        11      x location of second vertex of 2D quadrilateral
+        12      x location of third vertex of 2D quadrilateral
+        13      x location of fourth vertex of 2D quadrilateral
+        20      y location of first vertex of 2D quadrilateral
+        21      y location of second vertex of 2D quadrilateral
+        22      y location of third vertex 2D quadrilateral
+        23      y location of fourth vertex of 2D quadrilateral
+        </pre>
+        The quadrilateral is made up of two triangles. The first triangle is
+        defined by the first three vertices, the second triangle is defined
+        by the last three vertices.
 
         All other codes are ignored.
         A runtime_error exception is thrown if code 0 is not encountered
