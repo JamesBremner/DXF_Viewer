@@ -2,8 +2,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-
-#include "stdafx.h"
+#include <vector>
 #include <cmath>
 #include "dxf.h"
 #include "Spline.h"
@@ -145,8 +144,8 @@ void CSpline::Generate()
         return;
 
     float AMag, AMagOld;
-    vector<float> k;
-    vector< vector<float> > Mat( 3, vector<float>(m_FitPointCount) );
+    std::vector<float> k;
+    std::vector< std::vector<float> > Mat( 3, std::vector<float>(m_FitPointCount) );
 
     // vector A
     for(int i= 0 ; i<=(int)m_FitPointCount-2 ; i++ )
@@ -200,8 +199,8 @@ void CSpline::Generate()
 }
 
 void CSpline::MatrixSolve(
-    vector<float>& B,
-    vector< vector<float> >& Mat )
+    std::vector<float>& B,
+    std::vector< std::vector<float> >& Mat )
 {
     float* Work = new float[m_FitPointCount];
     float* WorkB = new float[m_FitPointCount];
@@ -246,7 +245,7 @@ bool CSpline::getDraw( cDrawPrimitiveData& draw )
     For good smooth looking curves ensure that no segment changes the x or y pixel by more than 2
     */
 
-    int Ndiv = (int)(max(abs(x[draw.index]-x[draw.index+1]),abs(y[draw.index]-y[draw.index+1]))
+    int Ndiv = (int)(std::max(abs(x[draw.index]-x[draw.index+1]),abs(y[draw.index]-y[draw.index+1]))
                      / ( 2 * draw.rect->myScale ));
 
     if( draw.index_curve == 0 && draw.index == 0 )

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+
 #include "DXF.h"
 #include "Text.h"
 

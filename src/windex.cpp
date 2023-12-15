@@ -33,7 +33,7 @@ int main()
     wex::menubar mb( fm );
 
     wex::menu mf( fm );
-    mf.append("Open DXF file",[&]
+    mf.append("Open DXF file",[&](const std::string &title)
     {
         // prompt for file to open
         wex::filebox fb( fm );
@@ -52,12 +52,12 @@ int main()
         }
         catch( std::runtime_error& e )
         {
-            wex::msgbox mb(fm,
+            wex::msgbox mb(
                            std::string("Error reading file\n")+e.what());
             exit(1);
         }
     });
-    mf.append("Save to PNG", [&]
+    mf.append("Save to PNG", [&](const std::string &title)
     {
         wex::filebox fb( fm );
         auto path = fb.save();
@@ -70,7 +70,7 @@ int main()
 
 
     wex::menu mv( fm );
-    mv.append("Fit",[&]
+    mv.append("Fit",[&](const std::string &title)
     {
         // rescale and pan so all entities fit in the window
         dxf.myBoundingRectangle.Fit();
@@ -81,21 +81,21 @@ int main()
     mb.append("View", mv );
 
     wex::menu mp( fm );
-    mp.append("SOLID 2 point parser",[&]
+    mp.append("SOLID 2 point parser",[&](const std::string &title)
     {
         mp.check(0,true);
         mp.check(1,false);
         mp.check(2,false);
         dxf.SolidParser( dxfv::eParser::solid_2point );
     });
-    mp.append("SOLID 3 point parser",[&]
+    mp.append("SOLID 3 point parser",[&](const std::string &title)
     {
         mp.check(0,false);
         mp.check(1,true);
         mp.check(2,false);
         dxf.SolidParser( dxfv::eParser::solid_3point );
     });
-    mp.append("SOLID 4 point parser",[&]
+    mp.append("SOLID 4 point parser",[&](const std::string &title)
     {
         mp.check(0,false);
         mp.check(1,false);

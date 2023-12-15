@@ -4,7 +4,6 @@
 
 #include <cmath>
 
-#include "stdafx.h"
 #include "dxf.h"
 #include "Arc.h"
 
