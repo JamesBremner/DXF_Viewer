@@ -44,6 +44,8 @@ CSpline::~CSpline()
 
 bool CSpline::Append(  cvit_t& cvit )
 {
+    // https://help.autodesk.com/view/OARX/2023/ENU/?guid=GUID-E1F884F8-AA90-4864-A215-3182D47A9C74
+    
     int point_index = 0;
     while( true )
     {

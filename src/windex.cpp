@@ -213,8 +213,6 @@ void cLWPolyLine::Draw( CDxf* dxf )
 {
     cDrawPrimitiveData draw( dxf );
 
-    dxf->shapes()->color( 0xFFFFFF );
-
     // loop over drawing primitives
     while( getDraw( draw ) )
     {
@@ -228,8 +226,6 @@ void cLWPolyLine::Draw( CDxf* dxf )
 void CText::Draw( CDxf* dxf )
 {
     cDrawPrimitiveData draw( dxf );
-
-    dxf->shapes()->color( 0 );
 
     // loop over drawing primitives
     while( getDraw( draw ) )
