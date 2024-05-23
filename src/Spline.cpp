@@ -70,6 +70,8 @@ bool CSpline::Append(  cvit_t& cvit )
 
         case 74:
             m_FitPointCount = atoi(cvit->myValue.c_str());
+            if( ! m_FitPointCount )
+                break;
             if( m_FitPointCount >= MAXPOINTS )
                 throw std::runtime_error("Too many spline points");
             if( m_ControlPointCount )
@@ -84,6 +86,7 @@ bool CSpline::Append(  cvit_t& cvit )
                 }
             }
             break;
+            
         case 11:
             if(m_FitPointCount )
                 x[point_index] = atof(cvit->myValue.c_str());
@@ -96,6 +99,8 @@ bool CSpline::Append(  cvit_t& cvit )
 
         case 73:
             m_ControlPointCount = atoi(cvit->myValue.c_str());
+            if( ! m_ControlPointCount)
+                break;
             if( m_ControlPointCount >= MAXPOINTS )
                 throw std::runtime_error("Too many spline points");
             if( m_FitPointCount )

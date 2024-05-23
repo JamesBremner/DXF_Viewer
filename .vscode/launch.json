@@ -8,7 +8,7 @@
             "name": "(gdb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/bin/DXF_ViewerForWindex.exe",
+            "program": "${workspaceFolder}/bin/DXF_Viewer.exe",
             //  "args": ["127.0.0.1","27654"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/bin",

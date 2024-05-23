@@ -8,7 +8,7 @@ INCS = -I./include \
 
 LIBS = \
 	-lgdiplus -lgdi32 -lcomdlg32 -lstdc++fs \
-	#-mwindows
+	-mwindows
 
 static_link_flags = -static-libstdc++ -static-libgcc -static -lComctl32
 
@@ -38,7 +38,7 @@ $(ODIR)/%.o: %.cpp
 
 starter: $(OBJ_starter)
 	g++ $(OPT) \
-	-o bin/DXF_ViewerForWindex.exe $^  \
+	-o bin/DXF_Viewer.exe $^  \
 	$(static_link_flags) $(LIBS)
 
 .PHONY: clean
