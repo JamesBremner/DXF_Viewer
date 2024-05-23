@@ -346,7 +346,7 @@ bool CSpline::getDrawControlPoint( cDrawPrimitiveData& draw )
         return true;
     }
 
-    int Ndiv = 19;
+    int Ndiv = 100;
 
     // check if more points are available
     if( draw.index == Ndiv - 1 )
