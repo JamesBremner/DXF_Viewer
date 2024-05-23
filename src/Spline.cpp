@@ -25,6 +25,7 @@ CSpline::CSpline()
     , m_Layer("0")
     , m_FitPointCount( 0 )
     , m_ControlPointCount( 0 )
+    , m_KnotCount( 0 )
     , m_Select( false )
     , m_Nest( false )
     , myfwxwidgets( false )
@@ -86,7 +87,7 @@ bool CSpline::Append(  cvit_t& cvit )
                 }
             }
             break;
-            
+
         case 11:
             if(m_FitPointCount )
                 x[point_index] = atof(cvit->myValue.c_str());
@@ -124,6 +125,15 @@ bool CSpline::Append(  cvit_t& cvit )
                 y[point_index++] = atof(cvit->myValue.c_str());
             break;
 
+        case 72:
+            m_KnotCount =  atoi(cvit->myValue.c_str());
+            if( m_KnotCount )
+            {
+                throw std::runtime_error(
+                    "B-Spline not supported"                );
+            }
+            break;
+            
         }
     }
     return true;
@@ -336,7 +346,7 @@ bool CSpline::getDrawControlPoint( cDrawPrimitiveData& draw )
         return true;
     }
 
-    int Ndiv = 100;
+    int Ndiv = 19;
 
     // check if more points are available
     if( draw.index == Ndiv - 1 )
@@ -374,6 +384,9 @@ void CSpline::getBezierPoint( double& ox, double& oy, double t )
     }
     ox = tmp[0].x;
     oy = tmp[0].y;
+
+    std::cout << "getBezierPoint "
+        << ox <<" "<< oy << " | ";
 }
 
 void CSpline::Adjust( double ax, double ay )

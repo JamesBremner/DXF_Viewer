@@ -16,6 +16,7 @@ public:
     std::string m_Layer;
     int m_FitPointCount;
     int m_ControlPointCount;
+    int m_KnotCount;
     double x[MAXPOINTS],y[MAXPOINTS];
     unsigned char m_Select;
     unsigned char m_Nest;
