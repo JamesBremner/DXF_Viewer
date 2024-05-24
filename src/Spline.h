@@ -28,7 +28,7 @@ public:
     bool Read( FILE * fp, int& code, char* value );
     void Update( cBoundingRectangle& rect );
 
-    /**  get wxWidgets drawing parameters, scaled to display window, for the 'next' line
+    /**  get drawing parameters, scaled to display window, for the 'next' line
 
     @param[in/out] draw  structure holding parameters, intialize index to zero on first call
     @return true if valid line has been returned
@@ -61,8 +61,20 @@ private:
     std::vector<float> By;
     std::vector<float> Cx;
     std::vector<float> Cy;
+    std::vector<double> vknots;
 
+    /// @brief check sanity of completely parsed spline
+    /// @param point_index number of control points found
+    /// @return true always
+    /// Throws exception when problem found
+
+    bool sanity(int point_index );
+
+    /// @brief Initialize fit points calculation
     void Generate();
+
+    void BSplineInit();
+
     void MatrixSolve(std::vector<float>& B,
                      std::vector< std::vector<float> >& Mat );
     bool getDrawControlPoint( cDrawPrimitiveData& draw );
