@@ -14,9 +14,6 @@ namespace dxfv
     public:
         std::string m_Layer;
         int m_FitPointCount;
-        int m_ControlPointCount;
-        int m_KnotCount;
-        double x[MAXPOINTS], y[MAXPOINTS];
         unsigned char m_Select;
         unsigned char m_Nest;
 
@@ -60,8 +57,10 @@ namespace dxfv
         std::vector<float> By;
         std::vector<float> Cx;
         std::vector<float> Cy;
-        std::vector<double> vknots;
-        std::vector<double> vx, vy;
+        int m_KnotCount;
+        std::vector<double> vknots;     // Spline knots
+        int m_ControlPointCount;
+        std::vector<double> vx, vy;     // Spline control points
         int myDegree;
 
         /// @brief check sanity of completely parsed spline

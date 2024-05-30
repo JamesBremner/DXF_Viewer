@@ -86,11 +86,11 @@ namespace dxfv
 
             case 11:
                 if (m_FitPointCount)
-                    x[point_index] = atof(cvit->myValue.c_str());
+                    vx.push_back( atof(cvit->myValue.c_str()) );
                 break;
             case 21:
                 if (m_FitPointCount)
-                    y[point_index++] = atof(cvit->myValue.c_str());
+                    vy.push_back( atof(cvit->myValue.c_str()));
                 break;
 
             case 73:
@@ -115,12 +115,12 @@ namespace dxfv
 
             case 10:
                 if (m_ControlPointCount)
-                    x[point_index] = atof(cvit->myValue.c_str());
+                    vx.push_back(atof(cvit->myValue.c_str()));
                 break;
 
             case 20:
                 if (m_ControlPointCount)
-                    y[point_index++] = atof(cvit->myValue.c_str());
+                    vy.push_back(atof(cvit->myValue.c_str()));
                 break;
 
             case 72:
@@ -163,7 +163,7 @@ namespace dxfv
             count = m_ControlPointCount;
         for (int k = 0; k < count; k++)
         {
-            rect.Update(x[k], y[k]);
+            rect.Update(vx[k], vy[k]);
         }
         int dbg = 0;
     }
@@ -179,8 +179,8 @@ namespace dxfv
         // vector A
         for (int i = 0; i <= (int)m_FitPointCount - 2; i++)
         {
-            Ax.push_back(x[i + 1] - x[i]);
-            Ay.push_back(y[i + 1] - y[i]);
+            Ax.push_back(vx[i + 1] - vx[i]);
+            Ay.push_back(vy[i + 1] - vy[i]);
         }
         // k
         AMagOld = (float)sqrt(Ax[0] * Ax[0] + Ay[0] * Ay[0]);
@@ -295,13 +295,13 @@ namespace dxfv
         For good smooth looking curves ensure that no segment changes the x or y pixel by more than 2
         */
 
-        int Ndiv = (int)(std::max(abs(x[draw.index] - x[draw.index + 1]), abs(y[draw.index] - y[draw.index + 1])) / (2 * draw.rect->myScale));
+        int Ndiv = (int)(std::max(abs(vx[draw.index] - vx[draw.index + 1]), abs(vy[draw.index] - vy[draw.index + 1])) / (2 * draw.rect->myScale));
 
         if (draw.index_curve == 0 && draw.index == 0)
         {
             // The first point in the spline
-            draw.x1 = x[draw.index];
-            draw.y1 = y[draw.index];
+            draw.x1 = vx[draw.index];
+            draw.y1 = vy[draw.index];
             draw.rect->ApplyScale(draw.x1, draw.y1);
         }
         else if (draw.index_curve == Ndiv)
@@ -319,8 +319,8 @@ namespace dxfv
             draw.index_curve = 0;
             draw.x1 = draw.x2;
             draw.y1 = draw.y2;
-            draw.x2 = x[draw.index];
-            draw.y2 = y[draw.index];
+            draw.x2 = vx[draw.index];
+            draw.y2 = vy[draw.index];
             draw.rect->ApplyScale(draw.x2, draw.y2);
             return true;
         }
@@ -338,8 +338,8 @@ namespace dxfv
         f = t * t * (3.0f - 2.0f * t);
         g = t * (t - 1.0f) * (t - 1.0f);
         h = t * t * (t - 1.0f);
-        double x2 = (x[draw.index] + Ax[draw.index] * f + Bx[draw.index] * g + Cx[draw.index] * h);
-        double y2 = (y[draw.index] + Ay[draw.index] * f + By[draw.index] * g + Cy[draw.index] * h);
+        double x2 = (vx[draw.index] + Ax[draw.index] * f + Bx[draw.index] * g + Cx[draw.index] * h);
+        double y2 = (vy[draw.index] + Ay[draw.index] * f + By[draw.index] * g + Cy[draw.index] * h);
 
         draw.rect->ApplyScale(x2, y2);
         draw.x2 = round(x2);
@@ -366,11 +366,11 @@ namespace dxfv
                 return true;
             }
 
-            draw.x1 = x[draw.index];
-            draw.y1 = y[draw.index];
+            draw.x1 = vx[draw.index];
+            draw.y1 = vy[draw.index];
             draw.rect->ApplyScale(draw.x1, draw.y1);
-            draw.x2 = x[draw.index + 1];
-            draw.y2 = y[draw.index + 1];
+            draw.x2 = vx[draw.index + 1];
+            draw.y2 = vy[draw.index + 1];
             draw.rect->ApplyScale(draw.x2, draw.y2);
             draw.index++;
             draw.index_curve = 0;
@@ -394,13 +394,6 @@ namespace dxfv
 
     bool CSpline::getDrawBSpline(cDrawPrimitiveData &draw)
     {
-
-        for (int k = 0; k < m_ControlPointCount; k++)
-        {
-            vx.push_back(x[k]);
-            vy.push_back(y[k]);
-        }
-
         // number of points drawn along curve
         const int Ndiv = 100;
         if (draw.index == Ndiv)
@@ -422,8 +415,7 @@ namespace dxfv
         }
         draw.rect->ApplyScale(draw.x2, draw.y2);
         draw.index++;
-
-        return true;
+        return true;        // more points to come
     }
 
     /* python code from https://en.wikipedia.org/wiki/De_Boor%27s_algorithm#Example_implementation
@@ -535,7 +527,7 @@ namespace dxfv
 
         std::vector<cP> tmp;
         for (int k = 0; k < m_ControlPointCount; k++)
-            tmp.push_back(cP(x[k], y[k]));
+            tmp.push_back(cP(vx[k], vy[k]));
         int i = m_ControlPointCount - 1;
         while (i > 0)
         {
@@ -557,8 +549,8 @@ namespace dxfv
             count = m_ControlPointCount;
         for (int k = 0; k < count; k++)
         {
-            x[k] += ax;
-            y[k] += ay;
+            vx[k] += ax;
+            vy[k] += ay;
         }
     }
 }
