@@ -192,14 +192,14 @@ void CLine::Draw( CDxf* dxf )
     getDraw( draw );
     dxf->shapes()->color( 255,255,255 );
     dxf->shapes()->line(
-    {draw.x1, draw.y1, draw.x2, draw.y2});
+    {(int)draw.x1, (int)draw.y1, (int)draw.x2, (int)draw.y2});
 }
 void CArc::Draw( CDxf* dxf )
 {
     cDrawPrimitiveData draw( dxf );
     getDraw( draw );
     dxf->shapes()->arc(
-        draw.x1, draw.y1, draw.r,
+        (int)draw.x1, (int)draw.y1, draw.r,
         draw.sa, draw.ea );
 }
 void CCircle::Draw( CDxf* dxf )
@@ -218,8 +218,8 @@ void cLWPolyLine::Draw( CDxf* dxf )
     {
         dxf->shapes()->line(
         {
-            draw.x1, draw.y1,
-            draw.x2, draw.y2
+            (int)draw.x1, (int)draw.y1,
+            (int)draw.x2, (int)draw.y2
         });
     }
 }
@@ -241,10 +241,15 @@ void CSpline::Draw( CDxf* dxf )
     // loop over drawing primitives
     while( getDraw( draw ) )
     {
+        // std::cout << "CSpline::Draw "
+        //     << draw.x1 <<" "
+        //     << draw.y1 <<" "
+        //     << draw.x2 <<" "
+        //     << draw.y2 <<"\n";
         dxf->shapes()->line(
         {
-            draw.x1, draw.y1,
-            draw.x2, draw.y2
+            (int)draw.x1, (int)draw.y1,
+            (int)draw.x2, (int)draw.y2
         });
     }
 }
@@ -263,9 +268,9 @@ void CSolid::Draw( CDxf* dxf )
         dxf->shapes()->fill();
         dxf->shapes()->polygon(
         {
-            draw.x1, draw.y1,
-            draw.x2, draw.y2,
-            draw.x3, draw.y3,
+            (int)draw.x1, (int)draw.y1,
+            (int)draw.x2, (int)draw.y2,
+            (int)draw.x3, (int)draw.y3,
         });
     }
 }
