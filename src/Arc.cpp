@@ -14,8 +14,7 @@ CArc::CArc()
     : cDXFGraphObject("ARC",cDXFGraphObject::eType::arc)
 {
     m_Layer = "0";
-    m_Select = FALSE;
-    m_Nest = FALSE;
+
 }
 
 CArc::CArc( cCodeValue& cv )

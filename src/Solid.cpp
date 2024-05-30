@@ -17,8 +17,6 @@ CSolid::CSolid()
     : cDXFGraphObject("SOLID",cDXFGraphObject::eType::solid)
 {
     m_Layer = "0";
-    m_Select = FALSE;
-    m_Nest = FALSE;
     myColor = 0x00ffffff; // white color, default value
 }
 

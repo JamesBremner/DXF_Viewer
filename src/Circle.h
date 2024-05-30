@@ -11,8 +11,6 @@ class CCircle  : public cDXFGraphObject
 public:
     double x,y,r;
     std::string m_Layer;
-    unsigned char m_Select;
-    unsigned char m_Nest;
 
     CCircle();
     CCircle( cCodeValue& cv );

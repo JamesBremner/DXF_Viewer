@@ -20,8 +20,6 @@ class CLine : public cDXFGraphObject
 public:
     double x1,y1,x2,y2;
     std::string m_Layer;
-    unsigned char m_Select;
-    unsigned char m_Nest;
 
     CLine();
     CLine( cCodeValue& cv );

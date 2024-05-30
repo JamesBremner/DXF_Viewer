@@ -16,8 +16,7 @@ public:
     double sa;  ///< start angle degrees anti-clockwise from 3 o'clock
     double ea;  ///< end angle degrees anti-clockwise from 3 o'clock
     std::string m_Layer;
-    unsigned char m_Select;
-    unsigned char m_Nest;
+
 
     CArc();
     CArc( cCodeValue& cv );

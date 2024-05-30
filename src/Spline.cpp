@@ -21,7 +21,7 @@ namespace dxfv
 {
 
     CSpline::CSpline()
-        : cDXFGraphObject("SPLINE", cDXFGraphObject::eType::spline), m_Layer("0"), m_FitPointCount(0), m_ControlPointCount(0), m_KnotCount(0), m_Select(false), m_Nest(false), myfwxwidgets(false),
+        : cDXFGraphObject("SPLINE", cDXFGraphObject::eType::spline), m_Layer("0"), m_FitPointCount(0), m_ControlPointCount(0), m_KnotCount(0), myfwxwidgets(false),
           myDegree(-1)
     {
     }

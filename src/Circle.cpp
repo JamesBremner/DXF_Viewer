@@ -22,8 +22,6 @@ CCircle::CCircle()
     : cDXFGraphObject("CIRCLE",cDXFGraphObject::eType::circle)
 {
     m_Layer = "0";
-    m_Select = FALSE;
-    m_Nest = FALSE;
 }
 
 CCircle::CCircle( cCodeValue& cv )

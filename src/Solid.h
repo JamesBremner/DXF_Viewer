@@ -15,8 +15,6 @@ public:
 
     std::vector< std::vector< std::vector< double > > > myTriangMesh;
     std::string m_Layer;
-    unsigned char m_Select;
-    unsigned char m_Nest;
     int myColor;
 
     CSolid();

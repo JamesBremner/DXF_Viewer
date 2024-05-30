@@ -14,20 +14,19 @@ namespace dxfv
     public:
         std::string m_Layer;
         int m_FitPointCount;
-        unsigned char m_Select;
-        unsigned char m_Nest;
 
         CSpline();
         CSpline(cCodeValue &cv);
         virtual ~CSpline();
+
         bool Append(cvit_t &cvit);
-        bool Read(FILE *fp, int &code, char *value);
+
         void Update(cBoundingRectangle &rect);
 
         /**  get drawing parameters, scaled to display window, for the 'next' line
 
         @param[in/out] draw  structure holding parameters, intialize index to zero on first call
-        @return true if valid line has been returned
+        @return true if valid line has been returned and more lines are available
 
         */
         bool getDraw(cDrawPrimitiveData &draw);

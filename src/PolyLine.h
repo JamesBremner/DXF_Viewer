@@ -15,8 +15,6 @@ public:
     unsigned int m_VertexCount;
     double x[MAXPOINTS],y[MAXPOINTS];
     std::string m_Layer;
-    unsigned char m_Select;
-    unsigned char m_Nest;
 
     cLWPolyLine();
     cLWPolyLine( cCodeValue& cv );

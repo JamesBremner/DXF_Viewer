@@ -23,8 +23,7 @@ CLine::CLine()
 : cDXFGraphObject("LINE", cDXFGraphObject::eType::line )
 {
     m_Layer = "0";
-    m_Select = FALSE;
-    m_Nest = FALSE;
+
 }
 
 CLine::CLine( cCodeValue& cv )

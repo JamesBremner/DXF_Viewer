@@ -25,8 +25,7 @@ cLWPolyLine::cLWPolyLine()
     m_VertexCount = 0;
     myfClosed = false;
     m_Layer = "0";
-    m_Select = FALSE;
-    m_Nest = FALSE;
+
 }
 
 cLWPolyLine::cLWPolyLine( cCodeValue& cv )
