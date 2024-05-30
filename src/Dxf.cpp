@@ -194,24 +194,24 @@ void CDxf::UpdateBoundingRectangle()
     for( auto po : myGraphObject )
         po->Update( myBoundingRectangle );
 
-    if( myBoundingRectangle.y1 < 0 )
-    {
-        // entities with negative y co-ords present
-        // zoom code doesn't handle -ve y
-        // so adjust co-ords so that all y's are +ve
+    // if( myBoundingRectangle.y1 < 0 )
+    // {
+    //     // entities with negative y co-ords present
+    //     // zoom code doesn't handle -ve y
+    //     // so adjust co-ords so that all y's are +ve
 
-        for( auto po : myGraphObject )
-        {
-            po->Adjust( 0, -myBoundingRectangle.y1 );
-        }
+    //     for( auto po : myGraphObject )
+    //     {
+    //         po->Adjust( 0, -myBoundingRectangle.y1 );
+    //     }
 
-        // recalculate bounding rectangle
-        myBoundingRectangle.init = false;
-        for( auto po : myGraphObject )
-        {
-            po->Update( myBoundingRectangle );
-        }
-    }
+    //     // recalculate bounding rectangle
+    //     myBoundingRectangle.init = false;
+    //     for( auto po : myGraphObject )
+    //     {
+    //         po->Update( myBoundingRectangle );
+    //     }
+    // }
 }
 
 void CDxf::Init()

@@ -21,7 +21,8 @@ namespace dxfv
 {
 
     CSpline::CSpline()
-        : cDXFGraphObject("SPLINE", cDXFGraphObject::eType::spline), m_Layer("0"), m_FitPointCount(0), m_ControlPointCount(0), m_KnotCount(0), m_Select(false), m_Nest(false), myfwxwidgets(false)
+        : cDXFGraphObject("SPLINE", cDXFGraphObject::eType::spline), m_Layer("0"), m_FitPointCount(0), m_ControlPointCount(0), m_KnotCount(0), m_Select(false), m_Nest(false), myfwxwidgets(false),
+          myDegree(-1)
     {
     }
 
@@ -57,6 +58,10 @@ namespace dxfv
 
             case 8:
                 m_Layer = cvit->myValue;
+                break;
+
+            case 71:
+                myDegree = atoi(cvit->myValue.c_str());
                 break;
 
             case 74:
@@ -107,10 +112,12 @@ namespace dxfv
                     }
                 }
                 break;
+
             case 10:
                 if (m_ControlPointCount)
                     x[point_index] = atof(cvit->myValue.c_str());
                 break;
+
             case 20:
                 if (m_ControlPointCount)
                     y[point_index++] = atof(cvit->myValue.c_str());
@@ -129,15 +136,17 @@ namespace dxfv
         return true;
     }
 
-    bool CSpline::sanity( int point_index)
+    bool CSpline::sanity(int point_index)
     {
         // std::cout << "spline points " << m_FitPointCount  <<" "<< m_ControlPointCount<<" "<< point_index << "\n";
         if (m_FitPointCount == 0 && m_ControlPointCount == 0)
             throw std::runtime_error("Spline has no points");
         if (point_index != m_FitPointCount && point_index != m_ControlPointCount)
             throw std::runtime_error("Spline has unexpected number of points");
-        if( m_KnotCount != vknots.size())
+        if (m_KnotCount != vknots.size())
             throw std::runtime_error("Spline has unexpected number of knots");
+        if (myDegree == -1)
+            throw std::runtime_error("Spline has unspecified degree");
         return true;
     }
 
@@ -156,6 +165,7 @@ namespace dxfv
         {
             rect.Update(x[k], y[k]);
         }
+        int dbg = 0;
     }
     void CSpline::Generate()
     {
@@ -253,23 +263,33 @@ namespace dxfv
 
     void CSpline::BSplineInit()
     {
-        if( !vknots.size() )
+        if (!vknots.size())
             return;
 
-        if( fabs( 1 - vknots.back() ) > 0.01  )
+        if (fabs(1 - vknots.back()) > 0.01)
         {
             // normalize knot values
-            for( double& v : vknots )
+            for (double &v : vknots)
                 v /= vknots.back();
         }
     }
 
+    cP operator*(double s, cP b)
+    {
+        return cP(s * b.x, s * b.y);
+    }
+
     bool CSpline::getDraw(cDrawPrimitiveData &draw)
     {
-        if (!m_FitPointCount)
-        {
+        if (m_FitPointCount)
+            return getDrawFit(draw);
+        if (!vknots.size())
             return getDrawControlPoint(draw);
-        }
+        return getDrawBSpline(draw);
+    }
+
+    bool CSpline::getDrawFit(cDrawPrimitiveData &draw)
+    {
 
         /* determine number of straight line segments to draw between each pait of fit points
         For good smooth looking curves ensure that no segment changes the x or y pixel by more than 2
@@ -289,7 +309,7 @@ namespace dxfv
             // No more points in current curve
             if (draw.index == m_FitPointCount - 2)
             {
-                // No more fittine points
+                // No more fitting points
                 return false;
             }
 
@@ -372,11 +392,143 @@ namespace dxfv
         return true;
     }
 
-    cP operator*(double s, cP b)
+    bool CSpline::getDrawBSpline(cDrawPrimitiveData &draw)
     {
-        return cP(s * b.x, s * b.y);
+
+        for (int k = 0; k < m_ControlPointCount; k++)
+        {
+            vx.push_back(x[k]);
+            vy.push_back(y[k]);
+        }
+
+        // number of points drawn along curve
+        const int Ndiv = 100;
+        if (draw.index == Ndiv)
+            return false;                      // completed
+        double t = ((float)draw.index) / Ndiv; // normalize
+
+        if (!draw.index)
+        {
+            // first
+            getxydeBoor(t, draw.x1, draw.y1);
+            draw.rect->ApplyScale(draw.x1, draw.y1);
+            getxydeBoor(((float)draw.index + 1) / Ndiv, draw.x2, draw.y2);
+        }
+        else
+        {
+            draw.x1 = draw.x2;
+            draw.y1 = draw.y2;
+            getxydeBoor(t, draw.x2, draw.y2);
+        }
+        draw.rect->ApplyScale(draw.x2, draw.y2);
+        draw.index++;
+
+        return true;
     }
 
+    /* python code from https://en.wikipedia.org/wiki/De_Boor%27s_algorithm#Example_implementation
+
+    def deBoor(k: int, x: int, t, c, p: int):
+    """Evaluates S(x).
+
+    Arguments
+    ---------
+    k: Index of knot interval that contains x.
+    x: Position.
+    t: Array of knot positions, needs to be padded as described above.
+    c: Array of control points.
+    p: Degree of B-spline.
+    """
+    d = [c[j + k - p] for j in range(0, p + 1)]
+
+    for r in range(1, p + 1):
+        for j in range(p, r - 1, -1):
+            alpha = (x - t[j + k - p]) / (t[j + 1 + k - r] - t[j + k - p])
+            d[j] = (1.0 - alpha) * d[j - 1] + alpha * d[j]
+
+    return d[p]
+
+    Note 1:  input x "the position" is declared to be an integer.  This makes no sense.
+        IMHO this should be a double in the range [0,1] where 0 is the first point and 1 is the last.
+        [] indicates end points included in range
+
+    Note 2: input c: array of control points is an array of values for one dimension of the control points
+        for a 2D curve this must be called twice, once for the x values and once for the y values
+
+    Here is my port to C++
+
+    /// @brief deBoor algorithim for B-Spline generation
+    /// @param k index of greatest knot less than x
+    /// @param x position along the curve in the range [0,1] where 0 is the first point and 1 is the last.
+    /// @param t knots in the range [0,1] where 0 is the first point and 1 is the last
+    /// @param c values for one dimension of the control points ( e.g x or y for 2D curve)
+    /// @param p degree of spline
+    /// @return value of spline curve in dimenson provided by c
+    double deBoor(
+        int k,
+        double x,
+        const std::vector<double> &t,
+        const std::vector<double> &c,
+        int p)
+    {
+        std::vector<double> d;
+        for (int j1 = 0; j1 < p + 1; j1++)
+            d.push_back(c[j1 + k - p]);
+
+        for (int r = 1; r < p + 2; r++)
+        {
+            for (int j = p; j > r - 1; j--)
+            {
+                double alpha = (x - t[j + k - p]) / (t[j + 1 + k - r] - t[j + k - p]);
+                d[j] = (1 - alpha) * d[j - 1] + alpha * d[j];
+            }
+        }
+        return d[p];
+    }
+
+    */
+
+    double CSpline::deBoor(
+        int k,
+        double x,
+        const std::vector<double> &c)
+    {
+        std::vector<double> d;
+        for (int j1 = 0; j1 < myDegree + 1; j1++)
+        {
+            d.push_back(c[j1 + k - myDegree]);
+        }
+        for (int r = 1; r < myDegree + 2; r++)
+        {
+            for (int j = myDegree; j > r - 1; j--)
+            {
+                double alpha = (x - vknots[j + k - myDegree]) /
+                               (vknots[j + 1 + k - r] - vknots[j + k - myDegree]);
+                d[j] = (1 - alpha) * d[j - 1] + alpha * d[j];
+            }
+        }
+        return d[myDegree];
+    }
+
+    void CSpline::getxydeBoor(double t, double &cx, double &cy)
+    {
+        // index of largest knot less than t
+        int ik;
+        for (ik = 0; ik < vknots.size(); ik++)
+            if (vknots[ik + 1] > t)
+                break;
+
+        cx = deBoor(
+            ik,
+            t,
+            vx);
+        cy = deBoor(
+            ik,
+            t,
+            vy);
+
+        // std::cout << "xy: " << t << " " << cx << " " << cy << "\n";
+    }
     void CSpline::getBezierPoint(double &ox, double &oy, double t)
     {
         // https://stackoverflow.com/a/21642962/16582
@@ -409,5 +561,4 @@ namespace dxfv
             y[k] += ay;
         }
     }
-
 }
