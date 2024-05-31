@@ -14,12 +14,8 @@ Displaying sample file `dxf/Gear Sample-iss4.DXF`
 - ARC
 - TEXT
 - CIRCLE
-- SPLINE with fit points
-- SPLINE with control points OR fit points
+- SPLINE 
 - SOLID
-
-not supported:
-- SPLINE with fit AND control points
 
 ## View features
 
