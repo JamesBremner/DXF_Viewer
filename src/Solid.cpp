@@ -265,6 +265,7 @@ int CSolid::AutocadColor2RGB( int ai )
     case 9:
         return 0x808080;
     default:
+        // TODO: implement some other colors #30
         return 0;
     }
 }

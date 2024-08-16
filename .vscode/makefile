@@ -8,14 +8,14 @@ INCS = -I./include \
 
 LIBS = \
 	-lgdiplus -lgdi32 -lcomdlg32 -lstdc++fs \
-	-mwindows
+	#-mwindows
 
 static_link_flags = -static-libstdc++ -static-libgcc -static -lComctl32
 
 # folders
 ODIR = ./.vscode/obj
 
-OPT = -g
+OPT = -O2
 CCflags = -std=c++17 $(OPT) -D_mingw_
 
 # sources

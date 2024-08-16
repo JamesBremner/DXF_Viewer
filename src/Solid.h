@@ -74,6 +74,10 @@ public:
 
     void Adjust( double x, double y );
 
+    /// @brief Convert autocad color code to RGB values
+    /// @param ai color code // http://gohtx.com/acadcolors.php
+    /// @return RGB values
+    
     int AutocadColor2RGB( int ai );
 
 private:
