@@ -206,6 +206,7 @@ void CCircle::Draw( CDxf* dxf )
 {
     cDrawPrimitiveData draw( dxf );
     getDraw( draw );
+    dxf->shapes()->color( draw.color );
     dxf->shapes()->circle(
         draw.x1, draw.y1, draw.r );
 }
