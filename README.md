@@ -3,7 +3,8 @@ A simple DXF File viewer
 
 Displaying sample file `dxf/Gear Sample-iss4.DXF`
 
-![screenshot](https://github.com/JamesBremner/DXF_Viewer/blob/master/doc/Capture.png)
+![image](https://github.com/user-attachments/assets/c10f8bd6-1c60-4c7f-b18c-a06e4a5ae30d)
+
 
 ## DXF Graphical entities supported
 
