@@ -15,7 +15,7 @@ public:
 
     std::vector< std::vector< std::vector< double > > > myTriangMesh;
     std::string m_Layer;
-    int myColor;
+
 
     CSolid();
     CSolid( cCodeValue& cv );
@@ -73,12 +73,6 @@ public:
     void Draw( CDxf * dxf );
 
     void Adjust( double x, double y );
-
-    /// @brief Convert autocad color code to RGB values
-    /// @param ai color code // http://gohtx.com/acadcolors.php
-    /// @return RGB values
-    
-    int AutocadColor2RGB( int ai );
 
 private:
 

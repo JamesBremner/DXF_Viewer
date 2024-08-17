@@ -250,6 +250,8 @@ public:
     /// true if valid construction
     bool myfValid;
 
+    int myColor;
+
     /// default contructor
     cDXFGraphObject()
     {
@@ -299,6 +301,12 @@ public:
 protected:
     std::string myCode;
     eParser myParser;
+
+    /// @brief Convert autocad color code to RGB values
+    /// @param ai color code // http://gohtx.com/acadcolors.php
+    /// Stores RGB color in myColor attribute
+    
+    void AutocadColor2RGB( int ai );
 };
 
 

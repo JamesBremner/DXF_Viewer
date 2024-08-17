@@ -88,7 +88,7 @@ bool CSolid::Append( cvit_t& cvit )
                 y2 = atof(cvit->myValue.c_str());
                 break;
             case 62:
-                myColor = AutocadColor2RGB( atoi( cvit->myValue.c_str() ) );
+                AutocadColor2RGB( atoi( cvit->myValue.c_str() ) );
                 break;
             }
             break;
@@ -147,7 +147,7 @@ bool CSolid::Append( cvit_t& cvit )
                 ya[3] = atof(cvit->myValue.c_str());
                 break;
             case 62:
-                myColor = AutocadColor2RGB( atoi( cvit->myValue.c_str() ) );
+                AutocadColor2RGB( atoi( cvit->myValue.c_str() ) );
                 break;
             }
             break;
@@ -251,22 +251,5 @@ void CSolid::Adjust( double ax, double ay )
 {
     x += ax;
     y += ay;
-}
-
-int CSolid::AutocadColor2RGB( int ai )
-{
-    // http://gohtx.com/acadcolors.php
-
-    std::cout << "AutocadColor2RGB " << ai << "\n";
-    switch ( ai )
-    {
-    case 0:
-        return 0;
-    case 9:
-        return 0x808080;
-    default:
-        // TODO: implement some other colors #30
-        return 0;
-    }
 }
 }

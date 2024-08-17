@@ -48,6 +48,40 @@ cDXFGraphObject* cDXFGraphObject::Factory( cCodeValue& cv )
     return nullptr;
 }
 
+void cDXFGraphObject::AutocadColor2RGB( int ai )
+{
+    // http://gohtx.com/acadcolors.php
+
+    std::cout << "AutocadColor2RGB " << ai << "\n";
+    switch ( ai )
+    {
+    case 0:
+        myColor = 0;
+        break;
+    case 1:
+        myColor = 0x0000FF;
+        break;
+    case 2:
+        myColor = 0x00FFFF;
+        break;
+    case 3:
+        myColor = 0x00FF00;
+        break;
+    case 4:
+        myColor = 0xFFFF00;
+        break;
+    case 5:
+        myColor = 0xFF0000;
+        break;
+    case 9:
+        myColor = 0x808080;
+        break;
+    default:
+        // TODO: implement some other colors #30
+        myColor = 0x808080;
+    }
+}
+
 void cBoundingRectangle::CalcScale( int w, int h )
 {
     myWindowHeight = h;

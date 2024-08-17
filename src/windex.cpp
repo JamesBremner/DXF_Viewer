@@ -190,7 +190,7 @@ void CLine::Draw( CDxf* dxf )
 {
     cDrawPrimitiveData draw( dxf );
     getDraw( draw );
-    dxf->shapes()->color( 255,255,255 );
+    dxf->shapes()->color( draw.color );
     dxf->shapes()->line(
     {(int)draw.x1, (int)draw.y1, (int)draw.x2, (int)draw.y2});
 }
