@@ -85,6 +85,9 @@ bool cLWPolyLine::Append(  cvit_t& cvit )
             if( point_index >= MAXPOINTS )
                 throw std::runtime_error("Too many LWPOLYLINE points");
             break;
+        case 62:
+            AutocadColor2RGB(atoi(cvit->myValue.c_str()));
+            break;
         }
     }
     throw std::runtime_error("DXF file incorrectly terminated");
@@ -172,6 +175,7 @@ bool cLWPolyLine::getDraw( cDrawPrimitiveData& draw )
     }
     draw.rect->ApplyScale( draw.x1, draw.y1 );
     draw.rect->ApplyScale( draw.x2, draw.y2 );
+    draw.color = myColor;
 
      return true;
 }

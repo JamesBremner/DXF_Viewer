@@ -198,6 +198,7 @@ void CArc::Draw( CDxf* dxf )
 {
     cDrawPrimitiveData draw( dxf );
     getDraw( draw );
+    dxf->shapes()->color( draw.color );
     dxf->shapes()->arc(
         (int)draw.x1, (int)draw.y1, draw.r,
         draw.sa, draw.ea );
@@ -217,6 +218,7 @@ void cLWPolyLine::Draw( CDxf* dxf )
     // loop over drawing primitives
     while( getDraw( draw ) )
     {
+        dxf->shapes()->color( draw.color );
         dxf->shapes()->line(
         {
             (int)draw.x1, (int)draw.y1,
