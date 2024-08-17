@@ -58,7 +58,7 @@ void cDXFGraphObject::AutocadColor2RGB( int ai )
     case 0:
         myColor = 0;
         break;
-    case 1:
+    case 1: case 10:
         myColor = 0x0000FF;
         break;
     case 2:
@@ -73,11 +73,21 @@ void cDXFGraphObject::AutocadColor2RGB( int ai )
     case 5:
         myColor = 0xFF0000;
         break;
+    case 6:
+        myColor = 0xFF00FF;
+        break;
+    case 7:
+        myColor = 0xFFFFFF;
+        break;
+    case 8:
+        myColor = 0x414141;
     case 9:
         myColor = 0x808080;
         break;
+
     default:
-        // TODO: implement some other colors #30
+        std::cout << "AutocadColor2RGB unrecofnzed color code "
+         << ai << "\n";
         myColor = 0x808080;
     }
 }
