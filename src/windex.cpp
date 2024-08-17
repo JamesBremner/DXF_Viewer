@@ -230,6 +230,8 @@ void CText::Draw( CDxf* dxf )
 {
     cDrawPrimitiveData draw( dxf );
 
+    dxf->shapes()->color( draw.color );
+
     // loop over drawing primitives
     while( getDraw( draw ) )
     {
@@ -240,10 +242,13 @@ void CText::Draw( CDxf* dxf )
 void CSpline::Draw( CDxf* dxf )
 {
     cDrawPrimitiveData draw( dxf );
-
+    
     // loop over drawing primitives
     while( getDraw( draw ) )
     {
+
+        dxf->shapes()->color( draw.color );
+        
         // std::cout << "CSpline::Draw "
         //     << draw.x1 <<" "
         //     << draw.y1 <<" "

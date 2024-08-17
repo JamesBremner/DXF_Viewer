@@ -131,6 +131,10 @@ namespace dxfv
                 vknots.push_back(
                     atof(cvit->myValue.c_str()));
                 break;
+
+            case 62:
+                AutocadColor2RGB(atoi(cvit->myValue.c_str()));
+                break;
             }
         }
         return true;
@@ -290,6 +294,7 @@ namespace dxfv
 
     bool CSpline::getDrawFit(cDrawPrimitiveData &draw)
     {
+        draw.color = myColor;
 
         /* determine number of straight line segments to draw between each pait of fit points
         For good smooth looking curves ensure that no segment changes the x or y pixel by more than 2
@@ -354,6 +359,8 @@ namespace dxfv
 
     bool CSpline::getDrawControlPoint(cDrawPrimitiveData &draw)
     {
+         draw.color = myColor;
+
         // check if using wxwidgets spline method
         if (myfwxwidgets)
         {
@@ -394,6 +401,8 @@ namespace dxfv
 
     bool CSpline::getDrawBSpline(cDrawPrimitiveData &draw)
     {
+         draw.color = myColor;
+         
         // number of points drawn along curve
         const int Ndiv = 100;
         if (draw.index == Ndiv)

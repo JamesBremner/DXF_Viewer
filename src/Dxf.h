@@ -261,6 +261,7 @@ public:
     cDXFGraphObject( const std::string& c, eType t  )
         : myType( t )
         , myCode( c )
+        , myColor( 0x808080 )
     {
     }
     virtual ~cDXFGraphObject()
