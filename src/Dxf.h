@@ -274,7 +274,23 @@ namespace dxfv
         */
         virtual void Options(CDxf *dxf) {}
 
+        /**
+         * @brief Parse dxf group code value pairs for an entity
+         * 
+         * @param cvit reference to iterator pointing to first code/value pair to be parsed ( not code 0 ! )
+         * @return true this should never happen
+         * @return false encountered a new entity
+         * 
+         * In the base class this method is undefined.
+         * Overide with parser for each entity type.
+         * 
+         * This should work its way through the code value pairs in a .dxf file
+         * until a new entity is encountered ( code 0 ), parsing the values.
+         * When new entity found return false with cvit pointing to new entity 0 code value pair
+         * 
+         */
         virtual bool Append(cvit_t &cvit) = 0;
+
         virtual void Update(cBoundingRectangle &rect) = 0;
 
         /** Get data for next call to graphic primitive
@@ -425,6 +441,8 @@ namespace dxfv
         bool myfwxwidgets;                    ///< true if using wxwidgets method for control point splines
         bool myfSplineControlPointsPreferred; ///< true if, given choice, splines use control rather than fit points
         std::vector<cCodeValue> myCodeValue;
+
+        /// Vector storing pointers to each parsed entity
         std::vector<cDXFGraphObject *> myGraphObject;
 
 #ifdef wxwbuild

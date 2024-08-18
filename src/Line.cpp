@@ -60,6 +60,9 @@ namespace dxfv
             case 21:
                 y2 = atof(cvit->myValue.c_str());
                 break;
+            case 39:
+                myThick = atoi(cvit->myValue.c_str());
+                break;
             case 62:
                 AutocadColor2RGB(atoi(cvit->myValue.c_str()));
                 break;
@@ -79,6 +82,7 @@ namespace dxfv
         draw.rect->ApplyScale(draw.x1, draw.y1);
         draw.rect->ApplyScale(draw.x2, draw.y2);
         draw.color = myColor;
+        draw.thick = myThick;
         draw.index++;
         return true;
     }

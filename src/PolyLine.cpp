@@ -116,9 +116,6 @@ bool cPolyLine::Append(  cvit_t& cvit )
         case 8:
             m_Layer = cvit->myCode;
             break;
-        case 70:
-            myfClosed = atoi(cvit->myValue.c_str());
-            break;
         case 10:
             if( fVertex )
                 x[point_index] = atof(cvit->myValue.c_str());
@@ -128,6 +125,12 @@ bool cPolyLine::Append(  cvit_t& cvit )
                 y[point_index++] = atof(cvit->myValue.c_str());
             if( point_index >= MAXPOINTS )
                 throw std::runtime_error("Too many POLYLINE points");
+            break;
+        case 39:
+            myThick = atoi(cvit->myValue.c_str());
+            break;
+        case 70:
+            myfClosed = atoi(cvit->myValue.c_str());
             break;
         }
     }
@@ -176,6 +179,7 @@ bool cLWPolyLine::getDraw( cDrawPrimitiveData& draw )
     draw.rect->ApplyScale( draw.x1, draw.y1 );
     draw.rect->ApplyScale( draw.x2, draw.y2 );
     draw.color = myColor;
+    draw.thick = myThick;
 
      return true;
 }

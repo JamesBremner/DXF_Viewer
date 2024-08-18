@@ -220,6 +220,7 @@ void cLWPolyLine::Draw( CDxf* dxf )
     // loop over drawing primitives
     while( getDraw( draw ) )
     {
+        dxf->shapes()->penThick( draw.thick );
         dxf->shapes()->color( draw.color );
         dxf->shapes()->line(
         {
