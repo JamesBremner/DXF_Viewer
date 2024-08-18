@@ -61,6 +61,9 @@ namespace dxfv
             case 20:
                 y = atof(cvit->myValue.c_str());
                 break;
+            case 39:
+                myThick = atoi(cvit->myValue.c_str());
+                break;
             case 40:
                 r = atof(cvit->myValue.c_str());
                 break;
@@ -83,6 +86,7 @@ namespace dxfv
         draw.rect->ApplyScale(draw.x1, draw.y1);
         draw.r /= draw.rect->myScale;
         draw.color = myColor;
+        draw.thick = myThick;
         return true;
     }
     void CCircle::Adjust(double ax, double ay)

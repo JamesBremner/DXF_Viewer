@@ -211,6 +211,7 @@ namespace dxfv
         double r;
         double sa;
         double ea;
+        int thick;
         int index;
         int index_curve;
         std::string text;
@@ -243,6 +244,8 @@ namespace dxfv
 
         int myColor;
 
+        int myThick;
+
         /// default contructor
         cDXFGraphObject()
         {
@@ -250,7 +253,7 @@ namespace dxfv
 
         /// construct base for a type
         cDXFGraphObject(const std::string &c, eType t)
-            : myType(t), myCode(c), myColor(0x808080)
+            : myType(t), myCode(c), myColor(0x808080), myThick( 1 )
         {
         }
         virtual ~cDXFGraphObject()
