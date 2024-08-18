@@ -408,7 +408,8 @@ void CArc::Draw( CDxf* dxf )
         double yTopLeft = draw.y1 - draw.r;
         double diameter = 2 * draw.r;
         wxColour c(draw.color);
-        dxf->DC()->SetBrush(wxBrush(c));
+        // Set the brush to be transparent
+        dxf->DC()->SetBrush(*wxTRANSPARENT_BRUSH);
         dxf->DC()->SetPen(wxPen(c));
         dxf->DC()->DrawEllipticArc (
             xTopLeft, yTopLeft,
@@ -424,7 +425,8 @@ void CCircle::Draw( CDxf* dxf )
     while( getDraw( draw ) )
     {
         wxColour c(draw.color);
-        dxf->DC()->SetBrush(wxBrush(c));
+        // Set the brush to be transparent
+        dxf->DC()->SetBrush(*wxTRANSPARENT_BRUSH);
         dxf->DC()->SetPen(wxPen(c));
         dxf->DC()->DrawCircle( draw.x1, draw.y1, draw.r );
     }
