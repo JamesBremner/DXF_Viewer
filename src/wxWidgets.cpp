@@ -391,6 +391,9 @@ void CLine::Draw( CDxf* dxf )
     // loop over drawing primitives
     while( getDraw( draw ) )
     {
+        wxColour c(draw.color);
+        dxf->DC()->SetBrush(wxBrush(c));
+        dxf->DC()->SetPen(wxPen(c));
         dxf->DC()->DrawLine( draw.x1, draw.y1, draw.x2, draw.y2 );
     }
 }
@@ -404,6 +407,9 @@ void CArc::Draw( CDxf* dxf )
         double xTopLeft = draw.x1 - draw.r;
         double yTopLeft = draw.y1 - draw.r;
         double diameter = 2 * draw.r;
+        wxColour c(draw.color);
+        dxf->DC()->SetBrush(wxBrush(c));
+        dxf->DC()->SetPen(wxPen(c));
         dxf->DC()->DrawEllipticArc (
             xTopLeft, yTopLeft,
             diameter, diameter,
@@ -417,6 +423,9 @@ void CCircle::Draw( CDxf* dxf )
     // loop over drawing primitives
     while( getDraw( draw ) )
     {
+        wxColour c(draw.color);
+        dxf->DC()->SetBrush(wxBrush(c));
+        dxf->DC()->SetPen(wxPen(c));
         dxf->DC()->DrawCircle( draw.x1, draw.y1, draw.r );
     }
 }
@@ -427,6 +436,9 @@ void cLWPolyLine::Draw( CDxf* dxf )
     // loop over drawing primitives
     while( getDraw( draw ) )
     {
+        wxColour c(draw.color);
+        dxf->DC()->SetBrush(wxBrush(c));
+        dxf->DC()->SetPen(wxPen(c));
         dxf->DC()->DrawLine( draw.x1, draw.y1, draw.x2, draw.y2 );
     }
 }
@@ -437,13 +449,20 @@ void CText::Draw( CDxf* dxf )
     // loop over drawing primitives
     while( getDraw( draw ) )
     {
-         dxf->DC()->DrawText( draw.text, draw.x1, draw.y1 );
+        wxColour c(draw.color);
+        dxf->DC()->SetBrush(wxBrush(c));
+        dxf->DC()->SetPen(wxPen(c));
+        dxf->DC()->DrawText( draw.text, draw.x1, draw.y1 );
     }
 }
 void CSpline::Draw( CDxf* dxf )
 {
     wxPoint spline_points[MAXPOINTS];
     cDrawPrimitiveData draw( dxf );
+
+    wxColour c(draw.color);
+    dxf->DC()->SetBrush(wxBrush(c));
+    dxf->DC()->SetPen(wxPen(c));
 
     // loop over drawing primitives
     while( getDraw( draw ) )
