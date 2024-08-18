@@ -207,6 +207,7 @@ void CCircle::Draw( CDxf* dxf )
 {
     cDrawPrimitiveData draw( dxf );
     getDraw( draw );
+    dxf->shapes()->fill( false );
     dxf->shapes()->color( draw.color );
     dxf->shapes()->circle(
         draw.x1, draw.y1, draw.r );
@@ -248,7 +249,7 @@ void CSpline::Draw( CDxf* dxf )
     {
 
         dxf->shapes()->color( draw.color );
-        
+
         // std::cout << "CSpline::Draw "
         //     << draw.x1 <<" "
         //     << draw.y1 <<" "
