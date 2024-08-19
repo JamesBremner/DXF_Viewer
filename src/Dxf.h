@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <vector>
 
 #define MAXPOINTS 1024
 
@@ -21,10 +22,6 @@ namespace nana
     }
 }
 #endif // nanabuild
-
-#ifdef windexbuild
-#include "wex.h"
-#endif // windexbuild
 
 namespace dxfv
 {
@@ -400,16 +397,7 @@ namespace dxfv
         }
 
 #endif // nanabuild
-#ifdef windexbuild
-        void set(wex::shapes &s)
-        {
-            myS = &s;
-        }
-        wex::shapes *shapes()
-        {
-            return myS;
-        }
-#endif // windexbuild
+
 
         /// Draw every entity
         void Draw(int width, int height);
@@ -436,10 +424,6 @@ namespace dxfv
 #ifdef nanabuild
         nana::paint::graphics *myGraph;
 #endif // nanabuild
-
-#ifdef windexbuild
-        wex::shapes *myS;
-#endif // windexbuild
 
         void UpdateBoundingRectangle();
     };

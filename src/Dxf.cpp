@@ -220,9 +220,9 @@ namespace dxfv
     void CDxf::Init()
     {
         myLoadStatus = none;
-        m_InitialDraw = FALSE;
+        m_InitialDraw = false;
         myGraphObject.clear();
-        m_Nesting = FALSE;
+        m_Nesting = false;
     }
 
     void CDxf::SolidParser(eParser ep)

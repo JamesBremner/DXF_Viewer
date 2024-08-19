@@ -1,9 +1,21 @@
+/*
+
+Windex specific code, including the main() function
+
+Only compile and link this file if using the windex library
+
+Do not link with any other GUI framework library or specific code
+
+*/
 #include <cmath>
 
 #include "wex.h"
 #include "window2file.h"
 
 #include "dxf.h"
+
+// Global pointer to instance of class that uses the windex library to draw on the window
+wex::shapes * theShaper;
 
 #ifndef UNIT_TEST
 int main()
@@ -22,12 +34,17 @@ int main()
     // register drawing function
     fm.events().draw([&dxf]( PAINTSTRUCT& ps )
     {
-        wex::shapes S( ps );
-        S.color( 255,255,255);
-        dxf.set( S );
+        // construct shaper to draw on window
+        theShaper = new wex::shapes( ps );
+        theShaper->color( 255,255,255);
+
+        // display every entity defined in the dxf file
         dxf.Draw(
             ps.rcPaint.right,
             ps.rcPaint.bottom);
+
+        // done with the shaper
+        delete theShaper;
     });
 
     wex::menubar mb( fm );
@@ -190,16 +207,16 @@ void CLine::Draw( CDxf* dxf )
 {
     cDrawPrimitiveData draw( dxf );
     getDraw( draw );
-    dxf->shapes()->color( draw.color );
-    dxf->shapes()->line(
+    theShaper->color( draw.color );
+    theShaper->line(
     {(int)draw.x1, (int)draw.y1, (int)draw.x2, (int)draw.y2});
 }
 void CArc::Draw( CDxf* dxf )
 {
     cDrawPrimitiveData draw( dxf );
     getDraw( draw );
-    dxf->shapes()->color( draw.color );
-    dxf->shapes()->arc(
+    theShaper->color( draw.color );
+    theShaper->arc(
         (int)draw.x1, (int)draw.y1, draw.r,
         draw.sa, draw.ea );
 }
@@ -207,10 +224,10 @@ void CCircle::Draw( CDxf* dxf )
 {
     cDrawPrimitiveData draw( dxf );
     getDraw( draw );
-    dxf->shapes()->fill( false );
-    dxf->shapes()->penThick( draw.thick );
-    dxf->shapes()->color( draw.color );
-    dxf->shapes()->circle(
+    theShaper->fill( false );
+    theShaper->penThick( draw.thick );
+    theShaper->color( draw.color );
+    theShaper->circle(
         draw.x1, draw.y1, draw.r );
 }
 void cLWPolyLine::Draw( CDxf* dxf )
@@ -220,9 +237,9 @@ void cLWPolyLine::Draw( CDxf* dxf )
     // loop over drawing primitives
     while( getDraw( draw ) )
     {
-        dxf->shapes()->penThick( draw.thick );
-        dxf->shapes()->color( draw.color );
-        dxf->shapes()->line(
+        theShaper->penThick( draw.thick );
+        theShaper->color( draw.color );
+        theShaper->line(
         {
             (int)draw.x1, (int)draw.y1,
             (int)draw.x2, (int)draw.y2
@@ -233,12 +250,12 @@ void CText::Draw( CDxf* dxf )
 {
     cDrawPrimitiveData draw( dxf );
 
-    dxf->shapes()->color( draw.color );
+    theShaper->color( draw.color );
 
     // loop over drawing primitives
     while( getDraw( draw ) )
     {
-        dxf->shapes()->text( draw.text,
+        theShaper->text( draw.text,
         { (int)draw.x1, (int)draw.y1,(int)draw.x1+100, (int)draw.y1+25 } );
     }
 }
@@ -250,14 +267,14 @@ void CSpline::Draw( CDxf* dxf )
     while( getDraw( draw ) )
     {
 
-        dxf->shapes()->color( draw.color );
+        theShaper->color( draw.color );
 
         // std::cout << "CSpline::Draw "
         //     << draw.x1 <<" "
         //     << draw.y1 <<" "
         //     << draw.x2 <<" "
         //     << draw.y2 <<"\n";
-        dxf->shapes()->line(
+        theShaper->line(
         {
             (int)draw.x1, (int)draw.y1,
             (int)draw.x2, (int)draw.y2
@@ -276,8 +293,8 @@ void CSolid::Draw( CDxf* dxf )
                   << draw.x2 <<" "<< draw.y2 <<" "
                   << draw.x3 <<" "<< draw.y3 <<"\n";
 
-        dxf->shapes()->fill();
-        dxf->shapes()->polygon(
+        theShaper->fill();
+        theShaper->polygon(
         {
             (int)draw.x1, (int)draw.y1,
             (int)draw.x2, (int)draw.y2,
