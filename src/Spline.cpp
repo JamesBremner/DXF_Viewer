@@ -9,6 +9,21 @@
 
 namespace dxfv
 {
+    struct cP
+    {
+        double x, y;
+        cP() {}
+        cP(double x, double y) : x(x), y(y) {}
+        cP operator+(cP b)
+        {
+            return cP(x + b.x, y + b.y);
+        }
+
+        cP operator-(cP b)
+        {
+            return cP(x - b.x, y - b.y);
+        }
+    };
 
     CSpline::CSpline(cCodeValue &cv)
         : cDXFGraphObject()
@@ -16,7 +31,7 @@ namespace dxfv
         myfValid = (cv.myValue == "SPLINE");
         myType = cDXFGraphObject::eType::spline;
         m_FitPointCount = 0;
-        m_ControlPointCount = 0; 
+        m_ControlPointCount = 0;
         m_KnotCount = 0;
         myfwxwidgets = false;
         myDegree = 0;
@@ -76,11 +91,11 @@ namespace dxfv
 
             case 11:
                 if (m_FitPointCount)
-                    vx.push_back( atof(cvit->myValue.c_str()) );
+                    vx.push_back(atof(cvit->myValue.c_str()));
                 break;
             case 21:
                 if (m_FitPointCount)
-                    vy.push_back( atof(cvit->myValue.c_str()));
+                    vy.push_back(atof(cvit->myValue.c_str()));
                 break;
 
             case 73:
@@ -349,7 +364,7 @@ namespace dxfv
 
     bool CSpline::getDrawControlPoint(cDrawPrimitiveData &draw)
     {
-         draw.color = myColor;
+        draw.color = myColor;
 
         // check if using wxwidgets spline method
         if (myfwxwidgets)
@@ -391,8 +406,8 @@ namespace dxfv
 
     bool CSpline::getDrawBSpline(cDrawPrimitiveData &draw)
     {
-         draw.color = myColor;
-         
+        draw.color = myColor;
+
         // number of points drawn along curve
         const int Ndiv = 100;
         if (draw.index == Ndiv)
@@ -414,7 +429,7 @@ namespace dxfv
         }
         draw.rect->ApplyScale(draw.x2, draw.y2);
         draw.index++;
-        return true;        // more points to come
+        return true; // more points to come
     }
 
     /* python code from https://en.wikipedia.org/wiki/De_Boor%27s_algorithm#Example_implementation

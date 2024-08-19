@@ -38,21 +38,7 @@ namespace dxfv
         solid_4point,
     };
 
-    struct cP
-    {
-        double x, y;
-        cP() {}
-        cP(double x, double y) : x(x), y(y) {}
-        cP operator+(cP b)
-        {
-            return cP(x + b.x, y + b.y);
-        }
 
-        cP operator-(cP b)
-        {
-            return cP(x - b.x, y - b.y);
-        }
-    };
 
     /// DXF code value pair
     class cCodeValue
