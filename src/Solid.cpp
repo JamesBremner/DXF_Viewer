@@ -5,25 +5,13 @@
 #include "dxf.h"
 #include "Solid.h"
 
-
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
-//////////////////////////////////////////////////////////////////////
-
 namespace dxfv
 {
 
-CSolid::CSolid()
-    : cDXFGraphObject("SOLID",cDXFGraphObject::eType::solid)
-{
-    m_Layer = "0";
-    myColor = 0x00ffffff; // white color, default value
-}
-
 CSolid::CSolid( cCodeValue& cv )
-    : CSolid()
+    : cDXFGraphObject()
 {
-    myfValid =( cv.myValue == myCode );
+    myfValid =( cv.myValue == "SOLID" );
 }
 
 CSolid::~CSolid()
@@ -73,7 +61,7 @@ bool CSolid::Append( cvit_t& cvit )
                 return false;
 
             case 8:
-                m_Layer = cvit->myValue;
+                myLayer = cvit->myValue;
                 break;
             case 10:
                 x = atof(cvit->myValue.c_str());
@@ -116,7 +104,7 @@ bool CSolid::Append( cvit_t& cvit )
                 cvit--;
                 return false;
             case 8:
-                m_Layer = cvit->myValue;
+                myLayer = cvit->myValue;
                 break;
             // 10 20
             case 10:

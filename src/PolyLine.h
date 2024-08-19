@@ -14,7 +14,6 @@ class cLWPolyLine   : public cDXFGraphObject
 public:
     unsigned int m_VertexCount;
     double x[MAXPOINTS],y[MAXPOINTS];
-    std::string m_Layer;
 
     cLWPolyLine();
     cLWPolyLine( cCodeValue& cv );

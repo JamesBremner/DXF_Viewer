@@ -18,16 +18,11 @@ static char THIS_FILE[] = __FILE__;
 namespace dxfv
 {
 
-    CCircle::CCircle()
-        : cDXFGraphObject("CIRCLE", cDXFGraphObject::eType::circle)
-    {
-        m_Layer = "0";
-    }
-
     CCircle::CCircle(cCodeValue &cv)
-        : CCircle()
+        : cDXFGraphObject()
     {
-        myfValid = (cv.myValue == myCode);
+        myfValid = (cv.myValue == "CIRCLE");
+        myType = cDXFGraphObject::eType::circle;
     }
 
     CCircle::~CCircle()
@@ -53,7 +48,7 @@ namespace dxfv
                 cvit--;
                 return false;
             case 8:
-                m_Layer = cvit->myValue;
+                myLayer = cvit->myValue;
                 break;
             case 10:
                 x = atof(cvit->myValue.c_str());

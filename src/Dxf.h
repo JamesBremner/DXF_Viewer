@@ -246,16 +246,14 @@ namespace dxfv
 
         int myThick;
 
+        std::string myLayer;
+
         /// default contructor
         cDXFGraphObject()
+        :  myColor(0x808080), myThick( 1 ), myLayer("0")
         {
         }
 
-        /// construct base for a type
-        cDXFGraphObject(const std::string &c, eType t)
-            : myType(t), myCode(c), myColor(0x808080), myThick( 1 )
-        {
-        }
         virtual ~cDXFGraphObject()
         {
         }
@@ -277,7 +275,7 @@ namespace dxfv
         /**
          * @brief Parse dxf group code value pairs for an entity
          * 
-         * @param cvit reference to iterator pointing to first code/value pair to be parsed ( not code 0 ! )
+         * @param cvit reference to iterator pointing to first code/value pair to be parsed ( code 0 ! )
          * @return true this should never happen
          * @return false encountered a new entity
          * 
@@ -285,7 +283,7 @@ namespace dxfv
          * Overide with parser for each entity type.
          * 
          * This should work its way through the code value pairs in a .dxf file
-         * until a new entity is encountered ( code 0 ), parsing the values.
+         * until a new entity is encountered ( a new code 0 ), parsing the values.
          * When new entity found return false with cvit pointing to new entity 0 code value pair
          * 
          */

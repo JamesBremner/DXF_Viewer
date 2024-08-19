@@ -14,8 +14,6 @@ public:
     double x,y,x2,y2;       ///< locations of top-right and bottm-left corners
 
     std::vector< std::vector< std::vector< double > > > myTriangMesh;
-    std::string m_Layer;
-
 
     CSolid();
     CSolid( cCodeValue& cv );

@@ -15,10 +15,8 @@ public:
     double r;   ///< radius
     double sa;  ///< start angle degrees anti-clockwise from 3 o'clock
     double ea;  ///< end angle degrees anti-clockwise from 3 o'clock
-    std::string m_Layer;
 
 
-    CArc();
     CArc( cCodeValue& cv );
     virtual ~CArc();
 

@@ -12,7 +12,6 @@ namespace dxfv
     class CSpline : public cDXFGraphObject
     {
     public:
-        std::string m_Layer;
         int m_FitPointCount;
 
         CSpline();

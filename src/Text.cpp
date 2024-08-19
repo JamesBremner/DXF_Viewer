@@ -5,14 +5,11 @@
 namespace dxfv
 {
 
-    CText::CText()
-        : cDXFGraphObject("MTEXT", cDXFGraphObject::eType::text)
-    {
-    }
     CText::CText(cCodeValue &cv)
-        : CText()
+        : cDXFGraphObject()
     {
-        myfValid = (cv.myValue == myCode);
+        myfValid = (cv.myValue == "MTEXT");
+        myType = cDXFGraphObject::eType::text;
     }
 
     bool CText::Append(cvit_t &cvit)

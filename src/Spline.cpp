@@ -7,29 +7,19 @@
 #include "dxf.h"
 #include "Spline.h"
 
-#ifdef _DEBUG
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#define new DEBUG_NEW
-#endif
-
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
-//////////////////////////////////////////////////////////////////////
-
 namespace dxfv
 {
 
-    CSpline::CSpline()
-        : cDXFGraphObject("SPLINE", cDXFGraphObject::eType::spline), m_Layer("0"), m_FitPointCount(0), m_ControlPointCount(0), m_KnotCount(0), myfwxwidgets(false),
-          myDegree(-1)
-    {
-    }
-
     CSpline::CSpline(cCodeValue &cv)
-        : CSpline()
+        : cDXFGraphObject()
     {
-        myfValid = (cv.myValue == myCode);
+        myfValid = (cv.myValue == "SPLINE");
+        myType = cDXFGraphObject::eType::spline;
+        m_FitPointCount = 0;
+        m_ControlPointCount = 0; 
+        m_KnotCount = 0;
+        myfwxwidgets = false;
+        myDegree = 0;
     }
 
     CSpline::~CSpline()
@@ -57,7 +47,7 @@ namespace dxfv
                 return false;
 
             case 8:
-                m_Layer = cvit->myValue;
+                myLayer = cvit->myValue;
                 break;
 
             case 71:

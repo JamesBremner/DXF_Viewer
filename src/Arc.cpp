@@ -10,16 +10,11 @@
 namespace dxfv
 {
 
-    CArc::CArc()
-        : cDXFGraphObject("ARC", cDXFGraphObject::eType::arc)
-    {
-        m_Layer = "0";
-    }
-
     CArc::CArc(cCodeValue &cv)
-        : CArc()
+        : cDXFGraphObject()
     {
-        myfValid = (cv.myValue == myCode);
+        myfValid = (cv.myValue == "ARC");
+        myType = cDXFGraphObject::eType::arc;
     }
 
     CArc::~CArc()
@@ -130,7 +125,7 @@ namespace dxfv
                 cvit--;
                 return false;
             case 8:
-                m_Layer = cvit->myValue;
+                myLayer = cvit->myValue;
                 break;
             case 10:
                 x = atof(cvit->myValue.c_str());

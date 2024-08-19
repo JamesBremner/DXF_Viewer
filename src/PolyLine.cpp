@@ -6,32 +6,16 @@
 #include "dxf.h"
 #include "PolyLine.h"
 
-#ifdef _DEBUG
-#undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
-#define new DEBUG_NEW
-#endif
-
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
-//////////////////////////////////////////////////////////////////////
-
 namespace dxfv
 {
 
-cLWPolyLine::cLWPolyLine()
-: cDXFGraphObject("LWPOLYLINE",cDXFGraphObject::eType::lwpolyline )
+cLWPolyLine::cLWPolyLine( cCodeValue& cv )
+    : cDXFGraphObject()
 {
+    myfValid =( cv.myValue == "LWPOLYLINE" );
+    myType = cDXFGraphObject::eType::lwpolyline;
     m_VertexCount = 0;
     myfClosed = false;
-    m_Layer = "0";
-
-}
-
-cLWPolyLine::cLWPolyLine( cCodeValue& cv )
-    : cLWPolyLine()
-{
-    myfValid =( cv.myValue == myCode );
 }
 
 cLWPolyLine::~cLWPolyLine()
@@ -39,16 +23,11 @@ cLWPolyLine::~cLWPolyLine()
 
 }
 
-cPolyLine::cPolyLine()
-{
-    myCode = "POLYLINE";
-    myType = cDXFGraphObject::eType::polyline;
-}
-
 cPolyLine::cPolyLine( cCodeValue& cv )
-    : cPolyLine()
+    : cLWPolyLine(cv)
 {
-    myfValid =( cv.myValue == myCode );
+    myfValid =( cv.myValue == "POLYLINE" );
+    myType = cDXFGraphObject::eType::polyline;
 }
 
 cPolyLine::~cPolyLine()
@@ -69,7 +48,7 @@ bool cLWPolyLine::Append(  cvit_t& cvit )
             cvit--;
             return false;
         case 8:
-            m_Layer = cvit->myCode;
+            myLayer = cvit->myCode;
             break;
         case 90:
             m_VertexCount = atoi(cvit->myValue.c_str());
@@ -114,7 +93,7 @@ bool cPolyLine::Append(  cvit_t& cvit )
             cvit--;
             return false;
         case 8:
-            m_Layer = cvit->myCode;
+            myLayer = cvit->myCode;
             break;
         case 10:
             if( fVertex )

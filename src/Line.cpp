@@ -5,29 +5,14 @@
 #include "DXF.h"
 #include "Line.h"
 
-#ifdef _DEBUG
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#define new DEBUG_NEW
-#endif
-
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
-//////////////////////////////////////////////////////////////////////
-
 namespace dxfv
 {
 
-    CLine::CLine()
-        : cDXFGraphObject("LINE", cDXFGraphObject::eType::line)
-    {
-        m_Layer = "0";
-    }
-
     CLine::CLine(cCodeValue &cv)
-        : CLine()
+        : cDXFGraphObject()
     {
-        myfValid = (cv.myValue == myCode);
+        myfValid = (cv.myValue == "LINE");
+        myType = cDXFGraphObject::eType::line;
     }
 
     CLine::~CLine()
@@ -46,7 +31,7 @@ namespace dxfv
                 cvit--;
                 return false;
             case 8:
-                m_Layer = cvit->myValue;
+                myLayer = cvit->myValue;
                 break;
             case 10:
                 x1 = atof(cvit->myValue.c_str());

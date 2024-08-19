@@ -6,7 +6,6 @@ namespace dxfv
 class CText : public cDXFGraphObject
 {
 public:
-    CText();
     CText( cCodeValue& cv );
     bool Append( cvit_t& cvit );
     bool getDraw( cDrawPrimitiveData& draw );

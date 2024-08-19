@@ -19,9 +19,7 @@ class CLine : public cDXFGraphObject
 {
 public:
     double x1,y1,x2,y2;
-    std::string m_Layer;
 
-    CLine();
     CLine( cCodeValue& cv );
     virtual ~CLine();
 

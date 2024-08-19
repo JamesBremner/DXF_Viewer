@@ -10,7 +10,6 @@ class CCircle  : public cDXFGraphObject
 {
 public:
     double x,y,r;
-    std::string m_Layer;
 
     CCircle();
     CCircle( cCodeValue& cv );
