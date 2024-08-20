@@ -34,7 +34,6 @@
 			<Add option="-mthreads" />
 			<Add option="`$(#WX_CONFIG) --cflags`" />
 			<Add option="-D__GNUWIN32__" />
-			<Add option="-Dwxwbuild" />
 		</Compiler>
 		<ResourceCompiler>
 			<Add option="`$(#WX_CONFIG) --rcflags`" />
