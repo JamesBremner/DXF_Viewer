@@ -8,77 +8,94 @@
 
 namespace dxfv
 {
-class CSolid  : public cDXFGraphObject
-{
-public:
-    double x,y,x2,y2;       ///< locations of top-right and bottm-left corners
+    class CSolid : public cDXFGraphObject
+    {
+    public:
+        // parser options
+        enum eParser
+        {
+            solid_2point, // default
+            solid_3point,
+            solid_4point,
+        };
 
-    std::vector< std::vector< std::vector< double > > > myTriangMesh;
+        // parser option in use
+        // static because all solids use the same parser
+        static eParser myParser;
 
-    CSolid();
-    CSolid( cCodeValue& cv );
-    virtual ~CSolid();
+        static eParser parser()
+        {
+            return myParser;
+        }
 
-    void Options( CDxf * dxf );
+        /// @brief Set parser option for all solids
+        /// @param p 
+        static void parser(eParser p);
 
-    /** Append DXF code-value pair to object specification
+        double x, y, x2, y2; ///< locations of top-right and bottm-left corners
 
-        @param[in] cvit iterator pointing to code value pair
+        std::vector<std::vector<std::vector<double>>> myTriangMesh;
 
-        The interpretation of the codes, depends on which parser has been selected
-        The 2-point parser uses:
-        <pre>
-        code    interpretation
-        0       end of SOLID specification
-        10      x location of top left of 2D rectangle
-        12      x location of bottom right of 2D rectangle
-        20      y location of top left of 2D rectangle
-        22      y location of bottom right of 2D rectangle
-        </pre>
-        The 4-point parser uses:
-        <pre>
-        code    interpretation
-        0       end of SOLID specification
-        10      x location of first vertex of 2D quadrilateral
-        11      x location of second vertex of 2D quadrilateral
-        12      x location of third vertex of 2D quadrilateral
-        13      x location of fourth vertex of 2D quadrilateral
-        20      y location of first vertex of 2D quadrilateral
-        21      y location of second vertex of 2D quadrilateral
-        22      y location of third vertex 2D quadrilateral
-        23      y location of fourth vertex of 2D quadrilateral
-        </pre>
-        The quadrilateral is made up of two triangles. The first triangle is
-        defined by the first three vertices, the second triangle is defined
-        by the last three vertices.
+        CSolid();
+        CSolid(cCodeValue &cv);
+        virtual ~CSolid();
 
-        All other codes are ignored.
-        A runtime_error exception is thrown if code 0 is not encountered
+        /** Append DXF code-value pair to object specification
 
-    */
-    bool Append( cvit_t& cvit );
+            @param[in] cvit iterator pointing to code value pair
 
-    void Update( cBoundingRectangle& rect );
+            The interpretation of the codes, depends on which parser has been selected
+            The 2-point parser uses:
+            <pre>
+            code    interpretation
+            0       end of SOLID specification
+            10      x location of top left of 2D rectangle
+            12      x location of bottom right of 2D rectangle
+            20      y location of top left of 2D rectangle
+            22      y location of bottom right of 2D rectangle
+            </pre>
+            The 4-point parser uses:
+            <pre>
+            code    interpretation
+            0       end of SOLID specification
+            10      x location of first vertex of 2D quadrilateral
+            11      x location of second vertex of 2D quadrilateral
+            12      x location of third vertex of 2D quadrilateral
+            13      x location of fourth vertex of 2D quadrilateral
+            20      y location of first vertex of 2D quadrilateral
+            21      y location of second vertex of 2D quadrilateral
+            22      y location of third vertex 2D quadrilateral
+            23      y location of fourth vertex of 2D quadrilateral
+            </pre>
+            The quadrilateral is made up of two triangles. The first triangle is
+            defined by the first three vertices, the second triangle is defined
+            by the last three vertices.
 
-    /**  get drawing parameters, scaled to display window
+            All other codes are ignored.
+            A runtime_error exception is thrown if code 0 is not encountered
 
-    @param[in/out] draw  structure holding parameters
-    @return true if valid line has been returned
+        */
+        bool Append(cvit_t &cvit);
 
-    */
-    bool getDraw( cDrawPrimitiveData& draw );
+        void Update(cBoundingRectangle &rect);
 
-    void Draw( CDxf * dxf );
+        /**  get drawing parameters, scaled to display window
 
-    void Adjust( double x, double y );
+        @param[in/out] draw  structure holding parameters
+        @return true if valid line has been returned
 
-private:
+        */
+        bool getDraw(cDrawPrimitiveData &draw);
 
-    // create two triangle from the two point, which makes one rectangle
-    void convert_2point();
+        void Draw(CDxf *dxf);
 
-    // append a triangle(3 points) to the internal triangle mesh
-    void append_triangle(double x[], double y[]);
-};
+        void Adjust(double x, double y);
+
+    private:
+        // create two triangle from the two point, which makes one rectangle
+        void convert_2point();
+
+        // append a triangle(3 points) to the internal triangle mesh
+        void append_triangle(double x[], double y[]);
+    };
 }
-

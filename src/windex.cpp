@@ -103,21 +103,21 @@ int main()
         mp.check(0,true);
         mp.check(1,false);
         mp.check(2,false);
-        dxf.SolidParser( dxfv::eParser::solid_2point );
+        dxfv::CSolid::parser( dxfv::CSolid::eParser::solid_2point );
     });
     mp.append("SOLID 3 point parser",[&](const std::string &title)
     {
         mp.check(0,false);
         mp.check(1,true);
         mp.check(2,false);
-        dxf.SolidParser( dxfv::eParser::solid_3point );
+        dxfv::CSolid::parser( dxfv::CSolid::eParser::solid_3point );
     });
     mp.append("SOLID 4 point parser",[&](const std::string &title)
     {
         mp.check(0,false);
         mp.check(1,false);
         mp.check(2,true);
-        dxf.SolidParser( dxfv::eParser::solid_4point );
+        dxfv::CSolid::parser( dxfv::CSolid::eParser::solid_4point );
     });
     mp.check(0);
     mb.append("Parsers", mp );

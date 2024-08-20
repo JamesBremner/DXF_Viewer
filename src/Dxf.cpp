@@ -128,10 +128,10 @@ namespace dxfv
           myfwxwidgets(false) // do not use wxwidgets for contol point splines
           ,
           myfSplineControlPointsPreferred(false) // if true and choice available, splines prefer control points
-          ,
-          mySolidParser(eParser::solid_2point)
     {
+        CSolid::parser(CSolid::eParser::solid_2point);
     }
+
 
     CDxf::~CDxf()
     {
@@ -221,21 +221,6 @@ namespace dxfv
     {
         myGraphObject.clear();
         m_Nesting = false;
-    }
-
-    void CDxf::SolidParser(eParser ep)
-    {
-        switch (ep)
-        {
-        case eParser::solid_2point:
-        case eParser::solid_3point:
-        case eParser::solid_4point:
-            mySolidParser = ep;
-            break;
-        default:
-            mySolidParser = eParser::solid_2point;
-            break;
-        }
     }
 
     void CDxf::Draw(int width, int height)

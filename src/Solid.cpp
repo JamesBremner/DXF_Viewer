@@ -8,6 +8,8 @@
 namespace dxfv
 {
 
+CSolid::eParser CSolid::myParser;
+
 CSolid::CSolid( cCodeValue& cv )
     : cDXFGraphObject()
 {
@@ -18,12 +20,6 @@ CSolid::~CSolid()
 {
 
 }
-
-void CSolid::Options( CDxf * dxf )
-{
-    myParser = dxf->SolidParser();
-}
-
 
 void CSolid::Update( cBoundingRectangle& rect )
 {
@@ -240,4 +236,9 @@ void CSolid::Adjust( double ax, double ay )
     x += ax;
     y += ay;
 }
+
+void CSolid::parser( eParser p )
+    {
+        myParser = p;
+    }
 }

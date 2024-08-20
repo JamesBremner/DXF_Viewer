@@ -28,12 +28,7 @@ namespace dxfv
 
     class CDxf;
 
-    enum eParser
-    {
-        solid_2point, // default
-        solid_3point,
-        solid_4point,
-    };
+
 
     /// DXF code value pair
     class cCodeValue
@@ -287,7 +282,7 @@ namespace dxfv
 
     protected:
         std::string myCode;
-        eParser myParser;
+
 
         /* @brief Convert autocad color code to RGB values
         /// @param ai color code // http://gohtx.com/acadcolors.php
@@ -390,22 +385,14 @@ namespace dxfv
         /// Draw every entity
         void Draw(int width, int height);
 
-        /// Enable a SOLID parser TID23
-        void SolidParser(eParser ep);
-        eParser SolidParser() const
-        {
-            return mySolidParser;
-        }
-
     private:
+    
         bool myfwxwidgets;                    ///< true if using wxwidgets method for control point splines
         bool myfSplineControlPointsPreferred; ///< true if, given choice, splines use control rather than fit points
         std::vector<cCodeValue> myCodeValue;
 
         /// Vector storing pointers to each parsed entity
         std::vector<cDXFGraphObject *> myGraphObject;
-
-        eParser mySolidParser; /// SOLID parser to be enabled TID23
 
 #ifdef wxwbuild
         wxDC *myDC;
