@@ -337,8 +337,6 @@ namespace dxfv
     {
     public:
 
-        unsigned char m_Nesting;
-
         cBoundingRectangle myBoundingRectangle;
 
         CDxf();
@@ -386,7 +384,7 @@ namespace dxfv
         void Draw(int width, int height);
 
     private:
-    
+
         bool myfwxwidgets;                    ///< true if using wxwidgets method for control point splines
         bool myfSplineControlPointsPreferred; ///< true if, given choice, splines use control rather than fit points
         std::vector<cCodeValue> myCodeValue;

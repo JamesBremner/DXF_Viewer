@@ -124,8 +124,7 @@ namespace dxfv
     //////////////////////////////////////////////////////////////////////
 
     CDxf::CDxf()
-        : m_Nesting(false),
-          myfwxwidgets(false) // do not use wxwidgets for contol point splines
+        : myfwxwidgets(false) // do not use wxwidgets for contol point splines
           ,
           myfSplineControlPointsPreferred(false) // if true and choice available, splines prefer control points
     {
@@ -220,7 +219,6 @@ namespace dxfv
     void CDxf::Init()
     {
         myGraphObject.clear();
-        m_Nesting = false;
     }
 
     void CDxf::Draw(int width, int height)
