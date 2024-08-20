@@ -32,16 +32,16 @@
 			<Add option="-fexceptions" />
 			<Add option="-pipe" />
 			<Add option="-mthreads" />
-			<Add option="`wx-config-msys2 --cflags --prefix=$(TARGET_COMPILER_DIR)`" />
+			<Add option="`$(#WX_CONFIG) --cflags`" />
 			<Add option="-D__GNUWIN32__" />
 			<Add option="-Dwxwbuild" />
 		</Compiler>
 		<ResourceCompiler>
-			<Add option="`wx-config-msys2 --rcflags --prefix=$(TARGET_COMPILER_DIR)`" />
+			<Add option="`$(#WX_CONFIG) --rcflags`" />
 		</ResourceCompiler>
 		<Linker>
 			<Add option="-mthreads" />
-			<Add option="`wx-config-msys2 --libs all --prefix=$(TARGET_COMPILER_DIR)`" />
+			<Add option="`$(#WX_CONFIG) --libs all`" />
 		</Linker>
 		<Unit filename="../../src/Arc.cpp" />
 		<Unit filename="../../src/Arc.h" />
