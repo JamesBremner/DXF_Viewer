@@ -293,6 +293,7 @@ void CSolid::Draw( CDxf* dxf )
                   << draw.x2 <<" "<< draw.y2 <<" "
                   << draw.x3 <<" "<< draw.y3 <<"\n";
 
+        theShaper->color( draw.color );
         theShaper->fill();
         theShaper->polygon(
         {
