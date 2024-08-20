@@ -124,7 +124,8 @@ namespace dxfv
     //////////////////////////////////////////////////////////////////////
 
     CDxf::CDxf()
-        : m_InitialDraw(false), myLoadStatus(none), m_Nesting(false), myfwxwidgets(false) // do not use wxwidgets for contol point splines
+        : m_Nesting(false),
+          myfwxwidgets(false) // do not use wxwidgets for contol point splines
           ,
           myfSplineControlPointsPreferred(false) // if true and choice available, splines prefer control points
           ,
@@ -148,7 +149,7 @@ namespace dxfv
         std::ifstream f(filepath);
         if (!f.is_open())
         {
-            myLoadStatus = none;
+
             return;
         }
 
@@ -188,7 +189,6 @@ namespace dxfv
             }
         }
         UpdateBoundingRectangle();
-        myLoadStatus = OK;
     }
 
     void CDxf::UpdateBoundingRectangle()
@@ -219,8 +219,6 @@ namespace dxfv
 
     void CDxf::Init()
     {
-        myLoadStatus = none;
-        m_InitialDraw = false;
         myGraphObject.clear();
         m_Nesting = false;
     }

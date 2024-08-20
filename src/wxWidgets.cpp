@@ -202,11 +202,13 @@ void dxfv_wxWidgetsFrame::OnOpen(wxCommandEvent& event)
     }
 
 #ifdef DEMO
-    if( dxf->myLoadStatus == dxfv::CDxf::demo )
-    {
-        wxMessageBox( "Demo limit exceeded!", "Sorry");
-        exit(1);
-    }
+    // this does nothing, myLoadStatus is never set to demo
+    // TODO: remove
+    // if( dxf->myLoadStatus == dxfv::CDxf::demo )
+    // {
+    //     wxMessageBox( "Demo limit exceeded!", "Sorry");
+    //     exit(1);
+    // }
 #endif // DEMO
     SetTitle( openFileDialog.GetPath() );
 

@@ -35,8 +35,6 @@ namespace dxfv
         solid_4point,
     };
 
-
-
     /// DXF code value pair
     class cCodeValue
     {
@@ -343,16 +341,6 @@ namespace dxfv
     class CDxf
     {
     public:
-        unsigned char m_InitialDraw;
-
-        enum eLoadStatus
-        {
-            none,
-            OK,
-            demo,
-        } myLoadStatus;
-
-        eParser mySolidParser; /// SOLID parser to be enabled TID23
 
         unsigned char m_Nesting;
 
@@ -416,6 +404,8 @@ namespace dxfv
 
         /// Vector storing pointers to each parsed entity
         std::vector<cDXFGraphObject *> myGraphObject;
+
+        eParser mySolidParser; /// SOLID parser to be enabled TID23
 
 #ifdef wxwbuild
         wxDC *myDC;
