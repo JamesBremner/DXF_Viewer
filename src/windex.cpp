@@ -123,20 +123,15 @@ int main()
     mb.append("Parsers", mp );
 
 
-//    // handle left mouse button down
+   // handle left mouse button down
     fm.events().click([&]
     {
         auto p = fm.getMouseStatus();
         old_pos.x = p.x;
         old_pos.y = p.y;
     });
-//    fm.events().mouse_down([&old_pos](const nana::arg_mouse&arg)
-//    {
-//        if( arg.left_button )
-//            old_pos = arg.pos;  // store mouse position
-//    });
-//
-//    // handle mouse movement
+
+   // handle mouse movement
     fm.events().mouseMove([&](wex::sMouse& m)
     {
         if( ! m.left )

@@ -10,22 +10,10 @@
 
 #define MAXPOINTS 1024
 
-#ifdef nanabuild
-namespace nana
-{
-    namespace paint
-    {
-        class graphics;
-    }
-}
-#endif // nanabuild
-
 namespace dxfv
 {
 
     class CDxf;
-
-
 
     /// DXF code value pair
     class cCodeValue
@@ -352,21 +340,6 @@ namespace dxfv
             return myfSplineControlPointsPreferred;
         }
 
-        // accessors for graphical device context
-        // which depend on the GUI framework used by the build
-#ifdef nanabuild
-        void graph(nana::paint::graphics *g)
-        {
-            myGraph = g;
-        }
-        nana::paint::graphics *graph()
-        {
-            return myGraph;
-        }
-
-#endif // nanabuild
-
-
         /// Draw every entity
         void Draw(int width, int height);
 
@@ -378,10 +351,6 @@ namespace dxfv
 
         /// Vector storing pointers to each parsed entity
         std::vector<cDXFGraphObject *> myGraphObject;
-
-#ifdef nanabuild
-        nana::paint::graphics *myGraph;
-#endif // nanabuild
 
         void UpdateBoundingRectangle();
     };
