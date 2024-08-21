@@ -8,6 +8,10 @@
 
 #include "dxf.h"
 
+// Global pointer to instance of class that uses the wxWidgets library to draw on the window
+
+wxDC * theDC = nullptr;
+
 class dxfv_wxWidgetsApp : public wxApp
 {
 public:
@@ -244,7 +248,7 @@ void dxfv_wxWidgetsFrame::OnSelectSolidParser(wxCommandEvent& event)
 void dxfv_wxWidgetsFrame::OnPaint(wxPaintEvent& event)
 {
     wxPaintDC dc(this);
-    dxf->DC( &dc );
+    theDC = &dc; // set the global wxDC pointer
     dc.SetPen(*wxWHITE_PEN);
     dc.SetBrush(*wxTRANSPARENT_BRUSH);
     dc.SetTextForeground( *wxYELLOW );
@@ -262,6 +266,8 @@ void dxfv_wxWidgetsFrame::OnPaint(wxPaintEvent& event)
 //        dim.getDraw( draw );
 //        dc.DrawText( draw.text, draw.x1, draw.y1 );
 //    }
+
+    theDC = nullptr;
 }
 void dxfv_wxWidgetsFrame::OnSize(wxSizeEvent& event)
 {
@@ -394,9 +400,9 @@ void CLine::Draw( CDxf* dxf )
     while( getDraw( draw ) )
     {
         wxColour c(draw.color);
-        dxf->DC()->SetBrush(wxBrush(c));
-        dxf->DC()->SetPen(wxPen(c));
-        dxf->DC()->DrawLine( draw.x1, draw.y1, draw.x2, draw.y2 );
+        theDC->SetBrush(wxBrush(c));
+        theDC->SetPen(wxPen(c));
+        theDC->DrawLine( draw.x1, draw.y1, draw.x2, draw.y2 );
     }
 }
 void CArc::Draw( CDxf* dxf )
@@ -411,9 +417,9 @@ void CArc::Draw( CDxf* dxf )
         double diameter = 2 * draw.r;
         wxColour c(draw.color);
         // Set the brush to be transparent
-        dxf->DC()->SetBrush(*wxTRANSPARENT_BRUSH);
-        dxf->DC()->SetPen(wxPen(c));
-        dxf->DC()->DrawEllipticArc (
+        theDC->SetBrush(*wxTRANSPARENT_BRUSH);
+        theDC->SetPen(wxPen(c));
+        theDC->DrawEllipticArc (
             xTopLeft, yTopLeft,
             diameter, diameter,
             draw.sa, draw.ea );
@@ -428,9 +434,9 @@ void CCircle::Draw( CDxf* dxf )
     {
         wxColour c(draw.color);
         // Set the brush to be transparent
-        dxf->DC()->SetBrush(*wxTRANSPARENT_BRUSH);
-        dxf->DC()->SetPen(wxPen(c));
-        dxf->DC()->DrawCircle( draw.x1, draw.y1, draw.r );
+        theDC->SetBrush(*wxTRANSPARENT_BRUSH);
+        theDC->SetPen(wxPen(c));
+        theDC->DrawCircle( draw.x1, draw.y1, draw.r );
     }
 }
 void cLWPolyLine::Draw( CDxf* dxf )
@@ -441,9 +447,9 @@ void cLWPolyLine::Draw( CDxf* dxf )
     while( getDraw( draw ) )
     {
         wxColour c(draw.color);
-        dxf->DC()->SetBrush(wxBrush(c));
-        dxf->DC()->SetPen(wxPen(c));
-        dxf->DC()->DrawLine( draw.x1, draw.y1, draw.x2, draw.y2 );
+        theDC->SetBrush(wxBrush(c));
+        theDC->SetPen(wxPen(c));
+        theDC->DrawLine( draw.x1, draw.y1, draw.x2, draw.y2 );
     }
 }
 void CText::Draw( CDxf* dxf )
@@ -454,9 +460,9 @@ void CText::Draw( CDxf* dxf )
     while( getDraw( draw ) )
     {
         wxColour c(draw.color);
-        dxf->DC()->SetBrush(wxBrush(c));
-        dxf->DC()->SetPen(wxPen(c));
-        dxf->DC()->DrawText( draw.text, draw.x1, draw.y1 );
+        theDC->SetBrush(wxBrush(c));
+        theDC->SetPen(wxPen(c));
+        theDC->DrawText( draw.text, draw.x1, draw.y1 );
     }
 }
 void CSpline::Draw( CDxf* dxf )
@@ -465,8 +471,8 @@ void CSpline::Draw( CDxf* dxf )
     cDrawPrimitiveData draw( dxf );
 
     wxColour c(draw.color);
-    dxf->DC()->SetBrush(wxBrush(c));
-    dxf->DC()->SetPen(wxPen(c));
+    theDC->SetBrush(wxBrush(c));
+    theDC->SetPen(wxPen(c));
 
     // loop over drawing primitives
     while( getDraw( draw ) )
@@ -485,7 +491,7 @@ void CSpline::Draw( CDxf* dxf )
             {
                 // all contol points
                 // use wxwidget spline method
-                dxf->DC()->DrawSpline(
+                theDC->DrawSpline(
                     m_ControlPointCount,
                     spline_points );
             }
@@ -494,7 +500,7 @@ void CSpline::Draw( CDxf* dxf )
         {
             // use wxwidgets drawing primitive for spline
 
-            dxf->DC()->DrawLine( draw.x1, draw.y1, draw.x2, draw.y2 );
+            theDC->DrawLine( draw.x1, draw.y1, draw.x2, draw.y2 );
         }
     }
 }
@@ -517,10 +523,10 @@ void CSolid::Draw( CDxf* dxf )
         };
 
         wxColour c(draw.color);
-        dxf->DC()->SetBrush(wxBrush(c));
-        dxf->DC()->SetPen(wxPen(c));
+        theDC->SetBrush(wxBrush(c));
+        theDC->SetPen(wxPen(c));
 
-        dxf->DC()->DrawPolygon(3, points);
+        theDC->DrawPolygon(3, points);
     }
 }
 }
