@@ -238,11 +238,11 @@ void dxfv_wxWidgetsFrame::OnSelectSolidParser(wxCommandEvent& event)
 {
     int id = event.GetId();
     if (id == idMenuSOLID2pointParser)
-        dxf->SolidParser( dxfv::eParser::solid_2point );
+        dxfv::CSolid::parser( dxfv::CSolid::eParser::solid_2point );
     else if (id == idMenuSOLID3pointParser)
-        dxf->SolidParser( dxfv::eParser::solid_3point );
+        dxfv::CSolid::parser( dxfv::CSolid::eParser::solid_3point );
     else if (id == idMenuSOLID4pointParser)
-        dxf->SolidParser( dxfv::eParser::solid_4point );
+        dxfv::CSolid::parser( dxfv::CSolid::eParser::solid_4point );
 }
 
 void dxfv_wxWidgetsFrame::OnPaint(wxPaintEvent& event)
