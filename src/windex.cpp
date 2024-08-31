@@ -12,7 +12,7 @@ Do not link with any other GUI framework library or specific code
 #include "wex.h"
 #include "window2file.h"
 
-#include "dxf.h"
+#include "Dxf.h"
 
 // Global pointer to instance of class that uses the windex library to draw on the window
 wex::shapes * theShaper;

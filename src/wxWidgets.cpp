@@ -6,7 +6,7 @@
 #include <cstdlib>
 #include <cmath>
 
-#include "dxf.h"
+#include "Dxf.h"
 
 // Global pointer to instance of class that uses the wxWidgets library to draw on the window
 

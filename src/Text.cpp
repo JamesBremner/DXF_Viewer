@@ -1,5 +1,5 @@
 
-#include "DXF.h"
+#include "Dxf.h"
 #include "Text.h"
 
 namespace dxfv

@@ -4,7 +4,7 @@
 
 #include <vector>
 #include <cmath>
-#include "dxf.h"
+#include "Dxf.h"
 #include "Spline.h"
 
 namespace dxfv
