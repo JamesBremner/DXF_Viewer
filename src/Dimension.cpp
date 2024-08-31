@@ -1,4 +1,3 @@
-#include "StdAfx.h"
 #include "Dxf.h"
 #include "Dimension.h"
 
