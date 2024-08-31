@@ -1,5 +1,5 @@
-#include "stdafx.h"
-#include "DXF.h"
+#include "StdAfx.h"
+#include "Dxf.h"
 #include "Dimension.h"
 
 

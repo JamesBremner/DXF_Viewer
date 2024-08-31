@@ -5,7 +5,7 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 
-#include "dxf.h"
+#include "Dxf.h"
 #include "Arc.h"
 
 namespace dxfv

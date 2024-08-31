@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////////////////////////
 
 
-#include "dxf.h"
+#include "Dxf.h"
 #include "PolyLine.h"
 
 namespace dxfv
@@ -75,7 +75,7 @@ bool cLWPolyLine::Append(  cvit_t& cvit )
 bool cPolyLine::Append(  cvit_t& cvit )
 {
     // https://help.autodesk.com/view/OARX/2023/ENU/?guid=GUID-748FC305-F3F2-4F74-825A-61F04D757A50
-    
+
     int point_index = 0;
     bool fVertex = false;
     while( true )
