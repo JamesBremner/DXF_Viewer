@@ -304,13 +304,13 @@ namespace dxfv
 
 }
 
-#include "line.h"
-#include "arc.h"
+#include "Line.h"
+#include "Arc.h"
 #include "Circle.h"
 #include "PolyLine.h"
 #include "Spline.h"
 #include "Solid.h"
-#include "text.h"
+#include "Text.h"
 #include "Dimension.h"
 
 namespace dxfv
