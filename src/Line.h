@@ -2,12 +2,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#if !defined(AFX_LINE_H__57D9AECB_3DF9_42D3_BC4B_789EA9B64D68__INCLUDED_)
-#define AFX_LINE_H__57D9AECB_3DF9_42D3_BC4B_789EA9B64D68__INCLUDED_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
 
 namespace dxfv
 {
@@ -51,4 +46,3 @@ public:
 
 };
 }
-#endif // !defined(AFX_LINE_H__57D9AECB_3DF9_42D3_BC4B_789EA9B64D68__INCLUDED_)

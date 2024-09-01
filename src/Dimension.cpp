@@ -5,7 +5,6 @@
 namespace dxfv
 {
 
-
 bool CDimension::getDraw( cDrawPrimitiveData& draw )
 {
     draw.text = myText;
