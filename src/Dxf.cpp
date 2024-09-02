@@ -148,8 +148,8 @@ namespace dxfv
         std::ifstream f(filepath);
         if (!f.is_open())
         {
-
-            return;
+            throw std::runtime_error(
+                "Cannot open " + filepath );
         }
 
         bool entities = false;
