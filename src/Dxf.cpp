@@ -127,10 +127,11 @@ namespace dxfv
         : myfwxwidgets(false) // do not use wxwidgets for contol point splines
           ,
           myfSplineControlPointsPreferred(false) // if true and choice available, splines prefer control points
+          ,
+          myFileVersion("n/a")
     {
         CSolid::parser(CSolid::eParser::solid_2point);
     }
-
 
     CDxf::~CDxf()
     {
@@ -149,18 +150,35 @@ namespace dxfv
         if (!f.is_open())
         {
             throw std::runtime_error(
-                "Cannot open " + filepath );
+                "Cannot open " + filepath);
         }
 
         bool entities = false;
+        bool version = false;
         cCodeValue cv;
         while (cv.Read(f))
         {
+
             // ignore everything until the ENTITIES section is reached
             if (!entities)
             {
-                if (cv.myValue == "ENTITIES")
+                if (cv.myValue == "ENTITIES") {
                     entities = true;
+                    continue;
+                }
+                if( version ) {
+                    if( cv.myCode == "1")
+                    {
+                        std::cout << " version " << cv.myValue << "\n";
+                        myFileVersion = cv.myValue;
+                        version = false;
+                    }
+                    continue;
+                }
+                if (cv.myValue == "$ACADVER")
+                {
+                    version = true;
+                }
                 continue;
             }
             // std::cout << cv.myCode <<" " << cv.myValue << "\n";
@@ -219,6 +237,7 @@ namespace dxfv
     void CDxf::Init()
     {
         myGraphObject.clear();
+        myFileVersion = "n/a";
     }
 
     void CDxf::Draw(int width, int height)

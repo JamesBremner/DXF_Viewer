@@ -83,6 +83,15 @@ int main()
         wex::window2file w2f;
         w2f.save( fm, path );
     });
+     mf.append("DXF file version",
+         [&](const std::string &title)
+    {
+        wex::msgbox( 
+            fm, 
+            dxf.getFileVersion(),
+            "DXF file version",
+            MB_OK );
+    });
     mb.append( "File", mf );
 
 

@@ -31,7 +31,7 @@ namespace dxfv
             // remove leading whitespace from the group code
             size_t p = myCode.find_first_not_of(" ");
             if (p > 0)
-                myCode.erase(0, p - 1);
+                myCode.erase(0, p);
             return true;
         }
         int Code()
@@ -343,6 +343,11 @@ namespace dxfv
         /// Draw every entity
         void Draw(int width, int height);
 
+        std::string getFileVersion() const
+        {
+            return myFileVersion;
+        }
+
     private:
 
         bool myfwxwidgets;                    ///< true if using wxwidgets method for control point splines
@@ -351,6 +356,8 @@ namespace dxfv
 
         /// Vector storing pointers to each parsed entity
         std::vector<cDXFGraphObject *> myGraphObject;
+
+        std::string myFileVersion;
 
         void UpdateBoundingRectangle();
     };
