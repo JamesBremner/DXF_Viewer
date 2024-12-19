@@ -31,6 +31,7 @@ private:
         idMenuQuit = 1000,
         idMenuAbout,
         idMenuOpen,
+        idMenuDXFFileVersion,
         idMenuFit,
         idMenuSOLID2pointParser,
         idMenuSOLID3pointParser,
@@ -42,6 +43,7 @@ private:
     void OnQuit(wxCommandEvent& event);
     void OnAbout(wxCommandEvent& event);
     void OnOpen(wxCommandEvent& event);
+    void OnDXFFileVersion(wxCommandEvent& event);
     void OnFit(wxCommandEvent& event);
     void OnSelectSolidParser(wxCommandEvent& event);
     void OnPaint(wxPaintEvent& event);
@@ -111,6 +113,7 @@ BEGIN_EVENT_TABLE(dxfv_wxWidgetsFrame, wxFrame)
     EVT_MENU(idMenuQuit, dxfv_wxWidgetsFrame::OnQuit)
     EVT_MENU(idMenuAbout, dxfv_wxWidgetsFrame::OnAbout)
     EVT_MENU(idMenuOpen, dxfv_wxWidgetsFrame::OnOpen)
+    EVT_MENU(idMenuDXFFileVersion, dxfv_wxWidgetsFrame::OnDXFFileVersion)
     EVT_MENU(idMenuFit, dxfv_wxWidgetsFrame::OnFit)
     EVT_MENU_RANGE(idMenuSOLID2pointParser, idMenuSOLID4pointParser, dxfv_wxWidgetsFrame::OnSelectSolidParser)
     EVT_PAINT(dxfv_wxWidgetsFrame::OnPaint )
@@ -131,6 +134,7 @@ dxfv_wxWidgetsFrame::dxfv_wxWidgetsFrame(wxFrame *frame, const wxString& title)
     wxMenuBar* mbar = new wxMenuBar();
     wxMenu* fileMenu = new wxMenu(_T(""));
     fileMenu->Append(idMenuOpen,"Open");
+    fileMenu->Append(idMenuDXFFileVersion, "DXF file version");
     fileMenu->Append(idMenuQuit, _("&Quit\tAlt-F4"), _("Quit the application"));
     mbar->Append(fileMenu, _("&File"));
 
@@ -227,6 +231,13 @@ void dxfv_wxWidgetsFrame::OnOpen(wxCommandEvent& event)
 
     Refresh();
 }
+
+void dxfv_wxWidgetsFrame::OnDXFFileVersion(wxCommandEvent& event)
+{
+    std::string version = dxf->getFileVersion();
+    wxMessageBox(version, "DXF file version", wxOK);
+}
+
 void dxfv_wxWidgetsFrame::OnFit(wxCommandEvent& event)
 {
     dxf->myBoundingRectangle.Fit();
