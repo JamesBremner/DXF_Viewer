@@ -499,6 +499,7 @@ namespace dxfv
         double x,
         const std::vector<double> &c)
     {
+
         std::vector<double> d;
         for (int j1 = 0; j1 < myDegree + 1; j1++)
         {
@@ -508,11 +509,17 @@ namespace dxfv
         {
             for (int j = myDegree; j > r - 1; j--)
             {
-                double alpha = (x - vknots[j + k - myDegree]) /
-                               (vknots[j + 1 + k - r] - vknots[j + k - myDegree]);
+                double div = vknots[j + 1 + k - r] - vknots[j + k - myDegree];
+                double alpha = 0.5;     // this is a guess to prevent nan TID45
+                if(fabs(div) > 0.00001 )
+                     alpha = (x - vknots[j + k - myDegree]) / div;
                 d[j] = (1 - alpha) * d[j - 1] + alpha * d[j];
             }
-        }
+        } 
+       
+        if(std::isnan(d[myDegree]))
+            throw std::runtime_error("CSpline::deBoor nan");
+
         return d[myDegree];
     }
 
