@@ -211,6 +211,7 @@ void CLine::Draw( CDxf* dxf )
 {
     cDrawPrimitiveData draw( dxf );
     getDraw( draw );
+    theShaper->penThick( draw.thick );
     theShaper->color( draw.color );
     theShaper->line(
     {(int)draw.x1, (int)draw.y1, (int)draw.x2, (int)draw.y2});

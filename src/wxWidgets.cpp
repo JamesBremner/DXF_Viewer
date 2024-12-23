@@ -412,7 +412,7 @@ void CLine::Draw( CDxf* dxf )
     {
         wxColour c(draw.color);
         theDC->SetBrush(wxBrush(c));
-        theDC->SetPen(wxPen(c));
+        theDC->SetPen(wxPen(c),draw.thick);
         theDC->DrawLine( draw.x1, draw.y1, draw.x2, draw.y2 );
     }
 }
