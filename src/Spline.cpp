@@ -35,6 +35,7 @@ namespace dxfv
         m_KnotCount = 0;
         myfwxwidgets = false;
         myDegree = 0;
+        myThick = 1;
     }
 
     CSpline::~CSpline()
@@ -128,8 +129,15 @@ namespace dxfv
                     vy.push_back(atof(cvit->myValue.c_str()));
                 break;
 
-            case 72:
-                m_KnotCount = atoi(cvit->myValue.c_str());
+            case 39:
+
+                /* Line thickness
+                The DXF standard makes no mention of spline line thickness
+                So this is an extension of the standard!
+                It defaults to one, set in the CSpline constructor
+                TID46 https://github.com/JamesBremner/DXF_Viewer/issues/46
+                */
+                myThick = atoi(cvit->myValue.c_str());
                 break;
 
             case 40:
@@ -139,6 +147,10 @@ namespace dxfv
 
             case 62:
                 AutocadColor2RGB(atoi(cvit->myValue.c_str()));
+                break;
+
+            case 72:
+                m_KnotCount = atoi(cvit->myValue.c_str());
                 break;
             }
         }
@@ -290,6 +302,7 @@ namespace dxfv
 
     bool CSpline::getDraw(cDrawPrimitiveData &draw)
     {
+        draw.thick = myThick;
         if (m_FitPointCount)
             return getDrawFit(draw);
         if (!vknots.size())
@@ -510,14 +523,14 @@ namespace dxfv
             for (int j = myDegree; j > r - 1; j--)
             {
                 double div = vknots[j + 1 + k - r] - vknots[j + k - myDegree];
-                double alpha = 0.5;     // this is a guess to prevent nan TID45
-                if(fabs(div) > 0.00001 )
-                     alpha = (x - vknots[j + k - myDegree]) / div;
+                double alpha = 0.5; // this is a guess to prevent nan TID45
+                if (fabs(div) > 0.00001)
+                    alpha = (x - vknots[j + k - myDegree]) / div;
                 d[j] = (1 - alpha) * d[j - 1] + alpha * d[j];
             }
-        } 
-       
-        if(std::isnan(d[myDegree]))
+        }
+
+        if (std::isnan(d[myDegree]))
             throw std::runtime_error("CSpline::deBoor nan");
 
         return d[myDegree];

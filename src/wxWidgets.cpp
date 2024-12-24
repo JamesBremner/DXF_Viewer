@@ -483,7 +483,7 @@ void CSpline::Draw( CDxf* dxf )
 
     wxColour c(draw.color);
     theDC->SetBrush(wxBrush(c));
-    theDC->SetPen(wxPen(c));
+    theDC->SetPen(wxPen(c,draw.thick));
 
     // loop over drawing primitives
     while( getDraw( draw ) )

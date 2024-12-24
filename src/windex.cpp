@@ -267,6 +267,7 @@ namespace dxfv
         {
 
             theShaper->color(draw.color);
+            theShaper->penThick(draw.thick);
 
             // std::cout << "CSpline::Draw "
             //     << draw.x1 <<" "
