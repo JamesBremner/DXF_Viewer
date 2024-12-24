@@ -516,7 +516,12 @@ namespace dxfv
         std::vector<double> d;
         for (int j1 = 0; j1 < myDegree + 1; j1++)
         {
-            d.push_back(c[j1 + k - myDegree]);
+            // quick fix: clamp index to >= 0  TID45 https://github.com/JamesBremner/DXF_Viewer/issues/45#issuecomment-2561315430
+            int index = j1 + k - myDegree;
+            if( index < 0 )
+                index = 0;
+
+            d.push_back(c[index]);
         }
         for (int r = 1; r < myDegree + 2; r++)
         {
