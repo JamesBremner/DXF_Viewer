@@ -284,15 +284,19 @@ namespace dxfv
 
     void CSpline::BSplineInit()
     {
+        // check that there are some knots
         if (!vknots.size())
             return;
 
-        if (fabs(1 - vknots.back()) > 0.01)
-        {
-            // normalize knot values
-            for (double &v : vknots)
-                v /= vknots.back();
-        }
+        // normalize the knots to the range 0 to 1 inclusive
+        double min = vknots[0];
+        double max = vknots.back();
+        if (max <= min)
+            throw std::runtime_error("BSpline has invalid knot values");
+        double scale = max - min;
+        double off = min;
+        for (auto &t : vknots)
+            t = (t - off) / scale;
     }
 
     cP operator*(double s, cP b)
@@ -516,10 +520,9 @@ namespace dxfv
         std::vector<double> d;
         for (int j1 = 0; j1 < myDegree + 1; j1++)
         {
-            // quick fix: clamp index to >= 0  TID45 https://github.com/JamesBremner/DXF_Viewer/issues/45#issuecomment-2561315430
             int index = j1 + k - myDegree;
-            if( index < 0 )
-                index = 0;
+            if (index < 0)
+                throw std::runtime_error("CSpline::deBoor bad knot index");
 
             d.push_back(c[index]);
         }
@@ -528,9 +531,9 @@ namespace dxfv
             for (int j = myDegree; j > r - 1; j--)
             {
                 double div = vknots[j + 1 + k - r] - vknots[j + k - myDegree];
-                double alpha = 0.5; // this is a guess to prevent nan TID45
-                if (fabs(div) > 0.00001)
-                    alpha = (x - vknots[j + k - myDegree]) / div;
+                if (div < 0.0000001)
+                    throw std::runtime_error("CSpline::deBoor divide by zero");
+                double alpha = (x - vknots[j + k - myDegree]) / div;
                 d[j] = (1 - alpha) * d[j - 1] + alpha * d[j];
             }
         }
