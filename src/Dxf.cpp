@@ -128,7 +128,8 @@ namespace dxfv
           ,
           myfSplineControlPointsPreferred(false) // if true and choice available, splines prefer control points
           ,
-          myFileVersion("n/a")
+          myFileVersion("n/a"),
+          myPenThickOverride( 0 )
     {
         CSolid::parser(CSolid::eParser::solid_2point);
     }

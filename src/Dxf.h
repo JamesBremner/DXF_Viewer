@@ -211,7 +211,8 @@ namespace dxfv
 
         /// default contructor
         cDXFGraphObject()
-        :  myColor(0x808080), myThick( 1 ), myLayer("0")
+            : myColor(0x808080), myThick(1), myLayer("0"),
+              myPenThickOverride(0)
         {
         }
 
@@ -267,7 +268,7 @@ namespace dxfv
 
     protected:
         std::string myCode;
-
+        int myPenThickOverride;
 
         /* @brief Convert autocad color code to RGB values
         /// @param ai color code // http://gohtx.com/acadcolors.php
@@ -321,7 +322,6 @@ namespace dxfv
     class CDxf
     {
     public:
-
         cBoundingRectangle myBoundingRectangle;
 
         CDxf();
@@ -348,8 +348,16 @@ namespace dxfv
             return myFileVersion;
         }
 
-    private:
+        void penThickOverride(int thick)
+        {
+            myPenThickOverride = thick;
+        }
+        int penThickOverride() const
+        {
+            return myPenThickOverride;
+        }
 
+    private:
         bool myfwxwidgets;                    ///< true if using wxwidgets method for control point splines
         bool myfSplineControlPointsPreferred; ///< true if, given choice, splines use control rather than fit points
         std::vector<cCodeValue> myCodeValue;
@@ -358,6 +366,7 @@ namespace dxfv
         std::vector<cDXFGraphObject *> myGraphObject;
 
         std::string myFileVersion;
+        int myPenThickOverride; ///< 0: do not override
 
         void UpdateBoundingRectangle();
     };

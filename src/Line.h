@@ -15,9 +15,11 @@ class CLine : public cDXFGraphObject
 public:
     double x1,y1,x2,y2;
 
+
     CLine( cCodeValue& cv );
     virtual ~CLine();
 
+    void Options(CDxf *dxf);
 
     void Update( cBoundingRectangle& rect )
     {

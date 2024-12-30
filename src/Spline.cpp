@@ -135,9 +135,13 @@ namespace dxfv
                 The DXF standard makes no mention of spline line thickness
                 So this is an extension of the standard!
                 It defaults to one, set in the CSpline constructor
+                but can be overridden
                 TID46 https://github.com/JamesBremner/DXF_Viewer/issues/46
                 */
-                myThick = atoi(cvit->myValue.c_str());
+                if (!myPenThickOverride)
+                {
+                    myThick = atoi(cvit->myValue.c_str());
+                }
                 break;
 
             case 40:
@@ -175,6 +179,9 @@ namespace dxfv
     {
         myfwxwidgets = dxf->wxwidgets();
         myfControlPointsPreferred = dxf->SplineControlPointsPreferred();
+        myPenThickOverride = dxf->penThickOverride();
+        if (myPenThickOverride)
+            myThick = myPenThickOverride;
     }
 
     void CSpline::Update(cBoundingRectangle &rect)

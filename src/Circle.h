@@ -14,6 +14,7 @@ public:
     CCircle();
     CCircle( cCodeValue& cv );
     virtual ~CCircle();
+    void Options(CDxf *dxf);
     bool Append( std::vector<cCodeValue>::iterator& cvit );
     bool Read( FILE * fp, int& code, char* value );
 
@@ -33,6 +34,7 @@ public:
     void Draw( CDxf * dxf );
 
     void Adjust( double x, double y );
+
 };
 }
 

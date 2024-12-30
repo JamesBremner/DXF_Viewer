@@ -18,6 +18,38 @@ Do not link with any other GUI framework library or specific code
 wex::shapes *theShaper;
 
 #ifndef UNIT_TEST
+
+void penDlg(wex::gui &fm, dxfv::CDxf& dxf)
+{
+    wex::gui &dlg = wex::maker::make();
+    dlg.move( 200,200,400,300);
+    dlg.text("Over-ride pen thickness");
+    wex::label& lbThick = wex::maker::make<wex::label>(dlg);
+    lbThick.move(50,50,100,30);
+    lbThick.text("Thickness pixels");
+    wex::editbox& ebThick = wex::maker::make<wex::editbox>(dlg);
+    ebThick.move(200,50,100,30);
+    ebThick.text("1");
+    wex::checkbox& chk = wex::maker::make<wex::checkbox>(dlg);
+    chk.move(100,100,100,30);
+    chk.text("  Enable");
+    wex::button& bOK = wex::maker::make<wex::button>(dlg);
+    bOK.move(200,150,50,30);
+    bOK.text("OK");
+    bOK.events().click(
+        [&]
+        {
+            int thick = 0;
+            if( chk.isChecked() )
+                thick = atoi(ebThick.text().c_str());
+            dxf.penThickOverride( thick );
+            dlg.endModal();
+        });
+
+    dlg.showModal(fm);
+
+}
+
 int main()
 {
     dxfv::CDxf dxf;
@@ -101,14 +133,26 @@ int main()
               });
     mb.append("File", mf);
 
-    wex::menu mv(fm);
-    mv.append("Fit", [&](const std::string &title)
-              {
-        // rescale and pan so all entities fit in the window
-        dxf.myBoundingRectangle.Fit();
+    // View menu
 
-        // refresh
-        fm.update(); });
+    wex::menu mv(fm);
+    mv.append("Fit",
+              [&](const std::string &title)
+              {
+                  // rescale and pan so all entities fit in the window
+                  dxf.myBoundingRectangle.Fit();
+
+                  // refresh
+                  fm.update();
+              });
+    mv.append("Pen",
+              [&](const std::string &title) {
+                    penDlg(fm,dxf);
+                    auto fname = fm.text();
+                    if( fname != "DXF Viewer")
+                        dxf.LoadFile( fname );
+                    fm.update();
+              });
     mb.append("View", mv);
 
     wex::menu mp(fm);
@@ -217,6 +261,7 @@ namespace dxfv
         cDrawPrimitiveData draw(dxf);
         getDraw(draw);
         theShaper->color(draw.color);
+        theShaper->penThick(draw.thick);
         theShaper->arc(
             (int)draw.x1, (int)draw.y1, draw.r,
             draw.sa, draw.ea);
@@ -265,7 +310,6 @@ namespace dxfv
         // loop over drawing primitives
         while (getDraw(draw))
         {
-
             theShaper->color(draw.color);
             theShaper->penThick(draw.thick);
 
@@ -286,10 +330,10 @@ namespace dxfv
         // loop over drawing primitives
         while (getDraw(draw))
         {
-            std::cout << "CSolid::Draw " << draw.color << "\n";
-            std::cout << draw.x1 << " " << draw.y1 << " "
-                      << draw.x2 << " " << draw.y2 << " "
-                      << draw.x3 << " " << draw.y3 << "\n";
+            // std::cout << "CSolid::Draw " << draw.color << "\n";
+            // std::cout << draw.x1 << " " << draw.y1 << " "
+            //           << draw.x2 << " " << draw.y2 << " "
+            //           << draw.x3 << " " << draw.y3 << "\n";
 
             theShaper->color(draw.color);
             theShaper->fill();

@@ -20,6 +20,7 @@ public:
     CArc( cCodeValue& cv );
     virtual ~CArc();
 
+    void Options(CDxf *dxf);
 
     /**  Update a bounding rectangle to include this
 

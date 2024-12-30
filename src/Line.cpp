@@ -19,6 +19,13 @@ namespace dxfv
     {
     }
 
+    void CLine::Options(CDxf *dxf)
+    {
+        myPenThickOverride = dxf->penThickOverride();
+        if( myPenThickOverride )
+            myThick = myPenThickOverride;
+    }
+
     bool CLine::Append(cvit_t &cvit)
     {
         while (true)
@@ -46,7 +53,8 @@ namespace dxfv
                 y2 = atof(cvit->myValue.c_str());
                 break;
             case 39:
-                myThick = atoi(cvit->myValue.c_str());
+                if( ! myPenThickOverride )
+                    myThick = atoi(cvit->myValue.c_str());
                 break;
             case 62:
                 AutocadColor2RGB(atoi(cvit->myValue.c_str()));

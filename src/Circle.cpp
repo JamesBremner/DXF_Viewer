@@ -19,6 +19,13 @@ namespace dxfv
     {
     }
 
+    void CCircle::Options(CDxf *dxf)
+    {
+        myPenThickOverride = dxf->penThickOverride();
+        if (myPenThickOverride)
+            myThick = myPenThickOverride;
+    }
+
     void CCircle::Update(cBoundingRectangle &rect)
     {
         rect.Update(x, y + r);
@@ -47,7 +54,8 @@ namespace dxfv
                 y = atof(cvit->myValue.c_str());
                 break;
             case 39:
-                myThick = atoi(cvit->myValue.c_str());
+                if( ! myPenThickOverride )
+                    myThick = atoi(cvit->myValue.c_str());
                 break;
             case 40:
                 r = atof(cvit->myValue.c_str());

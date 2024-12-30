@@ -20,6 +20,8 @@ public:
 
     virtual ~cLWPolyLine();
 
+    void Options(CDxf *dxf);
+
     void Update( cBoundingRectangle& rect );
 
     bool Append( cvit_t& cvit );

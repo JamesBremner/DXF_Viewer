@@ -21,6 +21,12 @@ namespace dxfv
     CArc::~CArc()
     {
     }
+    void CArc::Options(CDxf *dxf)
+    {
+        myPenThickOverride = dxf->penThickOverride();
+        if (myPenThickOverride)
+            myThick = myPenThickOverride;
+    }
     void CArc::Update(cBoundingRectangle &rect)
     {
         int start_quadrant = (int)sa % 360 / 90 + 1; // the quadrant of sa
@@ -83,6 +89,9 @@ namespace dxfv
         draw.sa = sa;
         draw.ea = ea;
         draw.color = myColor;
+        draw.thick = 1;
+        if( myPenThickOverride )
+            draw.thick = myPenThickOverride;
         return true;
     }
 
