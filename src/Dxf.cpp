@@ -158,11 +158,14 @@ namespace dxfv
             throw std::runtime_error(
                 "Cannot open " + filepath);
         }
+        //std::cout << filepath << "  ";
+
+        std::istream ss(f.rdbuf());
 
         bool entities = false;
         bool version = false;
         cCodeValue cv;
-        while (cv.Read(f))
+        while (cv.Read(ss))
         {
 
             // ignore everything until the ENTITIES section is reached
@@ -173,15 +176,14 @@ namespace dxfv
                     continue;
                 }
                 if( version ) {
-                    if( cv.myCode == "1")
                     {
-                        std::cout << " version " << cv.myValue << "\n";
-                        myFileVersion = cv.myValue;
+                        std::cout << " version " << cv.myCode << "\n";
+                        myFileVersion = cv.myCode;
                         version = false;
                     }
                     continue;
                 }
-                if (cv.myValue == "$ACADVER")
+                if (cv.myCode == "$ACADVER")
                 {
                     version = true;
                 }
@@ -250,7 +252,7 @@ namespace dxfv
     {
         if( ! myGraphObject.size() )
             return;
-            
+
         raven::set::cRunWatch aWatcher(" CDxf::Draw");
 
         // scale to window

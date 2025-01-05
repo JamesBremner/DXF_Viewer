@@ -22,16 +22,11 @@ namespace dxfv
         std::string myCode;
         std::string myValue;
 
-        bool Read(std::ifstream &f)
+        bool Read(std::istream &f)
         {
-            if (!std::getline(f, myCode))
+            f >> myCode >> myValue;
+            if( ! f.good())
                 return false;
-            if (!std::getline(f, myValue))
-                return false;
-            // remove leading whitespace from the group code
-            size_t p = myCode.find_first_not_of(" ");
-            if (p > 0)
-                myCode.erase(0, p);
             return true;
         }
         int Code()
