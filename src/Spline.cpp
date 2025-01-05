@@ -4,6 +4,7 @@
 
 #include <vector>
 #include <cmath>
+#include "cRunWatch.h"
 #include "Dxf.h"
 #include "Spline.h"
 
@@ -45,6 +46,8 @@ namespace dxfv
     bool CSpline::Append(cvit_t &cvit)
     {
         // https://help.autodesk.com/view/OARX/2023/ENU/?guid=GUID-E1F884F8-AA90-4864-A215-3182D47A9C74
+
+         raven::set::cRunWatch aWatcher("CSpline::Append");
 
         int point_index = 0;
 

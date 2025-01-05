@@ -11,6 +11,8 @@ Do not link with any other GUI framework library or specific code
 
 #include "wex.h"
 #include "window2file.h"
+#include "cRunWatch.h"
+
 
 #include "Dxf.h"
 
@@ -52,6 +54,9 @@ void penDlg(wex::gui &fm, dxfv::CDxf& dxf)
 
 int main()
 {
+    // uncomment next line to enable timing profiler
+    //raven::set::cRunWatch::Start();
+
     dxfv::CDxf dxf;
 
     // previous mouse position when dragged with left button pressed
@@ -113,7 +118,10 @@ int main()
             wex::msgbox mb(
                            std::string("Error reading file\n")+e.what());
             exit(1);
-        } });
+        } 
+        raven::set::cRunWatch::Report();
+
+        });
     mf.append("Save to PNG", [&](const std::string &title)
               {
         wex::filebox fb( fm );

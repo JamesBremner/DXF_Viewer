@@ -1,10 +1,12 @@
 #source file search paths
-VPATH = ./src 
+VPATH = ./src ../raven-set 
 
 	# compiler include search paths
 INCS = -I./include \
 	-I../windex/include \
 	-I../raven-set \
+	-I../../code_ext/boost/boost1_78 \
+
 
 LIBS = \
 	-lgdiplus -lgdi32 -lcomdlg32 -lstdc++fs \
@@ -15,7 +17,7 @@ static_link_flags = -static-libstdc++ -static-libgcc -static -lComctl32
 # folders
 ODIR = ./.vscode/obj
 
-OPT = -g
+OPT = -O2
 CCflags = -std=c++17 $(OPT) -D_mingw_
 
 # sources
@@ -29,6 +31,7 @@ OBJ_starter = \
 	$(ODIR)/Arc.o \
 	$(ODIR)/Text.o \
 	$(ODIR)/Solid.o \
+	$(ODIR)/cRunWatch.o \
 
 ### COMPILE
 

@@ -4,6 +4,9 @@
 
 #include "Dxf.h"
 
+#include "cRunWatch.h"
+
+
 namespace dxfv
 {
 
@@ -144,6 +147,8 @@ namespace dxfv
     */
     void CDxf::LoadFile(const std::string &filepath)
     {
+        raven::set::cRunWatch aWatcher("CDxf::LoadFile");
+
         Init();
 
         myCodeValue.clear();
@@ -243,6 +248,11 @@ namespace dxfv
 
     void CDxf::Draw(int width, int height)
     {
+        if( ! myGraphObject.size() )
+            return;
+            
+        raven::set::cRunWatch aWatcher(" CDxf::Draw");
+
         // scale to window
         myBoundingRectangle.CalcScale(
             width,
