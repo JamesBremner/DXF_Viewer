@@ -13,7 +13,6 @@ Do not link with any other GUI framework library or specific code
 #include "window2file.h"
 #include "cRunWatch.h"
 
-
 #include "Dxf.h"
 
 // Global pointer to instance of class that uses the windex library to draw on the window
@@ -21,41 +20,40 @@ wex::shapes *theShaper;
 
 #ifndef UNIT_TEST
 
-void penDlg(wex::gui &fm, dxfv::CDxf& dxf)
+void penDlg(wex::gui &fm, dxfv::CDxf &dxf)
 {
     wex::gui &dlg = wex::maker::make();
-    dlg.move( 200,200,400,300);
+    dlg.move(200, 200, 400, 300);
     dlg.text("Over-ride pen thickness");
-    wex::label& lbThick = wex::maker::make<wex::label>(dlg);
-    lbThick.move(50,50,100,30);
+    wex::label &lbThick = wex::maker::make<wex::label>(dlg);
+    lbThick.move(50, 50, 100, 30);
     lbThick.text("Thickness pixels");
-    wex::editbox& ebThick = wex::maker::make<wex::editbox>(dlg);
-    ebThick.move(200,50,100,30);
+    wex::editbox &ebThick = wex::maker::make<wex::editbox>(dlg);
+    ebThick.move(200, 50, 100, 30);
     ebThick.text("1");
-    wex::checkbox& chk = wex::maker::make<wex::checkbox>(dlg);
-    chk.move(100,100,100,30);
+    wex::checkbox &chk = wex::maker::make<wex::checkbox>(dlg);
+    chk.move(100, 100, 100, 30);
     chk.text("  Enable");
-    wex::button& bOK = wex::maker::make<wex::button>(dlg);
-    bOK.move(200,150,50,30);
+    wex::button &bOK = wex::maker::make<wex::button>(dlg);
+    bOK.move(200, 150, 50, 30);
     bOK.text("OK");
     bOK.events().click(
         [&]
         {
             int thick = 0;
-            if( chk.isChecked() )
+            if (chk.isChecked())
                 thick = atoi(ebThick.text().c_str());
-            dxf.penThickOverride( thick );
+            dxf.penThickOverride(thick);
             dlg.endModal();
         });
 
     dlg.showModal(fm);
-
 }
 
 int main()
 {
     // uncomment next line to enable timing profiler
-    //raven::set::cRunWatch::Start();
+    // raven::set::cRunWatch::Start();
 
     dxfv::CDxf dxf;
 
@@ -98,30 +96,29 @@ int main()
     wex::menu mf(fm);
     mf.append("Open DXF file", [&](const std::string &title)
               {
-        // prompt for file to open
-        wex::filebox fb( fm );
-        auto paths = fb.open();
-        if( paths.empty() )
-            return;
-        try
-        {
-            // read the file
-            dxf.LoadFile( paths );
+                  // prompt for file to open
+                  wex::filebox fb(fm);
+                  auto paths = fb.open();
+                  if (paths.empty())
+                      return;
+                  try
+                  {
+                      // read the file
+                      dxf.LoadFile(paths);
 
-            // refresh display with contents of opened file
-            fm.update();
+                      // refresh display with contents of opened file
+                      fm.update();
 
-            fm.text( paths);
-        }
-        catch( std::runtime_error& e )
-        {
-            wex::msgbox mb(
-                           std::string("Error reading file\n")+e.what());
-            exit(1);
-        } 
-        raven::set::cRunWatch::Report();
-
-        });
+                      fm.text(paths);
+                  }
+                  catch (std::runtime_error &e)
+                  {
+                      wex::msgbox mb(
+                          std::string("Error reading file\n") + e.what());
+                      exit(1);
+                  }
+                  raven::set::cRunWatch::Report();
+              });
     mf.append("Save to PNG", [&](const std::string &title)
               {
         wex::filebox fb( fm );
@@ -154,12 +151,13 @@ int main()
                   fm.update();
               });
     mv.append("Pen",
-              [&](const std::string &title) {
-                    penDlg(fm,dxf);
-                    auto fname = fm.text();
-                    if( fname != "DXF Viewer")
-                        dxf.LoadFile( fname );
-                    fm.update();
+              [&](const std::string &title)
+              {
+                  penDlg(fm, dxf);
+                  auto fname = fm.text();
+                  if (fname != "DXF Viewer")
+                      dxf.LoadFile(fname);
+                  fm.update();
               });
     mb.append("View", mv);
 
@@ -314,22 +312,20 @@ namespace dxfv
     void CSpline::Draw(CDxf *dxf)
     {
         cDrawPrimitiveData draw(dxf);
+        std::vector<std::pair<long, long>> vpp;
 
         // loop over drawing primitives
         while (getDraw(draw))
         {
-            theShaper->color(draw.color);
-            theShaper->penThick(draw.thick);
-
-            // std::cout << "CSpline::Draw "
-            //     << draw.x1 <<" "
-            //     << draw.y1 <<" "
-            //     << draw.x2 <<" "
-            //     << draw.y2 <<"\n";
-            theShaper->line(
-                {(int)draw.x1, (int)draw.y1,
-                 (int)draw.x2, (int)draw.y2});
+            vpp.emplace_back(
+                (long)draw.x1,
+                (long)draw.y1);
         }
+        theShaper->color(draw.color);
+        theShaper->penThick(draw.thick);
+        theShaper->polyLine(
+            (POINT *)vpp.data(),
+            vpp.size());
     }
     void CSolid::Draw(CDxf *dxf)
     {
