@@ -4,7 +4,11 @@
 
 #include <vector>
 #include <cmath>
+
+#ifdef TIMING_PROFILE
 #include "cRunWatch.h"
+#endif
+
 #include "Dxf.h"
 #include "Spline.h"
 
@@ -47,7 +51,9 @@ namespace dxfv
     {
         // https://help.autodesk.com/view/OARX/2023/ENU/?guid=GUID-E1F884F8-AA90-4864-A215-3182D47A9C74
 
+#ifdef TIMING_PROFILE
          raven::set::cRunWatch aWatcher("CSpline::Append");
+#endif
 
         int point_index = 0;
 
