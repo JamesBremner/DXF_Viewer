@@ -12,6 +12,54 @@
 
 wxDC * theDC = nullptr;
 
+
+#include <wx/wx.h>
+#include <wx/spinctrl.h>
+
+class PenDialog : public wxDialog {
+public:
+    PenDialog(wxWindow* parent, int& penThickness, bool& enableOverride)
+        : wxDialog(parent, wxID_ANY, "Override Pen Thickness", wxDefaultPosition, wxSize(300, 200)),
+          m_penThickness(penThickness), m_enableOverride(enableOverride) {
+        wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
+
+        sizer->Add(new wxStaticText(this, wxID_ANY, "Thickness (pixels):"), 0, wxALL, 10);
+        m_spinCtrl = new wxSpinCtrl(this, wxID_ANY);
+        m_spinCtrl->SetRange(1, 10);
+        m_spinCtrl->SetValue(penThickness);
+        sizer->Add(m_spinCtrl, 0, wxALL | wxEXPAND, 10);
+
+        m_checkbox = new wxCheckBox(this, wxID_ANY, "Enable");
+        m_checkbox->SetValue(enableOverride);
+        sizer->Add(m_checkbox, 0, wxALL, 10);
+
+        wxBoxSizer* btnSizer = new wxBoxSizer(wxHORIZONTAL);
+        btnSizer->Add(new wxButton(this, wxID_OK, "OK"), 0, wxALL, 10);
+        btnSizer->Add(new wxButton(this, wxID_CANCEL, "Cancel"), 0, wxALL, 10);
+        sizer->Add(btnSizer, 0, wxALIGN_CENTER);
+
+        SetSizerAndFit(sizer);
+
+        Bind(wxEVT_BUTTON, &PenDialog::OnOk, this, wxID_OK);
+    }
+
+private:
+    void OnOk(wxCommandEvent&) {
+        m_enableOverride = m_checkbox->GetValue();
+        if (m_enableOverride == true)
+            m_penThickness = m_spinCtrl->GetValue();
+        else
+            m_penThickness = 0;
+
+        EndModal(wxID_OK);
+    }
+
+    wxSpinCtrl* m_spinCtrl;
+    wxCheckBox* m_checkbox;
+    int& m_penThickness;
+    bool& m_enableOverride;
+};
+
 class dxfv_wxWidgetsApp : public wxApp
 {
 public:
@@ -33,6 +81,7 @@ private:
         idMenuOpen,
         idMenuDXFFileVersion,
         idMenuFit,
+        idMenuPen,
         idMenuSOLID2pointParser,
         idMenuSOLID3pointParser,
         idMenuSOLID4pointParser
@@ -45,6 +94,7 @@ private:
     void OnOpen(wxCommandEvent& event);
     void OnDXFFileVersion(wxCommandEvent& event);
     void OnFit(wxCommandEvent& event);
+    void OnPen(wxCommandEvent& event);
     void OnSelectSolidParser(wxCommandEvent& event);
     void OnPaint(wxPaintEvent& event);
     void OnSize(wxSizeEvent& event);
@@ -53,10 +103,7 @@ private:
     void OnLeftDown(wxMouseEvent& event);
     void OnKeyDown(wxKeyEvent& event);
 
-
-
     DECLARE_EVENT_TABLE()
-
 
     dxfv::CDxf * dxf;
 
@@ -66,8 +113,6 @@ private:
     /// Pan so model point is at window center
     void PanToWindowCenter( wxPoint& P );
 };
-
-
 
 bool dxfv_wxWidgetsApp::OnInit()
 {
@@ -115,6 +160,7 @@ BEGIN_EVENT_TABLE(dxfv_wxWidgetsFrame, wxFrame)
     EVT_MENU(idMenuOpen, dxfv_wxWidgetsFrame::OnOpen)
     EVT_MENU(idMenuDXFFileVersion, dxfv_wxWidgetsFrame::OnDXFFileVersion)
     EVT_MENU(idMenuFit, dxfv_wxWidgetsFrame::OnFit)
+    EVT_MENU(idMenuPen, dxfv_wxWidgetsFrame::OnPen)
     EVT_MENU_RANGE(idMenuSOLID2pointParser, idMenuSOLID4pointParser, dxfv_wxWidgetsFrame::OnSelectSolidParser)
     EVT_PAINT(dxfv_wxWidgetsFrame::OnPaint )
     EVT_SIZE(dxfv_wxWidgetsFrame::OnSize )
@@ -140,6 +186,7 @@ dxfv_wxWidgetsFrame::dxfv_wxWidgetsFrame(wxFrame *frame, const wxString& title)
 
     wxMenu* viewMenu = new wxMenu(_T(""));
     viewMenu->Append(idMenuFit,"Fit Contents");
+    viewMenu->Append(idMenuPen,"Pen");
 
     mbar->Append(viewMenu, _("&View"));
 
@@ -170,7 +217,6 @@ dxfv_wxWidgetsFrame::dxfv_wxWidgetsFrame(wxFrame *frame, const wxString& title)
 
 }
 
-
 dxfv_wxWidgetsFrame::~dxfv_wxWidgetsFrame()
 {
 }
@@ -194,8 +240,8 @@ void dxfv_wxWidgetsFrame::OnAbout(wxCommandEvent &event)
 void dxfv_wxWidgetsFrame::OnOpen(wxCommandEvent& event)
 {
 
-    wxFileDialog         openFileDialog(this, _("Open DXF file"), "", "",                       "DXF files (*.dxf)|*.dxf",
-                                        wxFD_OPEN|wxFD_FILE_MUST_EXIST);
+    wxFileDialog openFileDialog(this, _("Open DXF file"), "", "", "DXF files (*.dxf)|*.dxf",
+                                wxFD_OPEN|wxFD_FILE_MUST_EXIST);
     if (openFileDialog.ShowModal() == wxID_CANCEL)
         return;     // the user changed idea...
 
@@ -243,6 +289,21 @@ void dxfv_wxWidgetsFrame::OnFit(wxCommandEvent& event)
     dxf->myBoundingRectangle.Fit();
 
     Refresh();
+}
+
+void dxfv_wxWidgetsFrame::OnPen(wxCommandEvent& event)
+{
+    int penThickness;
+    bool enableOverride;
+    PenDialog dlg(this, penThickness, enableOverride);
+    if (dlg.ShowModal() == wxID_OK) {
+            // penThickness == 0 means we don't need thickness override
+            dxf->penThickOverride(penThickness);
+            std::string filePath = GetTitle().ToStdString();
+            if( filePath != "DXF Viewer")
+                dxf->LoadFile( filePath );
+            Refresh();  // Trigger a redraw to apply new pen thickness settings
+    }
 }
 
 void dxfv_wxWidgetsFrame::OnSelectSolidParser(wxCommandEvent& event)
