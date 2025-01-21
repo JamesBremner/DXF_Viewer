@@ -4,7 +4,9 @@
 
 #include "Dxf.h"
 
+#ifdef TIMING_PROFILE
 #include "cRunWatch.h"
+#endif
 
 
 namespace dxfv
@@ -147,7 +149,9 @@ namespace dxfv
     */
     void CDxf::LoadFile(const std::string &filepath)
     {
+#ifdef TIMING_PROFILE
         raven::set::cRunWatch aWatcher("CDxf::LoadFile");
+#endif
 
         Init();
 
@@ -253,7 +257,9 @@ namespace dxfv
         if( ! myGraphObject.size() )
             return;
 
+#ifdef TIMING_PROFILE
         raven::set::cRunWatch aWatcher(" CDxf::Draw");
+#endif
 
         // scale to window
         myBoundingRectangle.CalcScale(
