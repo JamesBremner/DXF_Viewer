@@ -473,7 +473,7 @@ void CLine::Draw( CDxf* dxf )
     {
         wxColour c(draw.color);
         theDC->SetBrush(wxBrush(c));
-        theDC->SetPen(wxPen(c,draw.thick));
+        theDC->SetPen(wxPen(c, draw.thick));
         theDC->DrawLine( draw.x1, draw.y1, draw.x2, draw.y2 );
     }
 }
@@ -490,7 +490,7 @@ void CArc::Draw( CDxf* dxf )
         wxColour c(draw.color);
         // Set the brush to be transparent
         theDC->SetBrush(*wxTRANSPARENT_BRUSH);
-        theDC->SetPen(wxPen(c));
+        theDC->SetPen(wxPen(c, draw.thick));
         theDC->DrawEllipticArc (
             xTopLeft, yTopLeft,
             diameter, diameter,
@@ -507,7 +507,7 @@ void CCircle::Draw( CDxf* dxf )
         wxColour c(draw.color);
         // Set the brush to be transparent
         theDC->SetBrush(*wxTRANSPARENT_BRUSH);
-        theDC->SetPen(wxPen(c));
+        theDC->SetPen(wxPen(c, draw.thick));
         theDC->DrawCircle( draw.x1, draw.y1, draw.r );
     }
 }
@@ -520,7 +520,7 @@ void cLWPolyLine::Draw( CDxf* dxf )
     {
         wxColour c(draw.color);
         theDC->SetBrush(wxBrush(c));
-        theDC->SetPen(wxPen(c));
+        theDC->SetPen(wxPen(c, draw.thick));
         theDC->DrawLine( draw.x1, draw.y1, draw.x2, draw.y2 );
     }
 }
@@ -533,7 +533,7 @@ void CText::Draw( CDxf* dxf )
     {
         wxColour c(draw.color);
         theDC->SetBrush(wxBrush(c));
-        theDC->SetPen(wxPen(c));
+        theDC->SetPen(wxPen(c, draw.thick));
         theDC->DrawText( draw.text, draw.x1, draw.y1 );
     }
 }
@@ -544,7 +544,7 @@ void CSpline::Draw( CDxf* dxf )
 
     wxColour c(draw.color);
     theDC->SetBrush(wxBrush(c));
-    theDC->SetPen(wxPen(c,draw.thick));
+    theDC->SetPen(wxPen(c, draw.thick));
 
     // loop over drawing primitives
     while( getDraw( draw ) )
@@ -596,7 +596,7 @@ void CSolid::Draw( CDxf* dxf )
 
         wxColour c(draw.color);
         theDC->SetBrush(wxBrush(c));
-        theDC->SetPen(wxPen(c));
+        theDC->SetPen(wxPen(c, draw.thick));
 
         theDC->DrawPolygon(3, points);
     }
