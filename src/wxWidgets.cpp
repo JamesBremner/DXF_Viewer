@@ -537,45 +537,26 @@ void CText::Draw( CDxf* dxf )
         theDC->DrawText( draw.text, draw.x1, draw.y1 );
     }
 }
+
 void CSpline::Draw( CDxf* dxf )
 {
-    wxPoint spline_points[MAXPOINTS];
     cDrawPrimitiveData draw( dxf );
 
     wxColour c(draw.color);
     theDC->SetBrush(wxBrush(c));
     theDC->SetPen(wxPen(c, draw.thick));
 
+    std::vector<wxPoint> points;
+
     // loop over drawing primitives
     while( getDraw( draw ) )
     {
-        if( dxf->wxwidgets() && m_ControlPointCount>0  )
-        {
-            // use wxwidgets spline method for control point spline TID6
-
-            if( ! draw.index_curve )
-            {
-                // collect control point
-                wxPoint p( draw.x1, draw.y1 );
-                spline_points[ draw.index-1] = p;
-            }
-            else
-            {
-                // all contol points
-                // use wxwidget spline method
-                theDC->DrawSpline(
-                    m_ControlPointCount,
-                    spline_points );
-            }
-        }
-        else
-        {
-            // use wxwidgets drawing primitive for spline
-
-            theDC->DrawLine( draw.x1, draw.y1, draw.x2, draw.y2 );
-        }
+        // use wxwidgets drawing primitive for spline
+        points.emplace_back(wxPoint(draw.x1, draw.y1));
     }
+    theDC->DrawSpline(points.size(), points.data());
 }
+
 void CSolid::Draw( CDxf* dxf )
 {
     cDrawPrimitiveData draw( dxf );
